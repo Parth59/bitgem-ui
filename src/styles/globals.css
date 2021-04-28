@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Open 24 Display St';
+  src: url('/fonts/Open24DisplaySt.woff2') format('woff2'),
+    url('/fonts/Open24DisplaySt.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pixelated';
+  src: url('/fonts/Pixelated.woff') format('woff'),
+    url('/fonts/Pixelated.svg') format('svg'),
+    url('/fonts/Pixelated.eot') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Press Start 2P';
+  src: url('/fonts/PressStart2P-Regular.woff2') format('woff2'),
+    url('/fonts/PressStart2P-Regular.woff') format('woff'),
+    url('/fonts/PressStart2P-Regular.svg#PressStart2P-Regular') format('svg');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  a {
+    @apply text-blue-400 hover:underline;
+  }
+}
+
+@layer utilities {
+  .text-shadow-sm {
+    text-shadow: 0px 0px 2px;
+  }
+
+  .text-shadow-md {
+    text-shadow: 0px 0px 4px;
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0px 0px 8px;
+  }
+
+  .text-shadow-indigo {
+    text-shadow: 0px 0px 17px rgb(102, 16, 242);
+  }
+
+  .flip-img {
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+  }
+
+  .menu-item {
+    @apply hover:no-underline font-bold text-yellow-300 text-shadow-sm px-1 hover:text-shadow-md focus:ring-2 focus:outline-none rounded-md;
+  }
+
+  .menu-item-sm {
+    @apply block px-2 py-2 rounded-md hover:bg-gray-700 hover:no-underline font-bold text-yellow-300 text-shadow-sm hover:text-shadow-md focus:ring-2 focus:outline-none;
+  }
+}
