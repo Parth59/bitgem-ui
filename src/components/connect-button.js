@@ -1,32 +1,25 @@
 import {useWeb3React} from '@web3-react/core';
 import {getWalletName} from 'lib/blockchain';
-import {injected} from 'lib/connectors';
-import React from 'react';
-import {useToast} from './toast-context';
+import * as React from 'react';
+import {ConnectModal} from './connect-modal';
 
 function ConnectButton({className}) {
-  const {active, activate, chainId, account} = useWeb3React();
-  const {add} = useToast();
-
-  React.useEffect(() => {
-    if (active) {
-      add(`Connected to ${getWalletName(chainId, account)}`);
-      console.log('added toast');
-    }
-  }, [account, active, chainId, add]);
+  const {active, chainId, account} = useWeb3React();
+  const [open, setOpen] = React.useState(false);
 
   const handleClick = () => {
-    if (!active) {
-      activate(injected);
-    }
+    if (!active && !open) setOpen(true);
   };
 
   const buttonLabel = active ? getWalletName(chainId, account) : 'Connect';
 
   return (
-    <button className={className} onClick={handleClick}>
-      {buttonLabel}
-    </button>
+    <div>
+      <button className={className} onClick={handleClick}>
+        {buttonLabel}
+      </button>
+      <ConnectModal open={open} setOpen={setOpen} />
+    </div>
   );
 }
 

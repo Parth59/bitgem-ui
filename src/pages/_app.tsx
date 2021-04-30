@@ -2,7 +2,7 @@ import {AppProps} from 'next/app';
 import {Header} from 'components/header';
 import {Footer} from 'components/footer';
 import '../styles/globals.css';
-import React from 'react';
+import * as React from 'react';
 import {Web3ReactProvider} from '@web3-react/core';
 import {ethers} from 'ethers';
 import {ToastProvider} from 'components/toast-context';

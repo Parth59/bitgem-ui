@@ -1,4 +1,4 @@
-import React, {useState, useContext, useCallback, useMemo} from 'react';
+import * as React from 'react';
 import {createPortal} from 'react-dom';
 import {useTimerTrigger} from '../hooks/useTimerTrigger';
 export const ToastContext = React.createContext(null);
@@ -14,17 +14,17 @@ const generateId = () => {
 };
 
 function ToastProvider({children}) {
-  const [toasts, setToasts] = useState([]);
+  const [toasts, setToasts] = React.useState([]);
 
-  const add = useCallback(
+  const add = React.useCallback(
     (message) => setToasts((prev) => [...prev, {id: generateId(), message}]),
     []
   );
-  const remove = useCallback(
+  const remove = React.useCallback(
     (id) => setToasts((prev) => prev.filter((t) => t.id !== id)),
     []
   );
-  const contextValue = useMemo(() => ({add, remove}), [add, remove]);
+  const contextValue = React.useMemo(() => ({add, remove}), [add, remove]);
 
   const isServer = typeof document === 'undefined';
   return (
@@ -32,7 +32,7 @@ function ToastProvider({children}) {
       {children}
 
       {isServer ? (
-        <div className="absolute top-0 right-0"></div>
+        <div className="absolute bottom-0 right-0"></div>
       ) : (
         createPortal(
           <div className="absolute bottom-0 right-0">
@@ -48,7 +48,7 @@ function ToastProvider({children}) {
 }
 
 function useToast() {
-  const state = useContext(ToastContext);
+  const state = React.useContext(ToastContext);
   if (state === null)
     throw new Error('useToast called outside a ToastProvider');
   return state;

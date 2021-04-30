@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React from 'react';
+import * as React from 'react';
 import {ConnectButton} from './connect-button';
 import {CloseIcon, MenuIcon} from './icons';
 import {useToggle} from 'hooks/useToggle';

@@ -22,7 +22,7 @@ module.exports = {
           1000: 'rgb(31,29,50)'
         }
       },
-      backgroundImage: (theme) => ({
+      backgroundImage: () => ({
         'app-wallpaper': "url('/img/screen.png')"
       }),
       keyframes: {
