@@ -10,9 +10,13 @@
   },
   "private": true,
   "dependencies": {
+    "@web3-react/core": "^6.1.9",
+    "@web3-react/injected-connector": "^6.0.7",
+    "ethers": "^5.1.4",
     "next": "latest",
     "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react-dom": "^17.0.1",
+    "react-query": "^3.15.1"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.3.2",

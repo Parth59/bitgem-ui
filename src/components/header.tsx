@@ -29,37 +29,38 @@ function Header(): JSX.Element {
           className="relative max-w-7xl mx-auto flex items-center justify-between px-2 md:px-3"
           aria-label="Global"
         >
+          {/* <div className="flex items-center justify-between flex-1"> */}
           <div className="flex items-center justify-between flex-1">
-            <div className="flex items-center justify-between w-full md:w-auto">
-              <div>
-                <Link href="/">
-                  <img
-                    className="w-8 md:w-1000 xl:w-12 cursor-pointer"
-                    alt="bitgem home"
-                    src="/img/animated-diamond.gif"
-                  />
-                </Link>
-              </div>
-
-              <div className="-mr-2 flex items-center md:hidden gap-1">
-                <ConnectButton className="px-4 py-2 font-bold rounded-md focus:ring-2 focus:outline-none text-red-500 text-shadow-sm hover:text-shadow-md" />
-
-                <button
-                  type="button"
-                  onClick={toggleMenu}
-                  className="bg-gray-900 rounded-md p-2 inline-flex items-center justify-center text-yellow-300 hover:bg-gray-800 focus:outline-none focus:ring-2 focus-ring-inset focus:ring-white"
-                  aria-expanded="false"
-                >
-                  <span className="sr-only">Open main menu</span>
-                  <MenuIcon className="h-6 w-6" />
-                </button>
-              </div>
+            <div>
+              <Link href="/">
+                <img
+                  className="w-8 md:w-1000 xl:w-12 cursor-pointer"
+                  alt="bitgem home"
+                  src="/img/animated-diamond.gif"
+                />
+              </Link>
             </div>
-            <div className="hidden md:flex items-baseline md:text-base lg:text-md xl:text-lg space-x-2  md:ml-10">
-              <MenuItems className="menu-item" />
+
+            <div className="-mr-2 flex items-center  gap-1">
+              <MenuItems className="hidden md:block menu-item" />
               <ConnectButton className="px-4 py-2 font-bold rounded-md focus:ring-2 focus:outline-none text-red-500 text-shadow-sm hover:text-shadow-md" />
+
+              <button
+                type="button"
+                onClick={toggleMenu}
+                className="md:hidden bg-gray-900 rounded-md p-2 inline-flex items-center justify-center text-yellow-300 hover:bg-gray-800 focus:outline-none focus:ring-2 focus-ring-inset focus:ring-white"
+                aria-expanded="false"
+              >
+                <span className="sr-only">Open main menu</span>
+                <MenuIcon className="h-6 w-6" />
+              </button>
             </div>
           </div>
+          {/* <div className="hidden md:flex items-baseline md:text-base lg:text-md xl:text-lg space-x-2  md:ml-10">
+              <MenuItems className="menu-item" />
+              <ConnectButton className="px-4 py-2 font-bold rounded-md focus:ring-2 focus:outline-none text-red-500 text-shadow-sm hover:text-shadow-md" />
+            </div> */}
+          {/* </div> */}
         </nav>
       </div>
       {/* Mobile Menu */}
@@ -138,12 +139,8 @@ function MenuItems({className}: MenuItemsProps): JSX.Element {
       </Link>
       <Link href="/governance">
         <a className={className}>
-          <div className="flex items-baseline gap-1">
-            <img
-              className="relative top-2 h-6"
-              alt="governance tokens"
-              src="/img/key.png"
-            />
+          <div className="flex items-center gap-1">
+            <img className="h-6" alt="governance tokens" src="/img/key.png" />
             <div className="">X0</div>
           </div>
         </a>

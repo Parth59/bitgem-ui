@@ -14,7 +14,7 @@ class MyDocument extends Document {
           />
           <link
             rel="preload"
-            href="/fonts/Open24DisplaySt.woff'"
+            href="/fonts/Open24DisplaySt.woff"
             as="font"
             type="font/woff"
             crossOrigin="anonymous"

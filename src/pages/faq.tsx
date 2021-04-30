@@ -49,8 +49,8 @@ function Faq(): JSX.Element {
           </div>
           <div className="text-green-500 text-shadow-md text-xs sm:text-base md:text-xl">
             no! if you need to break a claim for whatever reason, you can do so
-            with no penalty. you'll receive 100% of your deposited funds back
-            immediately, no questions asked.
+            with no penalty. you&apos;ll receive 100% of your deposited funds
+            back immediately, no questions asked.
           </div>
         </div>
         <div className="py-3 sm:py-6">
@@ -104,7 +104,7 @@ function Faq(): JSX.Element {
             where can I buy bitgem governance tokens?
           </div>
           <div className="text-green-500 text-shadow-md text-xs sm:text-base md:text-xl">
-            you can't. bitgem governance tokens are earned by creating and
+            you can&apos;t. bitgem governance tokens are earned by creating and
             collecting on claims, and just like bitgems, bitgem governance
             tokens get harder and harder to find as time goes on.
           </div>
