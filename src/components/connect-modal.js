@@ -13,7 +13,6 @@ function ConnectModal({open, setOpen}) {
   React.useEffect(() => {
     if (active) {
       add(`Connected to ${getWalletName(chainId, account)}`);
-      console.log('added toast');
     }
   }, [account, active, chainId, add]);
 

@@ -4,23 +4,23 @@ import {ConnectButton} from './connect-button';
 import {CloseIcon, MenuIcon} from './icons';
 import {useToggle} from 'hooks/useToggle';
 import {useRouter} from 'next/dist/client/router';
-
-const blockchainService = {
-  COIN: 'ETH',
-  formatEther: (amount) => amount,
-  totalEthStaked: 23.88,
-  totalClaims: 23,
-  totalMinted: 7
-};
+import {useBlockchain} from './blockchain-context';
+import {useWeb3React} from '@web3-react/core';
+import {networkCoins, ethToStr} from 'lib/blockchain';
 
 function Header(): JSX.Element {
   const router = useRouter();
   const [isMenuOpen, toggleMenu, setMenuState] = useToggle(false);
+  const {chainId} = useWeb3React();
+  const {totals, balances} = useBlockchain();
 
   // closes the menu when user picks a route on mobile
   React.useEffect(() => {
     setMenuState(false);
   }, [router.pathname, setMenuState]);
+
+  const coin = networkCoins[chainId] ?? 'ETH';
+  const balance = balances.governance.toString();
 
   return (
     <header className="relative z-10">
@@ -42,7 +42,10 @@ function Header(): JSX.Element {
             </div>
 
             <div className="-mr-2 flex items-center  gap-1">
-              <MenuItems className="hidden md:block menu-item" />
+              <MenuItems
+                className="hidden md:block menu-item"
+                balance={balance}
+              />
               <ConnectButton className="px-4 py-2 font-bold rounded-md focus:ring-2 focus:outline-none text-red-500 text-shadow-sm hover:text-shadow-md" />
 
               <button
@@ -56,11 +59,6 @@ function Header(): JSX.Element {
               </button>
             </div>
           </div>
-          {/* <div className="hidden md:flex items-baseline md:text-base lg:text-md xl:text-lg space-x-2  md:ml-10">
-              <MenuItems className="menu-item" />
-              <ConnectButton className="px-4 py-2 font-bold rounded-md focus:ring-2 focus:outline-none text-red-500 text-shadow-sm hover:text-shadow-md" />
-            </div> */}
-          {/* </div> */}
         </nav>
       </div>
       {/* Mobile Menu */}
@@ -80,7 +78,7 @@ function Header(): JSX.Element {
 
             <div className=" pb-6">
               <div className="text-yellow-300 text-shadow-sm px-2 space-y-1">
-                <MenuItems className="menu-item-sm" />
+                <MenuItems className="menu-item-sm" balance={balance} />
               </div>
             </div>
           </div>
@@ -103,12 +101,10 @@ function Header(): JSX.Element {
       </div>
       <div className="my-1 mx-auto max-w-max text-center">
         <span className="block text-shadow-lg text-[0.5rem] sm:text-sm md:text-lg lg:text-2xl text-green-300">
-          {`${blockchainService.COIN} staked: ${blockchainService.formatEther(
-            blockchainService.totalEthStaked
-          )} ${blockchainService.COIN} - claims ${
-            blockchainService.totalClaims
+          {`staked: ${ethToStr(totals.staked)} ${coin} - claims ${
+            totals.claims
           } -
-          minted: ${blockchainService.totalMinted} gems`}
+          minted: ${totals.minted} gems`}
         </span>
         <span className="block mt-2 sm:mt-3 mb-4 sm:mb-5 text-sm text-shadow-sm sm:text-2xl md:text-3xl lg:text-4xl text-pink-500">
           stake anything - earn nft gems
@@ -120,9 +116,10 @@ function Header(): JSX.Element {
 
 type MenuItemsProps = {
   className: string;
+  balance: string;
 };
 
-function MenuItems({className}: MenuItemsProps): JSX.Element {
+function MenuItems({className, balance}: MenuItemsProps): JSX.Element {
   return (
     <>
       <Link href="/pools">
@@ -141,7 +138,7 @@ function MenuItems({className}: MenuItemsProps): JSX.Element {
         <a className={className}>
           <div className="flex items-center gap-1">
             <img className="h-6" alt="governance tokens" src="/img/key.png" />
-            <div className="">X0</div>
+            <div className="">X{balance}</div>
           </div>
         </a>
       </Link>
