@@ -33,7 +33,7 @@ function ConnectModal({open, setOpen}) {
         open={open}
         onClose={setOpen}
       >
-        <div className="flex items-end justify-center font-pixel min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div className="flex items-end justify-center font-pixel min-h-screen pt-4 px-4 pb-10 text-center sm:block sm:p-0">
           <Transition.Child
             as={React.Fragment}
             enter="ease-out duration-300"
@@ -43,7 +43,7 @@ function ConnectModal({open, setOpen}) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-blue-300 bg-opacity-75 transition-opacity" />
+            <Dialog.Overlay className="fixed inset-0 bg-blue-400 bg-opacity-75 backdrop-filter backdrop-blur-sm transition-opacity" />
           </Transition.Child>
 
           {/* This element is to trick the browser into centering the modal contents. */}
@@ -73,22 +73,22 @@ function ConnectModal({open, setOpen}) {
                   </Dialog.Title>
                 </div>
               </div>
-              <div className="flex mt-5 sm:mt-6 gap-3 sm:gap-5 lg:gap-7">
+              <div className="flex mt-5 sm:mt-6 gap-1 sm:gap-5 lg:gap-7">
                 <button
                   type="button"
-                  className="flex -z-10 flex-col flex-1 items-center gap-2 justify-between w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
+                  className="flex -z-10 flex-col flex-1 items-center text-xs mx-3 gap-2 justify-between w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 sm:text-sm text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 "
                   onClick={() => handleConnectClick('metamask')}
                 >
-                  <MetamaskIcon className="h-16" />
+                  <MetamaskIcon className="h-12" />
                   Desktop
                 </button>
                 <button
                   type="button"
                   name="walletConnect"
-                  className="flex flex-col flex-1 items-center gap-2 justify-between w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
+                  className="flex flex-col flex-1 items-center text-xs mx-3 gap-2 justify-between w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 sm:text-sm text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   onClick={() => handleConnectClick('walletConnect')}
                 >
-                  <WalletConnectIcon className="h-16 pt-3 pb-1" />
+                  <WalletConnectIcon className="h-12 pt-3 pb-1" />
                   Mobile
                 </button>
               </div>
