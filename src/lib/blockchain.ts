@@ -48,20 +48,20 @@ export const networkCoins: any = {
   '43114': 'AVAX'
 };
 
-// const gemPic = (symbol: string): string => {
-//   if (symbol == 'DMND') return 'white2.png';
-//   else if (symbol == 'RUBY') return 'red2.png';
-//   else if (symbol == 'MRLD') return 'greengem2.png';
-//   else if (symbol == 'SPHR') return 'blue2.png';
-//   else if (symbol == 'JADE') return 'dkgreengem2.png';
-//   else if (symbol == 'TPAZ') return 'orange2.png';
-//   else if (symbol == 'OPAL') return 'opal.png';
-//   else if (symbol == 'PERL') return 'pearl.png';
-//   else if (symbol == 'CHRY') return 'cherry.png';
-//   else if (symbol == 'BERY') return 'strawberry.png';
-//   else if (symbol == 'PEPE') return 'pepe.png';
-//   else return 'white2.png';
-// };
+export const gemPics = (symbol: string): string => {
+  if (symbol == 'DMND') return 'white2.png';
+  else if (symbol == 'RUBY') return 'red2.png';
+  else if (symbol == 'MRLD') return 'greengem2.png';
+  else if (symbol == 'SPHR') return 'blue2.png';
+  else if (symbol == 'JADE') return 'dkgreengem2.png';
+  else if (symbol == 'TPAZ') return 'orange2.png';
+  else if (symbol == 'OPAL') return 'opal.png';
+  else if (symbol == 'PERL') return 'pearl.png';
+  else if (symbol == 'CHRY') return 'cherry.png';
+  else if (symbol == 'BERY') return 'strawberry.png';
+  else if (symbol == 'PEPE') return 'pepe.png';
+  else return 'white2.png';
+};
 
 export const getWalletName = (networkId: number, account: string): string =>
   `${networkNames[networkId]}-${account.substring(0, 3)}...${account.substring(
@@ -129,11 +129,12 @@ export const getData = async (
       (async (i: any) => {
         const address = await factory.allNFTGemPools(i);
         let res: any = {
-          address,
+          address: address.toLowerCase(), // I was getting inconsistencies, need to run this by lonestar
           contract: new ethers.Contract(address, iabis.NFTGemPool, signer)
         };
 
         const poolDetails = await getPoolDetails(res);
+        console.log('Pool Details', poolDetails);
         totals.claims = totals.claims + poolDetails.claimedCount.toNumber();
         totals.minted = totals.minted + poolDetails.mintedCount.toNumber();
         totals.staked = totals.staked.add(poolDetails.totalStaked);
@@ -287,3 +288,6 @@ const getPoolDetails = async (p: any): Promise<any> => {
 
 export const ethToStr = (eth: ethers.BigNumber, precision = 4): string =>
   parseFloat(formatEther(eth)).toFixed(precision);
+
+export const dateFromBigNumber = (bn: ethers.BigNumber): Date =>
+  new Date(bn.toNumber() * 1000);

@@ -3,7 +3,7 @@ import {StatusPanel} from 'components/status-panel';
 
 function Home(): JSX.Element {
   return (
-    <main className="flex-1">
+    <main className="flex-1 px-4 md:px-0">
       <SectionHeader title="Welcome" />
       <span className="text-sm text-justify lg:text-lg xl:text-xl text-yellow-200">
         <span className="text-shadow-sm text-lg md:text-xl lg:text-2xl text-pink-600">

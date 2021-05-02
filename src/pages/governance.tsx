@@ -3,7 +3,7 @@ import {StatusPanel} from 'components/status-panel';
 
 function Governance(): JSX.Element {
   return (
-    <main className="flex-1">
+    <main className="flex-1 px-4 md:px-0">
       <SectionHeader title="Governance" />
       <StatusPanel />
       <div className="text-yellow-200 md:mt-8 leading-relaxed text-xs sm:text-sm md:text-base lg:text-lg text-shadow-sm">

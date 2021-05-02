@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useWeb3React} from '@web3-react/core';
 import {getData, emptyData, networkCoins, formatEther} from 'lib/blockchain';
-
+import {verifyContext} from 'lib/utils';
 const BlockchainContext = React.createContext(null);
 
 function BlockchainProvider({children}) {
@@ -22,10 +22,17 @@ function BlockchainProvider({children}) {
 }
 
 function useBlockchain() {
-  const state = React.useContext(BlockchainContext);
-  if (state === null)
-    throw new Error('usePools() called outside PoolsProvider');
-  return state;
+  return verifyContext(
+    React.useContext(BlockchainContext),
+    'BlockchainContext'
+  );
 }
 
-export {BlockchainProvider, useBlockchain};
+function usePool(address) {
+  return verifyContext(
+    React.useContext(BlockchainContext),
+    'BlockchainContext'
+  ).gemPools.find((pool) => pool.address === address.toLowerCase());
+}
+
+export {BlockchainProvider, useBlockchain, usePool};

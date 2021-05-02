@@ -65,4 +65,8 @@
   .menu-item-sm {
     @apply block px-2 py-2 rounded-md hover:bg-gray-700 hover:no-underline font-bold text-yellow-300 text-shadow-sm hover:text-shadow-md focus:ring-2 focus:outline-none;
   }
+
+  .button-card {
+    @apply rounded-b-md text-lg w-full text-white py-2 text-shadow-lg bg-blue-600 hover:bg-blue-700 px-2 hover:outline-none hover:ring-1 hover:ring-gray-500 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500;
+  }
 }
