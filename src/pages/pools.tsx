@@ -4,7 +4,9 @@ import {StatusPanel} from 'components/status-panel';
 import {Pool} from 'components/pool';
 
 function Pools(): JSX.Element {
-  const {gemPools} = useBlockchain();
+  const {isSuccess, data} = useBlockchain();
+
+  const gemPools = isSuccess ? data.gemPools : [];
 
   return (
     <main className="flex-1 px-1">

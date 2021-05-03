@@ -78,7 +78,7 @@ export const importContract = async ({
   return importJSON(chainId).then((module) => module.default);
 };
 
-export const emptyData = {
+export const emptyBlockchainData = {
   contracts: {token: null, factory: null, governor: null},
   totals: {staked: 0, claims: 0, minted: 0},
   gemPools: [],
@@ -88,7 +88,7 @@ export const emptyData = {
   pepe: null
 };
 
-export const getData = async (
+export const getBlockchainData = async (
   chainId: number | undefined,
   library: any
 ): Promise<any> => {
@@ -134,7 +134,6 @@ export const getData = async (
         };
 
         const poolDetails = await getPoolDetails(res);
-        console.log('Pool Details', poolDetails);
         totals.claims = totals.claims + poolDetails.claimedCount.toNumber();
         totals.minted = totals.minted + poolDetails.mintedCount.toNumber();
         totals.staked = totals.staked.add(poolDetails.totalStaked);
@@ -150,7 +149,6 @@ export const getData = async (
         } else {
           gemPools.push(res);
         }
-        console.log(res);
       })(i)
     );
   }
@@ -212,7 +210,6 @@ export const getData = async (
 };
 
 export const formatEth = (n: ethers.BigNumber): string => {
-  console.log('n is', n);
   if (!n) return '0';
   const pe = ethers.utils.formatEther(n);
   return pe ? pe.toString() : '0';

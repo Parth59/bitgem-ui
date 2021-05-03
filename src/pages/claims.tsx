@@ -5,7 +5,9 @@ import {Claim} from 'components/claim';
 import {ethToStr} from 'lib/blockchain';
 
 function Claims(): JSX.Element {
-  const {claimList} = useBlockchain();
+  const {isSuccess, data} = useBlockchain();
+
+  const claimList = isSuccess ? data.claimList : [];
 
   return (
     <main className="flex-1 px-4">

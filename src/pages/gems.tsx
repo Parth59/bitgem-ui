@@ -4,7 +4,9 @@ import {StatusPanel} from 'components/status-panel';
 import {Gem} from 'components/gem';
 
 function Gems(): JSX.Element {
-  const {gemList} = useBlockchain();
+  const {isSuccess, data} = useBlockchain();
+
+  const gemList = isSuccess ? data.gemList : [];
 
   return (
     <main className="flex-1 px-4 md:px-0">

@@ -1,21 +1,22 @@
 import * as React from 'react';
 import {useWeb3React} from '@web3-react/core';
-import {getData, emptyData, formatEth} from 'lib/blockchain';
+import {getBlockchainData} from 'lib/blockchain';
 import {verifyContext} from 'lib/utils';
+import {useAsync} from 'hooks/use-async';
 const BlockchainContext = React.createContext(null);
 
 function BlockchainProvider({children}) {
   const {active, chainId, library} = useWeb3React();
-  const [data, setData] = React.useState(emptyData);
+  const {run, ...blockchain} = useAsync();
 
   React.useEffect(() => {
     if (active && library && chainId) {
-      getData(chainId, library).then(setData);
+      run(getBlockchainData(chainId, library));
     }
-  }, [active, chainId, library]);
-  console.log('data', data);
+  }, [active, chainId, library, run]);
+
   return (
-    <BlockchainContext.Provider value={data}>
+    <BlockchainContext.Provider value={blockchain}>
       {children}
     </BlockchainContext.Provider>
   );
@@ -32,7 +33,7 @@ function usePool(address) {
   return verifyContext(
     React.useContext(BlockchainContext),
     'BlockchainContext'
-  ).gemPools.find((pool) => pool.address === address.toLowerCase());
+  ).data.gemPools.find((pool) => pool.address === address.toLowerCase());
 }
 
 export {BlockchainProvider, useBlockchain, usePool};

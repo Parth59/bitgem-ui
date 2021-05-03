@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {gemPics} from 'lib/blockchain';
 import {usePool} from './blockchain-context';
-import {usePoolForm} from 'hooks/usePoolForm';
+import {usePoolForm} from 'hooks/use-pool-form';
 
 function Pool({address}) {
   const pool = usePool(address);

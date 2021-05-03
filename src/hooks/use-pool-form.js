@@ -10,7 +10,6 @@ function usePoolForm(pool) {
 
   const handleSubmit = (event) => {
     event?.preventDefault();
-    console.dir(formValues);
   };
 
   const handleDurationChange = (event) => {
@@ -36,7 +35,6 @@ function usePoolForm(pool) {
   };
 
   const handlePriceChange = (event) => {
-    console.log('value is', event.target.value);
     if (isNaN(event.target.value)) {
       return;
     }

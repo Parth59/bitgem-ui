@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {createPortal} from 'react-dom';
-import {useTimerTrigger} from '../hooks/useTimerTrigger';
+import {useTimerTrigger} from '../hooks/use-timer-trigger';
 export const ToastContext = React.createContext(null);
 
 const TOAST_DURATION = 6000;

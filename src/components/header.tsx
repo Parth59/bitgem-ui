@@ -2,17 +2,17 @@ import Link from 'next/link';
 import * as React from 'react';
 import {ConnectButton} from './connect-button';
 import {CloseIcon, MenuIcon} from './icons';
-import {useToggle} from 'hooks/useToggle';
+import {useToggle} from 'hooks/use-toggle';
 import {useRouter} from 'next/dist/client/router';
 import {useBlockchain} from './blockchain-context';
 import {useWeb3React} from '@web3-react/core';
-import {networkCoins, ethToStr} from 'lib/blockchain';
+import {networkCoins, ethToStr, emptyBlockchainData} from 'lib/blockchain';
 
 function Header(): JSX.Element {
   const router = useRouter();
   const [isMenuOpen, toggleMenu, setMenuState] = useToggle(false);
   const {chainId} = useWeb3React();
-  const {totals, balances} = useBlockchain();
+  const {isSuccess, data} = useBlockchain();
 
   // closes the menu when user picks a route on mobile
   React.useEffect(() => {
@@ -20,7 +20,7 @@ function Header(): JSX.Element {
   }, [router.pathname, setMenuState]);
 
   const coin = networkCoins[chainId] ?? 'ETH';
-  const balance = balances.governance.toString();
+  const blockchainData = isSuccess ? data : emptyBlockchainData;
 
   return (
     <header className="relative z-10">
@@ -44,7 +44,7 @@ function Header(): JSX.Element {
             <div className="-mr-2 flex items-center  gap-1">
               <MenuItems
                 className="hidden md:block menu-item"
-                balance={balance}
+                balance={blockchainData.balances.governance.toString()}
               />
               <ConnectButton className="px-4 py-2 font-bold rounded-md focus:ring-2 focus:outline-none text-red-500 text-shadow-sm hover:text-shadow-md" />
 
@@ -101,10 +101,10 @@ function Header(): JSX.Element {
       </div>
       <div className="my-1 mx-auto max-w-max text-center">
         <span className="block text-shadow-lg text-[0.5rem] sm:text-sm md:text-lg lg:text-2xl text-green-300">
-          {`staked: ${ethToStr(totals.staked)} ${coin} - claims ${
-            totals.claims
-          } -
-          minted: ${totals.minted} gems`}
+          {`staked: ${ethToStr(
+            blockchainData.totals.staked
+          )} ${coin} - claims ${blockchainData.totals.claims} -
+          minted: ${blockchainData.totals.minted} gems`}
         </span>
         <span className="block mt-2 sm:mt-3 mb-4 sm:mb-5 text-sm text-shadow-sm sm:text-2xl md:text-3xl lg:text-4xl text-pink-500">
           stake anything - earn nft gems
