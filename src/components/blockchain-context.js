@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useWeb3React} from '@web3-react/core';
-import {getData, emptyData, networkCoins, formatEther} from 'lib/blockchain';
+import {getData, emptyData, formatEth} from 'lib/blockchain';
 import {verifyContext} from 'lib/utils';
 const BlockchainContext = React.createContext(null);
 

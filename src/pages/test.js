@@ -1,6 +1,6 @@
 import {useWeb3React} from '@web3-react/core';
 import * as React from 'react';
-import {getData, networkCoins, formatEther} from 'lib/blockchain';
+import {getData, networkCoins, formatEth} from 'lib/blockchain';
 
 function Test() {
   const {active, chainId, library} = useWeb3React();
@@ -60,7 +60,7 @@ function Test() {
       {data ? (
         <div>
           {networkCoins[chainId]} staked:{' '}
-          {parseFloat(formatEther(data.totalStaked)).toFixed(4)}{' '}
+          {parseFloat(formatEth(data.totalStaked)).toFixed(4)}{' '}
           {networkCoins[chainId]} - claims {data.totalClaims} - minted:{' '}
           {data.totalMinted} gems
         </div>

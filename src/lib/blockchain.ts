@@ -211,7 +211,8 @@ export const getData = async (
   };
 };
 
-export const formatEther = (n: ethers.BigNumber): string => {
+export const formatEth = (n: ethers.BigNumber): string => {
+  console.log('n is', n);
   if (!n) return '0';
   const pe = ethers.utils.formatEther(n);
   return pe ? pe.toString() : '0';
@@ -287,7 +288,7 @@ const getPoolDetails = async (p: any): Promise<any> => {
 // utilities
 
 export const ethToStr = (eth: ethers.BigNumber, precision = 4): string =>
-  parseFloat(formatEther(eth)).toFixed(precision);
+  parseFloat(formatEth(eth)).toFixed(precision);
 
 export const dateFromBigNumber = (bn: ethers.BigNumber): Date =>
   new Date(bn.toNumber() * 1000);
