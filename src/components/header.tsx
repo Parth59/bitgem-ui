@@ -78,7 +78,10 @@ function Header(): JSX.Element {
 
             <div className=" pb-6">
               <div className="text-yellow-300 text-shadow-sm px-2 space-y-1">
-                <MenuItems className="menu-item-sm" balance={balance} />
+                <MenuItems
+                  className="menu-item-sm"
+                  balance={blockchainData.balances.governance.toString()}
+                />
               </div>
             </div>
           </div>

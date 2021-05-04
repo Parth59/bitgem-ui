@@ -36,4 +36,6 @@ function Home(): JSX.Element {
   );
 }
 
+Home.displayName = 'Home';
+
 export default Home;
