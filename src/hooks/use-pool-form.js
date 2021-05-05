@@ -1,6 +1,5 @@
 import * as React from 'react';
-import {formatEther, parseEther} from 'lib/blockchain';
-import {ethers} from 'ethers';
+import {formatEther} from 'lib/blockchain';
 import produce from 'immer';
 
 const reducer = produce((draft, {type, payload}) => {
@@ -15,7 +14,9 @@ const reducer = produce((draft, {type, payload}) => {
       break;
     }
     case 'SET_GEMS': {
-      draft.values.gems = payload;
+      // if (/^[0]+$/.test(payload)) draft.values.gems = '0';
+      draft.values.gems = /^[0]+$/.test(payload) ? '0' : payload;
+      draft.errors.gems = payload > 0 ? undefined : 'You must specify > 0 Gems';
       break;
     }
     case 'ZERO_PRICE': {
@@ -139,13 +140,14 @@ function usePoolForm(pool) {
   };
 
   const handleGemsChange = (event) => {
+    if (!/^[\d]*$/.test(event.target.value)) return;
     dispatch({type: 'SET_GEMS', payload: event.target.value});
   };
 
   return {
     formValues: formState.values,
     formErrors: formState.errors,
-    enabled: formState.enabled,
+    enabled: formState.enabled && formState.values.gems > 0,
     handleSubmit,
     handleDurationChange,
     handlePriceChange,

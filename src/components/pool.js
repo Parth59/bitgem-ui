@@ -109,13 +109,14 @@ function Pool({address}) {
         {isErrorShowing ? (
           <div className="px-1 py-2  text-base text-center text-shadow-md font-bold text-red-500">
             {errors.map((error, i) => (
-              <span key={i}>{error}</span>
+              <div key={i}>{error}</div>
             ))}
           </div>
         ) : null}
         {enabled ? (
           <div className="px-1 py-2  text-base text-center text-shadow-md font-bold text-green-600">
-            {formValues.price} BNB will be staked for {formValues.duration} day
+            {formValues.price * formValues.gems} BNB will be staked for{' '}
+            {formValues.duration} day
             {formValues.duration > 1 ? 's' : ''}
           </div>
         ) : null}
