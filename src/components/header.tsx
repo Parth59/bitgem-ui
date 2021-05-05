@@ -6,7 +6,7 @@ import {useToggle} from 'hooks/use-toggle';
 import {useRouter} from 'next/dist/client/router';
 import {useBlockchain} from './blockchain-context';
 import {useWeb3React} from '@web3-react/core';
-import {networkCoins, ethToStr, emptyBlockchainData} from 'lib/blockchain';
+import {networkCoins, formatEther, emptyBlockchainData} from 'lib/blockchain';
 
 function Header(): JSX.Element {
   const router = useRouter();
@@ -104,7 +104,7 @@ function Header(): JSX.Element {
       </div>
       <div className="my-1 mx-auto max-w-max text-center">
         <span className="block text-shadow-lg text-[0.5rem] sm:text-sm md:text-lg lg:text-2xl text-green-300">
-          {`staked: ${ethToStr(
+          {`staked: ${formatEther(
             blockchainData.totals.staked
           )} ${coin} - claims ${blockchainData.totals.claims} -
           minted: ${blockchainData.totals.minted} gems`}

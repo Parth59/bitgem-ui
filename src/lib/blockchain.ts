@@ -129,7 +129,7 @@ export const getBlockchainData = async (
       (async (i: any) => {
         const address = await factory.allNFTGemPools(i);
         let res: any = {
-          address: address.toLowerCase(), // I was getting inconsistencies, need to run this by lonestar
+          address: address.toLowerCase(),
           contract: new ethers.Contract(address, iabis.NFTGemPool, signer)
         };
 
@@ -138,11 +138,6 @@ export const getBlockchainData = async (
         totals.minted = totals.minted + poolDetails.mintedCount.toNumber();
         totals.staked = totals.staked.add(poolDetails.totalStaked);
         res = Object.assign(res, poolDetails);
-
-        if (res.symbol === 'PEPE') {
-          pepe = res;
-          return;
-        }
 
         if (gemPools.length > i && gemPools[i].address === address) {
           gemPools[i] = res;
@@ -204,15 +199,8 @@ export const getBlockchainData = async (
     gemPools,
     gemList,
     claimList,
-    balances,
-    pepe
+    balances
   };
-};
-
-export const formatEth = (n: ethers.BigNumber): string => {
-  if (!n) return '0';
-  const pe = ethers.utils.formatEther(n);
-  return pe ? pe.toString() : '0';
 };
 
 const getContractRef = async (
@@ -284,8 +272,25 @@ const getPoolDetails = async (p: any): Promise<any> => {
 
 // utilities
 
-export const ethToStr = (eth: ethers.BigNumber, precision = 4): string =>
-  parseFloat(formatEth(eth)).toFixed(precision);
+// parseEther(n: any) {
+//   const pe = ethers.utils.parseEther(n ? n.toString() : '0');
+//   return pe ? pe.toString() : '0';
+// }
+
+export const parseEther = (n: any) => {
+  const pe = ethers.utils.parseEther(n ? n.toString() : '0');
+  return pe ? pe.toString() : '0';
+};
+
+export const formatEther = (n: any) => {
+  if (!n) return '0';
+  console.log({n});
+  const pe = ethers.utils.formatEther(n);
+  return pe ? pe.toString() : '0';
+};
+
+export const bigNumberToStr = (eth: ethers.BigNumber, precision = 4): string =>
+  parseFloat(formatEther(eth)).toFixed(precision);
 
 export const dateFromBigNumber = (bn: ethers.BigNumber): Date =>
   new Date(bn.toNumber() * 1000);

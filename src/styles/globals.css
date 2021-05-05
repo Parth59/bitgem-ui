@@ -67,6 +67,6 @@
   }
 
   .button-card {
-    @apply rounded-b-md text-lg w-full text-white py-2 text-shadow-lg bg-blue-600 hover:bg-blue-700 px-2 hover:outline-none hover:ring-1 hover:ring-gray-500 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500;
+    @apply rounded-b-md text-lg w-full text-white disabled:text-gray-300 py-2 text-shadow-lg disabled:text-shadow-sm bg-blue-600 hover:bg-blue-700 px-2 hover:outline-none hover:ring-1 hover:ring-gray-500 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500 disabled:bg-gray-500;
   }
 }

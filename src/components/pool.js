@@ -2,16 +2,27 @@ import * as React from 'react';
 import {gemPics} from 'lib/blockchain';
 import {usePool} from './blockchain-context';
 import {usePoolForm} from 'hooks/use-pool-form';
+import {useTimerSwitch} from 'hooks/use-timer-switch';
 
 function Pool({address}) {
   const pool = usePool(address);
   const {
     formValues,
+    formErrors,
+    enabled,
     handleSubmit,
     handlePriceChange,
     handleGemsChange,
     handleDurationChange
   } = usePoolForm(pool);
+  const {isOn: isErrorFlashing, turnOn: flashError} = useTimerSwitch();
+  const hasErrors = !!Object.keys(formErrors).length;
+  const errors = Object.values(formErrors);
+  const isErrorShowing = isErrorFlashing || !enabled;
+
+  React.useEffect(() => {
+    if (enabled && hasErrors) flashError();
+  }, [enabled, flashError, hasErrors]);
 
   if (!pool) return null;
 
@@ -95,13 +106,25 @@ function Pool({address}) {
             gems
           </span>
         </div>
-        <div className="px-1 py-2  text-base text-center text-shadow-md font-bold text-green-600">
-          <div>
-            {formValues.price} BNB will be staked for {formValues.duration} day
+        {isErrorShowing ? (
+          <div className="px-1 py-2  text-base text-center text-shadow-md font-bold text-red-500">
+            {errors.map((error, i) => (
+              <span key={i}>{error}</span>
+            ))}
           </div>
-        </div>
+        ) : null}
+        {enabled ? (
+          <div className="px-1 py-2  text-base text-center text-shadow-md font-bold text-green-600">
+            {formValues.price} BNB will be staked for {formValues.duration} day
+            {formValues.duration > 1 ? 's' : ''}
+          </div>
+        ) : null}
         <div className="w-full sm:p-4">
-          <button type="submit" className="button-card sm:rounded-lg">
+          <button
+            type="submit"
+            disabled={!enabled}
+            className="button-card sm:rounded-lg"
+          >
             stake
           </button>
         </div>
