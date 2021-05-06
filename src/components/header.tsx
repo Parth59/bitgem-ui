@@ -104,9 +104,9 @@ function Header(): JSX.Element {
       </div>
       <div className="my-1 mx-auto max-w-max text-center">
         <span className="block text-shadow-lg text-[0.5rem] sm:text-sm md:text-lg lg:text-2xl text-green-300">
-          {`staked: ${formatEther(
-            blockchainData.totals.staked
-          )} ${coin} - claims ${blockchainData.totals.claims} -
+          {`staked: ${parseFloat(
+            formatEther(blockchainData.totals.staked)
+          ).toFixed(3)} ${coin} - claims ${blockchainData.totals.claims} -
           minted: ${blockchainData.totals.minted} gems`}
         </span>
         <span className="block mt-2 sm:mt-3 mb-4 sm:mb-5 text-sm text-shadow-sm sm:text-2xl md:text-3xl lg:text-4xl text-pink-500">

@@ -120,7 +120,6 @@ export const getBlockchainData = async (
     staked: ethers.BigNumber.from(0)
   };
   const allPoolsCount = await factory.allNFTGemPoolsLength();
-  let pepe;
 
   // Build the list of gem pools
   let promises = [];
@@ -284,7 +283,6 @@ export const parseEther = (n: any) => {
 
 export const formatEther = (n: any) => {
   if (!n) return '0';
-  console.log({n});
   const pe = ethers.utils.formatEther(n);
   return pe ? pe.toString() : '0';
 };

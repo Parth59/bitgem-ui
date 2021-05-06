@@ -2,7 +2,7 @@ import {useBlockchain} from 'components/blockchain-context';
 import {SectionHeader} from 'components/section-header';
 import {StatusPanel} from 'components/status-panel';
 import {Claim} from 'components/claim';
-import {ethToStr} from 'lib/blockchain';
+import {formatEther} from 'lib/blockchain';
 
 function Claims(): JSX.Element {
   const {isSuccess, data} = useBlockchain();
@@ -16,7 +16,7 @@ function Claims(): JSX.Element {
         {claimList.map(({hash, amount, name, symbol, quantity, unlockTime}) => (
           <Claim
             key={hash}
-            amount={ethToStr(amount)}
+            amount={parseFloat(formatEther(amount)).toFixed(4)}
             name={name}
             quantity={quantity.toString()}
             unlockTime={unlockTime}
