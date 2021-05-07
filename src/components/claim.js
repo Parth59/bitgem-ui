@@ -2,7 +2,8 @@ import * as React from 'react';
 import {gemPics, dateFromBigNumber} from 'lib/blockchain';
 
 function Claim({amount, name, symbol, quantity, unlockTime}) {
-  let date = dateFromBigNumber(unlockTime);
+  console.log(name, unlockTime);
+  let date = new Date(unlockTime * 1000);
 
   return (
     <div className="rounded-lg bg-green-900">

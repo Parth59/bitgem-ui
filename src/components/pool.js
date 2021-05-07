@@ -1,10 +1,12 @@
 import * as React from 'react';
-import {gemPics} from 'lib/blockchain';
+import {gemPics, networkCoins} from 'lib/blockchain';
 import {usePool} from './blockchain-context';
 import {usePoolForm} from 'hooks/use-pool-form';
 import {useTimerSwitch} from 'hooks/use-timer-switch';
+import {useWeb3React} from '@web3-react/core';
 
 function Pool({address}) {
+  const {chainId} = useWeb3React();
   const pool = usePool(address);
   const {
     formValues,
@@ -42,7 +44,7 @@ function Pool({address}) {
               {name}
             </div>
             <div className="text-blue-300 sm:hidden">
-              using bnb @ 1.0000/BNB
+              using {networkCoins[chainId]} @ 1.0000/{networkCoins[chainId]}
             </div>
           </div>
           <div className="text-blue-300 text-right sm:text-left text-xs sm:text-sm">
@@ -56,7 +58,7 @@ function Pool({address}) {
 
       <form className="sm:w-1/2" onSubmit={handleSubmit}>
         <div className="text-blue-300 hidden sm:block px-4 pt-4">
-          using bnb @ 1.0000/BNB
+          using {networkCoins[chainId]} @ 1.0000/{networkCoins[chainId]}
         </div>
         <div className="mt-1 flex rounded-md shadow-sm px-4">
           <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-200 text-gray-500 sm:text-sm">
@@ -87,7 +89,7 @@ function Pool({address}) {
             onChange={handlePriceChange}
           />
           <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-200 text-gray-500 sm:text-sm">
-            bnb
+            {networkCoins[chainId]}
           </span>
         </div>
         <div className="mt-1 flex rounded-md shadow-sm px-4">
@@ -115,8 +117,8 @@ function Pool({address}) {
         ) : null}
         {enabled ? (
           <div className="px-1 py-2  text-base text-center text-shadow-md font-bold text-green-600">
-            {formValues.price * formValues.gems} BNB will be staked for{' '}
-            {formValues.duration} day
+            {formValues.price * formValues.gems} {networkCoins[chainId]} will be
+            staked for {formValues.duration} day
             {formValues.duration > 1 ? 's' : ''}
           </div>
         ) : null}

@@ -13,6 +13,25 @@
         "internalType": "string",
         "name": "gemName",
         "type": "string"
+      }
+    ],
+    "name": "CustomNFTGemPoolCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "gemSymbol",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "gemName",
+        "type": "string"
       },
       {
         "indexed": false,
@@ -84,6 +103,35 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "bytecode",
+        "type": "bytes"
+      },
+      {
+        "internalType": "string",
+        "name": "gemSymbol",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "gemName",
+        "type": "string"
+      }
+    ],
+    "name": "createCustomNFTGemPool",
+    "outputs": [
+      {
+        "internalType": "address payable",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

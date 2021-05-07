@@ -56,7 +56,7 @@
         "type": "address"
       }
     ],
-    "stateMutability": "pure",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -149,24 +149,13 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "tokenA",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "tokenB",
+        "name": "f",
         "type": "address"
       }
     ],
-    "name": "pairFor",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "pure",
+    "name": "setFactory",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

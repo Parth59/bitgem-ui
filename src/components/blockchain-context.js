@@ -6,14 +6,14 @@ import {useAsync} from 'hooks/use-async';
 const BlockchainContext = React.createContext(null);
 
 function BlockchainProvider({children}) {
-  const {active, chainId, library} = useWeb3React();
+  const {active, account, chainId, library} = useWeb3React();
   const {run, ...blockchain} = useAsync();
 
   React.useEffect(() => {
     if (active && library && chainId) {
-      run(getBlockchainData(chainId, library));
+      run(getBlockchainData(chainId, library, account));
     }
-  }, [active, chainId, library, run]);
+  }, [account, active, chainId, library, run]);
 
   return (
     <BlockchainContext.Provider value={blockchain}>

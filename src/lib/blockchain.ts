@@ -1,14 +1,24 @@
-import {ethers} from 'ethers';
+import {BigNumber, Contract, providers, utils} from 'ethers';
+
+import {NFTGemGovernor} from '../../types/NFTGemGovernor';
+import {NFTGemMultiToken} from '../../types/NFTGemMultiToken';
+import {NFTGemPoolFactory} from '../../types/NFTGemPoolFactory';
+import {ERC20GemTokenFactory} from '../../types/ERC20GemTokenFactory';
+
+import {Pool} from '../lib/Pool';
+import {Token} from '../lib/Token';
+
 import * as iabis from '../../abis/abis.json';
 
-// This verbosity is unfortunate but necessary for webpack to know what to bundle
-// and not spit out "Critical dependency: the request of a dependency is an expression"
+// Unfortunately the bundler will complain if we parameterize the chainId on the import
 const importJSON = async (chainId) => {
   switch (chainId) {
-    case 1:
-      return import('../../abis/1/bitgems.json');
-    case 56:
-      return import('../../abis/56/bitgems.json');
+    case 250:
+      return import('../../abis/250/bitgems.json');
+    case 1337:
+      return import('../../abis/1337/bitgems.json');
+    case 4002:
+      return import('../../abis/4002/bitgems.json');
     default:
       return null;
   }
@@ -48,6 +58,23 @@ export const networkCoins: any = {
   '43114': 'AVAX'
 };
 
+const sortGemsList = (
+  a: {symbol: string; id: number},
+  b: {symbol: string; id: number}
+) => {
+  if (a.symbol > b.symbol) return -1;
+  if (a.symbol < b.symbol) return 1;
+  if (a.id > b.id) return 1;
+  if (a.id < b.id) return -1;
+  return 0;
+};
+
+const sortClaimsList = (a: {unlockTime: number}, b: {unlockTime: number}) => {
+  if (a.unlockTime > b.unlockTime) return 1;
+  if (a.unlockTime < b.unlockTime) return -1;
+  return 0;
+};
+
 export const gemPics = (symbol: string): string => {
   if (symbol == 'DMND') return 'white2.png';
   else if (symbol == 'RUBY') return 'red2.png';
@@ -84,65 +111,114 @@ export const emptyBlockchainData = {
   gemPools: [],
   gemList: [],
   claimList: [],
-  balances: {governance: ethers.BigNumber.from(0)},
+  balances: {governance: BigNumber.from(0)},
   pepe: null
 };
 
 export const getBlockchainData = async (
   chainId: number | undefined,
-  library: any
+  library: any,
+  account: null | string
 ): Promise<any> => {
   if (chainId === undefined || library === undefined)
     throw new Error('Not connected');
 
-  const contractData = await importJSON(chainId).then(
-    (module) => module.default
-  );
-  const signer = library.getSigner();
-  const token = await getContractRef(contractData, 'NFTGemMultiToken', signer);
-  const governor = await getContractRef(
-    contractData,
-    'NFTGemGovernance',
-    signer
-  );
-  const factory = await getContractRef(
-    contractData,
-    'NFTGemPoolFactory',
-    signer
-  );
-  const address = await signer.getAddress();
+  let mockMode = false;
+  let contractData;
   const claimList = [];
   const gemList = [];
   const gemPools = [];
+  const gemPoolsByAddress: {[address: string]: Pool} = {};
+  const symbolsBySymbol: {[symbol: string]: boolean} = {};
+  const symbolsList: string[] = [];
+
   const totals = {
     claims: 0,
     minted: 0,
-    staked: ethers.BigNumber.from(0)
+    staked: BigNumber.from(0)
   };
-  const allPoolsCount = await factory.allNFTGemPoolsLength();
+  const balances = {
+    governance: 0
+  };
+
+  const signer = library.getSigner();
+
+  try {
+    contractData = await importJSON(chainId).then((module) => module.default);
+  } catch (e) {
+    throw new Error('Invalid network');
+  }
+
+  let queryHelperContract = '';
+  if (chainId == 1 || chainId == 250) {
+    queryHelperContract = 'UniswapQueryHelper';
+  } else if (chainId == 43114) {
+    queryHelperContract = 'PangolinQueryHelper';
+  } else if (chainId == 56) {
+    queryHelperContract = 'PancakeSwapQueryHelper';
+  } else {
+    queryHelperContract = 'MockQueryHelper';
+    mockMode = true;
+  }
+
+  const [
+    queryHelper, // the uniswap helper
+    token, // the primary bitgem multitoken
+    factory, // the bitgem pool factory
+    tokenFactory, // the bitgem erc20 token factory
+    governor // governance
+  ]: [
+    any,
+    NFTGemMultiToken,
+    NFTGemPoolFactory,
+    ERC20GemTokenFactory,
+    NFTGemGovernor
+  ] = await Promise.all([
+    getContractRef(contractData, queryHelperContract, signer),
+    getContractRef(contractData, 'NFTGemMultiToken', signer),
+    getContractRef(contractData, 'NFTGemPoolFactory', signer),
+    getContractRef(contractData, 'ERC20GemTokenFactory', signer),
+    getContractRef(contractData, 'NFTGemGovernor', signer)
+  ]);
+
+  const allPoolsCount = (await factory.allNFTGemPoolsLength()).toNumber();
 
   // Build the list of gem pools
-  let promises = [];
+  let promises: Promise<void>[] = [];
   for (let i = 0; i < allPoolsCount; i++) {
     promises.push(
       (async (i: any) => {
         const address = await factory.allNFTGemPools(i);
-        let res: any = {
+
+        let abi = iabis.NFTGemPool;
+
+        if (
+          address === '0xB2f90a1E3a465764Bdf35DCf75795cC3D0D74778' ||
+          address === '0x3C1ee35a56Da6c51b4ce9CdF5A790441041FB4c'
+        ) {
+          abi = iabis.NFTComplexGemPool;
+        }
+
+        const pool: any = {
           address: address.toLowerCase(),
-          contract: new ethers.Contract(address, iabis.NFTGemPool, signer)
+          contract: new Contract(address, iabis.NFTGemPool, signer)
         };
 
-        const poolDetails = await getPoolDetails(res);
-        totals.claims = totals.claims + poolDetails.claimedCount.toNumber();
-        totals.minted = totals.minted + poolDetails.mintedCount.toNumber();
-        totals.staked = totals.staked.add(poolDetails.totalStaked);
-        res = Object.assign(res, poolDetails);
+        // get pool details
+        Object.assign(pool, await getPoolDetails(pool, tokenFactory, signer));
+
+        // Add this pool's numbers to our totals
+        totals.claims += pool.claimedCount.toNumber();
+        totals.minted += pool.mintedCount.toNumber();
+        totals.staked = totals.staked.add(pool.totalEthStaked);
 
         if (gemPools.length > i && gemPools[i].address === address) {
-          gemPools[i] = res;
+          gemPools[i] = pool;
         } else {
-          gemPools.push(res);
+          gemPools.push(pool);
         }
+        gemPoolsByAddress[address.toLowerCase()] = pool;
+        // if (this.loadSecret) console.log(pool);  // TODO: what is this?
       })(i)
     );
   }
@@ -150,47 +226,28 @@ export const getBlockchainData = async (
 
   // build the list of claims and gems for this address on this network.
   promises = [];
-  const tokensHeldCount = await token.allHeldTokensLength(address);
-  for (let i = 0; i < tokensHeldCount.toNumber(); i++) {
+  const tokenCount = await (
+    await token.allHeldTokensLength(account)
+  ).toNumber();
+  for (let i = 0; i < tokenCount; i++) {
     promises.push(
-      (async (i: any) => {
-        const tokenIndex = await token.allHeldTokens(address, i);
-        const hashString = tokenIndex.toHexString();
-        if (hashString == '0x00') {
-          return;
-        }
-        let tokenType = 0;
-        let tokenPool;
-        for (let j = 0; j < gemPools.length; j++) {
-          tokenType = await gemPools[j].contract.tokenType(hashString);
-          if (tokenType !== 0) {
-            tokenPool = gemPools[j];
-            break;
-          }
-        }
-        if (tokenType === 1 || tokenType === 2) {
-          const item = await getTokenOfPool(
-            tokenType,
-            hashString,
-            tokenPool,
-            token,
-            address
-          );
-          if (tokenType === 1) {
-            claimList.push(item);
-          } else if (tokenType === 2) {
-            gemList.push(item);
-          }
-        } else {
-          console.log('not found', hashString);
-        }
+      (async (n: any) => {
+        const tokenIndex = await token.allHeldTokens(account, n);
+
+        await updateTokenPools(
+          tokenIndex.toHexString(),
+          gemPools,
+          gemPoolsByAddress,
+          token,
+          account,
+          claimList,
+          gemList
+        );
       })(i)
     );
   }
   await Promise.all(promises);
-  const balances = {
-    governance: await token.balanceOf(address, 0)
-  };
+  balances.governance = (await token.balanceOf(account, 0)).toNumber();
 
   return {
     contracts: {token, factory, governor},
@@ -210,7 +267,7 @@ const getContractRef = async (
 ): Promise<any> => {
   const tokenData = contractData.contracts[contract];
   if (tokenData) {
-    return new ethers.Contract(
+    return new Contract(
       address ? address : tokenData.address,
       tokenData.abi,
       signer
@@ -218,77 +275,254 @@ const getContractRef = async (
   }
 };
 
-const getTokenOfPool = async (
-  tokenType: number,
-  hashString: string,
-  pool: any,
+const updateTokenPools = async (
+  hash: string,
+  gemPools: Array<Pool>,
+  gemPoolsByAddress: any,
   token: any,
-  address: any
-): Promise<any> => {
-  const claimUnlockTime = await pool.contract.claimUnlockTime(hashString);
-  const claimAmount = await pool.contract.claimAmount(hashString);
-  const claimQuantity = await pool.contract.claimQuantity(hashString);
-  const gemQuantity = await token.balanceOf(address, hashString);
-  const claimTokenAmount = await pool.contract.claimTokenAmount(hashString);
-  const stakedToken = await pool.contract.stakedToken(hashString);
-  const tokenId = await pool.contract.tokenId(hashString);
-  const item = {
-    type: tokenType,
-    id: tokenId,
-    hash: hashString,
-    name: pool.name,
-    symbol: pool.symbol,
-    unlockTime: claimUnlockTime,
-    amount: claimAmount,
-    tokenAmount: claimTokenAmount,
-    quantity: claimQuantity,
-    gemQuantity: gemQuantity,
-    token: stakedToken,
-    pool: pool
-  };
-  return item;
+  account: any,
+  claimsList: any,
+  gemsList: any
+): Promise<void> => {
+  if (BigNumber.from(hash).eq(0) || BigNumber.from(hash).eq(1)) {
+    return;
+  }
+  const {type: tokenType, address} = await getTokenPoolInfo(hash, gemPools);
+  if (tokenType === 1 || tokenType === 2) {
+    const gemPool = gemPoolsByAddress[address];
+    updateTokenPool(
+      tokenType,
+      hash,
+      gemPool,
+      token,
+      account,
+      claimsList,
+      gemsList
+    );
+  } else if (typeof tokenType !== 'undefined') {
+    console.log('no pool address for', hash);
+  }
 };
 
-const getPoolDetails = async (p: any): Promise<any> => {
+const updateTokenPool = async (
+  tokenType: number,
+  hash: string,
+  tokenPool: Pool,
+  token: Token,
+  account: any,
+  claimsList: any,
+  gemsList: any
+) => {
+  // if (symbol === 'MCU' && !this.loadSecret) {
+  //   return;
+  // }
+  const item: Token = await getTokenDetails(
+    tokenPool,
+    tokenType,
+    hash,
+    token,
+    account
+  );
+
+  if (tokenType === 1) {
+    if (item.gemQuantity) {
+      claimsList.push(item);
+      claimsList.sort(sortClaimsList);
+    }
+  } else if (tokenType === 2) {
+    gemsList.push(item);
+    gemsList.sort(sortGemsList);
+  }
+};
+
+const getTokenDetails = async (
+  tokenPool: any,
+  tokenType: number,
+  hash: string,
+  token: any,
+  account: any
+): Promise<Token> => {
+  // const version = 2;
+  const valid = tokenType !== 0 && tokenType !== 2;
+  const [
+    claimUnlockTime,
+    claimAmount,
+    claimQuantity,
+    claimTokenAmount,
+    stakedToken,
+    tokenId,
+    gemQuantity
+  ]: [
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    string,
+    BigNumber,
+    BigNumber
+  ] = await Promise.all([
+    valid ? tokenPool.contract.claimUnlockTime(hash) : BigNumber.from(0),
+    valid ? tokenPool.contract.claimAmount(hash) : BigNumber.from(0),
+    valid ? tokenPool.contract.claimQuantity(hash) : BigNumber.from(0),
+    valid ? tokenPool.contract.claimTokenAmount(hash) : BigNumber.from(0),
+    tokenPool.contract.stakedToken(hash),
+    tokenPool.contract.tokenId(hash),
+    token.balanceOf(account, hash)
+  ]);
+
+  const tokenDetails: Token = {
+    type: tokenType,
+    id: tokenId.toNumber(),
+    hash: hash,
+    name: tokenPool.name,
+    symbol: tokenPool.symbol,
+    unlockTime: claimUnlockTime.toNumber(),
+    amount: claimAmount,
+    tokenAmount: claimTokenAmount.toNumber(),
+    quantity: claimQuantity.toNumber(),
+    gemQuantity: gemQuantity.toNumber(),
+    token: stakedToken,
+    pool: tokenPool
+  };
+
+  return tokenDetails;
+};
+
+// const getPoolDetails = async (p: any): Promise<any> => {
+//   if (!p.contract) {
+//     return;
+//   }
+//   if (!p.name) p.name = await p.contract.name();
+//   if (!p.symbol) p.symbol = await p.contract.symbol();
+//   p.ethPrice = await p.contract.ethPrice();
+//   if (!p.minTime) p.minTime = await p.contract.minTime();
+//   if (!p.maxTime) p.maxTime = await p.contract.maxTime();
+//   if (!p.difficultyStep) p.difficultyStep = await p.contract.difficultyStep();
+//   if (!p.claimedCount) {
+//     p.claimedCount = await p.contract.claimedCount();
+//   }
+//   if (!p.mintedCount) {
+//     p.mintedCount = await p.contract.mintedCount();
+//   }
+//   p.totalStaked = await p.contract.totalStakedEth();
+//   return p;
+// };
+
+const getTokenPoolInfo = async (hash: string, gemPools: any): Promise<any> => {
+  // const key = `tknpool-${hash}`;
+  let tokenInfo = {};
+  // const cached: string | null = localStorage.getItem(key);
+  // if (cached) {
+  // tokenInfo = JSON.parse(cached);
+  // } else {
+  console.log({hash, gemPools});
+  for (let i = 0; i < gemPools.length; i++) {
+    const type = await gemPools[i].contract.tokenType(hash);
+    if (type !== 0) {
+      tokenInfo = {
+        v: 1, // version in case we need to update
+        type,
+        address: gemPools[i].address,
+        symbol: gemPools[i].symbol
+      };
+      break;
+    }
+  }
+  console.log({tokenInfo});
+  // cache it
+  // localStorage.setItem(key, JSON.stringify(tokenInfo));
+  // }
+  return tokenInfo;
+};
+
+const getPoolDetails = async (
+  p: any,
+  tokenFactory: any,
+  signer: any
+): Promise<any> => {
   if (!p.contract) {
     return;
   }
-  if (!p.name) p.name = await p.contract.name();
-  if (!p.symbol) p.symbol = await p.contract.symbol();
-  p.ethPrice = await p.contract.ethPrice();
-  if (!p.minTime) p.minTime = await p.contract.minTime();
-  if (!p.maxTime) p.maxTime = await p.contract.maxTime();
-  if (!p.difficultyStep) p.difficultyStep = await p.contract.difficultyStep();
-  if (!p.claimedCount) {
-    p.claimedCount = await p.contract.claimedCount();
-  }
-  if (!p.mintedCount) {
-    p.mintedCount = await p.contract.mintedCount();
-  }
-  p.totalStaked = await p.contract.totalStakedEth();
-  return p;
+  let {
+    // eslint-disable-next-line prefer-const
+    contract,
+    symbol,
+    name,
+    ethPrice,
+    minTime,
+    maxTime,
+    difficultyStep,
+    visible,
+    category,
+    claimedCount,
+    mintedCount,
+    totalEthStaked
+  } = p;
+
+  [
+    symbol,
+    name,
+    ethPrice,
+    minTime,
+    maxTime,
+    difficultyStep,
+    visible,
+    category,
+    claimedCount,
+    mintedCount,
+    totalEthStaked
+  ] = await Promise.all([
+    symbol ? Promise.resolve(symbol) : contract.symbol(),
+    name ? Promise.resolve(name) : contract.name(),
+    contract.ethPrice(), // always get the ethPrice
+    minTime ? Promise.resolve(minTime) : contract.minTime(),
+    maxTime ? Promise.resolve(maxTime) : contract.maxTime(),
+    difficultyStep
+      ? Promise.resolve(difficultyStep)
+      : contract.difficultyStep(),
+    visible ? Promise.resolve(visible) : contract.visible(),
+    category ? Promise.resolve(category) : contract.category(),
+    claimedCount ? Promise.resolve(claimedCount) : contract.claimedCount(),
+    mintedCount ? Promise.resolve(mintedCount) : contract.mintedCount(),
+    contract.totalStakedEth()
+  ]);
+
+  return {
+    ...p,
+    symbol,
+    name,
+    ethPrice,
+    minTime,
+    maxTime,
+    difficultyStep,
+    visible,
+    category,
+    claimedCount,
+    mintedCount,
+    totalEthStaked
+  };
 };
 
 // utilities
 
 // parseEther(n: any) {
-//   const pe = ethers.utils.parseEther(n ? n.toString() : '0');
+//   const pe = utils.parseEther(n ? n.toString() : '0');
 //   return pe ? pe.toString() : '0';
 // }
 
-export const parseEther = (n: any) => {
-  const pe = ethers.utils.parseEther(n ? n.toString() : '0');
+export const parseEther = (n: string): string => {
+  const pe = utils.parseEther(n ? n.toString() : '0');
   return pe ? pe.toString() : '0';
 };
 
-export const formatEther = (n: any) => {
+export const formatEther = (n: string): string => {
   if (!n) return '0';
-  const pe = ethers.utils.formatEther(n);
+  const pe = utils.formatEther(n);
   return pe ? pe.toString() : '0';
 };
 
-export const bigNumberToStr = (eth: ethers.BigNumber, precision = 4): string =>
+export const bigNumberToStr = (eth: BigNumber, precision = 4): string =>
   parseFloat(formatEther(eth)).toFixed(precision);
 
-export const dateFromBigNumber = (bn: ethers.BigNumber): Date =>
+export const dateFromBigNumber = (bn: BigNumber): Date =>
   new Date(bn.toNumber() * 1000);

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import {formatEther} from 'lib/blockchain';
 import produce from 'immer';
+import {BigNumber} from '@ethersproject/bignumber';
+import {parseEther} from 'lib/blockchain';
 
 const reducer = produce((draft, {type, payload}) => {
   console.log({type, payload});
@@ -67,6 +69,17 @@ function usePoolForm(pool) {
 
   const handleSubmit = (event) => {
     event?.preventDefault();
+    const {values} = formState;
+    const timeframe = BigNumber.from(values.duration * 86400);
+    const count = BigNumber.from(values.gems);
+    const ethPrice = BigNumber.from(parseEther(values.price));
+    const myPrice = ethPrice.mul(pool.minTime).div(timeframe);
+    if (timeframe.gt(pool.maxTime) || myPrice.gt(ethPrice)) {
+      return;
+    }
+    return pool.contract.createClaims(timeframe, count, {
+      value: ethPrice.mul(count).toHexString()
+    });
   };
 
   const handleDurationChange = (event) => {
