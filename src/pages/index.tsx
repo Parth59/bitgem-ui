@@ -12,7 +12,7 @@ function Home(): JSX.Element {
         <span className="mx-2 text-shadow-sm text-green-500">
           To mine them, stake Ethereum or any ERC20 token to receive a claim.
         </span>
-        <span className="text-shadow-md">
+        <span className="text-shadow-sm">
           Redeem your claim after the maturity date for a gem and your tokens
           back. Or anytime before maturity to get your tokens back. Each gem
           found raises the price to stake the next gem. Redeem your claim after

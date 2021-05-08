@@ -8,21 +8,26 @@ function Claims(): JSX.Element {
   const {isSuccess, data} = useBlockchain();
 
   const claimList = isSuccess ? data.claimList : [];
+  console.dir(data);
 
   return (
     <main className="flex-1 px-4">
       <SectionHeader title="My Claims" />
       <div className="flex flex-col gap-6">
-        {claimList.map(({hash, amount, name, symbol, quantity, unlockTime}) => (
-          <Claim
-            key={hash}
-            amount={parseFloat(formatEther(amount)).toFixed(4)}
-            name={name}
-            quantity={quantity.toString()}
-            unlockTime={unlockTime}
-            symbol={symbol}
-          />
-        ))}
+        {claimList.map(
+          ({hash, pool, amount, name, symbol, quantity, unlockTime}) => (
+            <Claim
+              key={hash}
+              hash={hash}
+              pool={pool}
+              amount={parseFloat(formatEther(amount)).toFixed(4)}
+              name={name}
+              quantity={quantity.toString()}
+              unlockTime={unlockTime}
+              symbol={symbol}
+            />
+          )
+        )}
       </div>
       <StatusPanel />
     </main>

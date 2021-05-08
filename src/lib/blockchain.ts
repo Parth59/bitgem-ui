@@ -1,4 +1,4 @@
-import {BigNumber, Contract, providers, utils} from 'ethers';
+import {BigNumber, Contract, utils} from 'ethers';
 
 import {NFTGemGovernor} from '../../types/NFTGemGovernor';
 import {NFTGemMultiToken} from '../../types/NFTGemMultiToken';
@@ -115,22 +115,24 @@ export const emptyBlockchainData = {
   pepe: null
 };
 
+// TODO: type
 export const getBlockchainData = async (
   chainId: number | undefined,
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   library: any,
   account: null | string
 ): Promise<any> => {
   if (chainId === undefined || library === undefined)
     throw new Error('Not connected');
 
-  let mockMode = false;
+  // let mockMode = false;
   let contractData;
   const claimList = [];
   const gemList = [];
   const gemPools = [];
   const gemPoolsByAddress: {[address: string]: Pool} = {};
-  const symbolsBySymbol: {[symbol: string]: boolean} = {};
-  const symbolsList: string[] = [];
+  // const symbolsBySymbol: {[symbol: string]: boolean} = {};
+  // const symbolsList: string[] = [];
 
   const totals = {
     claims: 0,
@@ -158,7 +160,7 @@ export const getBlockchainData = async (
     queryHelperContract = 'PancakeSwapQueryHelper';
   } else {
     queryHelperContract = 'MockQueryHelper';
-    mockMode = true;
+    // mockMode = true;
   }
 
   const [
@@ -181,6 +183,8 @@ export const getBlockchainData = async (
     getContractRef(contractData, 'NFTGemGovernor', signer)
   ]);
 
+  console.dir(queryHelper, tokenFactory);
+
   const allPoolsCount = (await factory.allNFTGemPoolsLength()).toNumber();
 
   // Build the list of gem pools
@@ -201,11 +205,11 @@ export const getBlockchainData = async (
 
         const pool: any = {
           address: address.toLowerCase(),
-          contract: new Contract(address, iabis.NFTGemPool, signer)
+          contract: new Contract(address, abi, signer)
         };
 
         // get pool details
-        Object.assign(pool, await getPoolDetails(pool, tokenFactory, signer));
+        Object.assign(pool, await getPoolDetails(pool)); //, tokenFactory, signer));
 
         // Add this pool's numbers to our totals
         totals.claims += pool.claimedCount.toNumber();
@@ -388,33 +392,8 @@ const getTokenDetails = async (
   return tokenDetails;
 };
 
-// const getPoolDetails = async (p: any): Promise<any> => {
-//   if (!p.contract) {
-//     return;
-//   }
-//   if (!p.name) p.name = await p.contract.name();
-//   if (!p.symbol) p.symbol = await p.contract.symbol();
-//   p.ethPrice = await p.contract.ethPrice();
-//   if (!p.minTime) p.minTime = await p.contract.minTime();
-//   if (!p.maxTime) p.maxTime = await p.contract.maxTime();
-//   if (!p.difficultyStep) p.difficultyStep = await p.contract.difficultyStep();
-//   if (!p.claimedCount) {
-//     p.claimedCount = await p.contract.claimedCount();
-//   }
-//   if (!p.mintedCount) {
-//     p.mintedCount = await p.contract.mintedCount();
-//   }
-//   p.totalStaked = await p.contract.totalStakedEth();
-//   return p;
-// };
-
 const getTokenPoolInfo = async (hash: string, gemPools: any): Promise<any> => {
-  // const key = `tknpool-${hash}`;
   let tokenInfo = {};
-  // const cached: string | null = localStorage.getItem(key);
-  // if (cached) {
-  // tokenInfo = JSON.parse(cached);
-  // } else {
   console.log({hash, gemPools});
   for (let i = 0; i < gemPools.length; i++) {
     const type = await gemPools[i].contract.tokenType(hash);
@@ -429,16 +408,13 @@ const getTokenPoolInfo = async (hash: string, gemPools: any): Promise<any> => {
     }
   }
   console.log({tokenInfo});
-  // cache it
-  // localStorage.setItem(key, JSON.stringify(tokenInfo));
-  // }
   return tokenInfo;
 };
 
 const getPoolDetails = async (
-  p: any,
-  tokenFactory: any,
-  signer: any
+  p: any
+  // tokenFactory: any,
+  // signer: any
 ): Promise<any> => {
   if (!p.contract) {
     return;
@@ -505,11 +481,6 @@ const getPoolDetails = async (
 
 // utilities
 
-// parseEther(n: any) {
-//   const pe = utils.parseEther(n ? n.toString() : '0');
-//   return pe ? pe.toString() : '0';
-// }
-
 export const parseEther = (n: string): string => {
   const pe = utils.parseEther(n ? n.toString() : '0');
   return pe ? pe.toString() : '0';
@@ -520,9 +491,6 @@ export const formatEther = (n: string): string => {
   const pe = utils.formatEther(n);
   return pe ? pe.toString() : '0';
 };
-
-export const bigNumberToStr = (eth: BigNumber, precision = 4): string =>
-  parseFloat(formatEther(eth)).toFixed(precision);
 
 export const dateFromBigNumber = (bn: BigNumber): Date =>
   new Date(bn.toNumber() * 1000);

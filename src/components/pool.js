@@ -32,7 +32,7 @@ function Pool({address}) {
 
   return (
     <div className="sm:flex justify-between rounded-lg bg-blue-900">
-      <div className="flex px-3 py-4 sm:px-5 sm:py-3 text-green-500 text-shadow-md">
+      <div className="flex sm:flex-1 px-3 py-4 sm:px-5 sm:py-3 text-green-500 text-shadow-sm">
         <img
           alt={name}
           className="h-20 sm:h-24 md:h-36 self-center"
@@ -40,7 +40,7 @@ function Pool({address}) {
         />
         <div className="flex flex-row w-full  sm:flex-col items-start pl-4 lg:pl-6 justify-between sm:justify-center py-1 sm:py-2">
           <div className="flex-1 sm:flex-none">
-            <div className="text-2xl sm:text-3xl sm:pb-4 text-yellow-300">
+            <div className="text-2xl md:text-3xl sm:pb-4 text-yellow-300">
               {name}
             </div>
             <div className="text-blue-300 sm:hidden">
@@ -56,7 +56,7 @@ function Pool({address}) {
         </div>
       </div>
 
-      <form className="sm:w-1/2" onSubmit={handleSubmit}>
+      <form className="sm:flex-1" onSubmit={handleSubmit}>
         <div className="text-blue-300 hidden sm:block px-4 pt-4">
           using {networkCoins[chainId]} @ 1.0000/{networkCoins[chainId]}
         </div>
@@ -109,14 +109,14 @@ function Pool({address}) {
           </span>
         </div>
         {isErrorShowing ? (
-          <div className="px-1 py-2  text-base text-center text-shadow-md font-bold text-red-500">
+          <div className="px-1 py-2  text-base text-center text-shadow-sm font-bold text-red-500">
             {errors.map((error, i) => (
               <div key={i}>{error}</div>
             ))}
           </div>
         ) : null}
         {enabled ? (
-          <div className="px-1 py-2  text-base text-center text-shadow-md font-bold text-green-600">
+          <div className="px-1 py-2  text-base text-center text-shadow-sm font-bold text-green-600">
             {formValues.price * formValues.gems} {networkCoins[chainId]} will be
             staked for {formValues.duration} day
             {formValues.duration > 1 ? 's' : ''}

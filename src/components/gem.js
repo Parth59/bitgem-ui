@@ -9,13 +9,13 @@ function Gem({gemQuantity, name, symbol, id, hash}) {
         <img alt={name} className="h-16" src={`/img/${gemPics(symbol)}`} />
       </div>
       <div className="sm:flex sm:flex-row flex-grow text-right sm:text-left pl-4 sm:pl-0">
-        <div className="sm:flex-grow text-yellow-400 font-bold text-shadow-md">
+        <div className="sm:flex-grow text-yellow-400 font-bold text-shadow-sm">
           {name}
         </div>
-        <div className="flex-grow text-red-600 text-shadow-sm">
+        <div className="flex-grow text-red-600 text-shadow-sm sm:px-3">
           x{gemQuantity.toString()}
         </div>
-        <div className="text-green-500 text-shadow-md">
+        <div className="text-green-500 text-shadow-sm">
           {hash.substring(0, 5)}...{hash.substring(hash.length - 6)}
         </div>
       </div>
