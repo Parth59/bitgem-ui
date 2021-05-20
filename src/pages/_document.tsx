@@ -6,59 +6,51 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head>
           <link
-            rel="preload"
+            rel="prefetch"
             href="/fonts/Open24DisplaySt.woff2"
             as="font"
-            type="font/woff2"
             crossOrigin="anonymous"
           />
           <link
-            rel="preload"
+            rel="prefetch"
             href="/fonts/Open24DisplaySt.woff"
             as="font"
-            type="font/woff"
             crossOrigin="anonymous"
           />
           <link
-            rel="preload"
+            rel="prefetch"
             href="/fonts/Pixelated.woff"
             as="font"
-            type="font/woff"
             crossOrigin="anonymous"
           />
           <link
-            rel="preload"
+            rel="prefetch"
             href="/fonts/Pixelated.eot"
             as="font"
-            type="font/eot"
             crossOrigin="anonymous"
           />
           <link
-            rel="preload"
+            rel="prefetch"
             href="/fonts/Pixelated.svg"
-            as="font"
-            type="font/svg"
+            as="image"
             crossOrigin="anonymous"
           />
           <link
-            rel="preload"
+            rel="prefetch"
             href="/fonts/PressStart2P-Regular.woff2"
             as="font"
-            type="font/woff"
             crossOrigin="anonymous"
           />
           <link
-            rel="preload"
+            rel="prefetch"
             href="/fonts/PressStart2P-Regular.woff"
             as="font"
-            type="font/eot"
             crossOrigin="anonymous"
           />
           <link
-            rel="preload"
+            rel="prefetch"
             href="/fonts/PressStart2P-Regular.svg"
-            as="font"
-            type="font/svg"
+            as="image"
             crossOrigin="anonymous"
           />
         </Head>

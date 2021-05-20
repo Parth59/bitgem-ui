@@ -11,11 +11,13 @@ import {BigNumber} from '@ethersproject/bignumber';
 import {useQuery} from 'react-query';
 import {usePools} from 'hooks/use-pools';
 import {useTokens} from 'hooks/use-tokens';
+import {useToast} from './toast-context';
 
 function Header(): JSX.Element {
   const router = useRouter();
   const [isMenuOpen, toggleMenu, setMenuState] = useToggle(false);
   const {chainId, account} = useWeb3React();
+  const {add} = useToast();
   const {contracts} = useBlockchain();
   const {data: governanceTokenBalance} = useQuery<BigNumber, Error>(
     'balance',
@@ -25,11 +27,27 @@ function Header(): JSX.Element {
   const {data: pools} = usePools();
   const {data: tokens} = useTokens();
 
+  React.useEffect(() => {
+    if (contracts.governor) {
+      const governor = contracts.governor;
+      const listener = (receiver: string) => {
+        if (receiver === account) {
+          add('You just received a governance token!');
+        }
+      };
+      governor.on('GovernanceTokenIssued', listener);
+      return () => {
+        governor.off('GovernanceTokenIssued', listener);
+      };
+    }
+  }, [account, add, contracts.governor]);
+
   // closes the menu when user picks a route on mobile
   React.useEffect(() => {
     setMenuState(false);
   }, [router.pathname, setMenuState]);
 
+  // derive state for balances and totals.
   const balance = governanceTokenBalance?.toString() ?? '0';
   let totals = {claims: 0, minted: 0, staked: BigNumber.from(0)};
   let claimCount = 0;
