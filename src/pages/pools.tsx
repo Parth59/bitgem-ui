@@ -15,7 +15,7 @@ function Pools(): JSX.Element {
       <div className="flex flex-col gap-6">
         <SectionHeader title="BitGem Pools" />
         {isLoading
-          ? [...new Array(5)].map((x, i) => (
+          ? [...new Array(5)].map((_, i) => (
               <Skeleton key={i} className="bg-blue-900 h-80 md:h-72" />
             ))
           : pools.map((pool) => <Pool key={pool.address} pool={pool} />)}

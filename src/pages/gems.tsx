@@ -16,7 +16,7 @@ function Gems(): JSX.Element {
       <SectionHeader title="My Bitgems" />
       <div className="flex flex-col gap-6">
         {isLoading
-          ? [...new Array(5)].map((x, i) => (
+          ? [...new Array(5)].map((_, i) => (
               <Skeleton key={i} className="bg-blue-900 md:h-24 h-40" />
             ))
           : tokens
