@@ -56,30 +56,69 @@ const _abi = [
     type: "event",
   },
   {
+    inputs: [],
+    name: "getReserves",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getTokenAddress",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getTokenId",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "string",
-        name: "tokenSymbol",
+        name: "",
         type: "string",
       },
       {
         internalType: "string",
-        name: "tokenName",
+        name: "",
         type: "string",
       },
       {
         internalType: "address",
-        name: "poolAddress",
+        name: "",
         type: "address",
       },
       {
         internalType: "address",
-        name: "tokenAddress",
+        name: "",
         type: "address",
       },
       {
         internalType: "uint8",
-        name: "decimals",
+        name: "",
         type: "uint8",
       },
     ],

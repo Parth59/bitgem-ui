@@ -27,7 +27,11 @@ interface NFTGemWrappedERC20GovernanceInterface extends ethers.utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
+    "getReserves()": FunctionFragment;
+    "getTokenAddress()": FunctionFragment;
+    "getTokenId()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
+    "initialize(string,string,address,address,uint8)": FunctionFragment;
     "name()": FunctionFragment;
     "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
@@ -55,8 +59,24 @@ interface NFTGemWrappedERC20GovernanceInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "getReserves",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getTokenAddress",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getTokenId",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values: [string, string, string, string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
@@ -99,9 +119,19 @@ interface NFTGemWrappedERC20GovernanceInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getReserves",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getTokenAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getTokenId", data: BytesLike): Result;
+  decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "onERC1155BatchReceived",
@@ -131,10 +161,14 @@ interface NFTGemWrappedERC20GovernanceInterface extends ethers.utils.Interface {
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
+    "Unwrap(address,uint256)": EventFragment;
+    "Wrap(address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Unwrap"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Wrap"): EventFragment;
 }
 
 export class NFTGemWrappedERC20Governance extends Contract {
@@ -198,6 +232,18 @@ export class NFTGemWrappedERC20Governance extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    getReserves(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "getReserves()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getTokenAddress(overrides?: CallOverrides): Promise<[string]>;
+
+    "getTokenAddress()"(overrides?: CallOverrides): Promise<[string]>;
+
+    getTokenId(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "getTokenId()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -207,6 +253,24 @@ export class NFTGemWrappedERC20Governance extends Contract {
     "increaseAllowance(address,uint256)"(
       spender: string,
       addedValue: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    initialize(
+      arg0: string,
+      arg1: string,
+      arg2: string,
+      arg3: string,
+      arg4: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "initialize(string,string,address,address,uint8)"(
+      arg0: string,
+      arg1: string,
+      arg2: string,
+      arg3: string,
+      arg4: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -362,6 +426,18 @@ export class NFTGemWrappedERC20Governance extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  getReserves(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "getReserves()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+  getTokenAddress(overrides?: CallOverrides): Promise<string>;
+
+  "getTokenAddress()"(overrides?: CallOverrides): Promise<string>;
+
+  getTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "getTokenId()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
@@ -371,6 +447,24 @@ export class NFTGemWrappedERC20Governance extends Contract {
   "increaseAllowance(address,uint256)"(
     spender: string,
     addedValue: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  initialize(
+    arg0: string,
+    arg1: string,
+    arg2: string,
+    arg3: string,
+    arg4: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "initialize(string,string,address,address,uint8)"(
+    arg0: string,
+    arg1: string,
+    arg2: string,
+    arg3: string,
+    arg4: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -526,6 +620,18 @@ export class NFTGemWrappedERC20Governance extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    getReserves(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getReserves()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getTokenAddress(overrides?: CallOverrides): Promise<string>;
+
+    "getTokenAddress()"(overrides?: CallOverrides): Promise<string>;
+
+    getTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getTokenId()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -537,6 +643,24 @@ export class NFTGemWrappedERC20Governance extends Contract {
       addedValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    initialize(
+      arg0: string,
+      arg1: string,
+      arg2: string,
+      arg3: string,
+      arg4: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "initialize(string,string,address,address,uint8)"(
+      arg0: string,
+      arg1: string,
+      arg2: string,
+      arg3: string,
+      arg4: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -645,6 +769,10 @@ export class NFTGemWrappedERC20Governance extends Contract {
     ): EventFilter;
 
     Transfer(from: string | null, to: string | null, value: null): EventFilter;
+
+    Unwrap(account: string | null, quantity: null): EventFilter;
+
+    Wrap(account: string | null, quantity: null): EventFilter;
   };
 
   estimateGas: {
@@ -695,6 +823,18 @@ export class NFTGemWrappedERC20Governance extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    getReserves(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getReserves()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getTokenAddress(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getTokenAddress()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getTokenId()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -704,6 +844,24 @@ export class NFTGemWrappedERC20Governance extends Contract {
     "increaseAllowance(address,uint256)"(
       spender: string,
       addedValue: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    initialize(
+      arg0: string,
+      arg1: string,
+      arg2: string,
+      arg3: string,
+      arg4: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "initialize(string,string,address,address,uint8)"(
+      arg0: string,
+      arg1: string,
+      arg2: string,
+      arg3: string,
+      arg4: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -857,6 +1015,20 @@ export class NFTGemWrappedERC20Governance extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
+    getReserves(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getReserves()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getTokenAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getTokenAddress()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getTokenId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getTokenId()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -866,6 +1038,24 @@ export class NFTGemWrappedERC20Governance extends Contract {
     "increaseAllowance(address,uint256)"(
       spender: string,
       addedValue: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      arg0: string,
+      arg1: string,
+      arg2: string,
+      arg3: string,
+      arg4: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "initialize(string,string,address,address,uint8)"(
+      arg0: string,
+      arg1: string,
+      arg2: string,
+      arg3: string,
+      arg4: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

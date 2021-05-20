@@ -23,7 +23,6 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface INFTGemPoolInterface extends ethers.utils.Interface {
   functions: {
-    "category()": FunctionFragment;
     "collectClaim(uint256)": FunctionFragment;
     "createClaim(uint256)": FunctionFragment;
     "createClaims(uint256,uint256)": FunctionFragment;
@@ -31,19 +30,12 @@ interface INFTGemPoolInterface extends ethers.utils.Interface {
     "createERC20Claims(address,uint256,uint256)": FunctionFragment;
     "initialize(string,string,uint256,uint256,uint256,uint256,uint256,address)": FunctionFragment;
     "mintGenesisGems(address,address)": FunctionFragment;
-    "rescue(address,uint256)": FunctionFragment;
-    "setCategory(uint256)": FunctionFragment;
     "setFeeTracker(address)": FunctionFragment;
     "setGovernor(address)": FunctionFragment;
     "setMultiToken(address)": FunctionFragment;
     "setSwapHelper(address)": FunctionFragment;
-    "setValidateErc20(bool)": FunctionFragment;
-    "setVisible(bool)": FunctionFragment;
-    "validateErc20()": FunctionFragment;
-    "visible()": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "category", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "collectClaim",
     values: [BigNumberish]
@@ -82,14 +74,6 @@ interface INFTGemPoolInterface extends ethers.utils.Interface {
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "rescue",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setCategory",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "setFeeTracker",
     values: [string]
   ): string;
@@ -102,18 +86,7 @@ interface INFTGemPoolInterface extends ethers.utils.Interface {
     functionFragment: "setSwapHelper",
     values: [string]
   ): string;
-  encodeFunctionData(
-    functionFragment: "setValidateErc20",
-    values: [boolean]
-  ): string;
-  encodeFunctionData(functionFragment: "setVisible", values: [boolean]): string;
-  encodeFunctionData(
-    functionFragment: "validateErc20",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "visible", values?: undefined): string;
 
-  decodeFunctionResult(functionFragment: "category", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "collectClaim",
     data: BytesLike
@@ -139,11 +112,6 @@ interface INFTGemPoolInterface extends ethers.utils.Interface {
     functionFragment: "mintGenesisGems",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "rescue", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setCategory",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "setFeeTracker",
     data: BytesLike
@@ -160,16 +128,6 @@ interface INFTGemPoolInterface extends ethers.utils.Interface {
     functionFragment: "setSwapHelper",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "setValidateErc20",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "setVisible", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "validateErc20",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "visible", data: BytesLike): Result;
 
   events: {
     "NFTGemClaimCreated(address,address,uint256,uint256,uint256,uint256)": EventFragment;
@@ -200,10 +158,6 @@ export class INFTGemPool extends Contract {
   interface: INFTGemPoolInterface;
 
   functions: {
-    category(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "category()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     collectClaim(
       claimHash: BigNumberish,
       overrides?: Overrides
@@ -298,28 +252,6 @@ export class INFTGemPool extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    rescue(
-      erc20token: string,
-      tokenAmount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "rescue(address,uint256)"(
-      erc20token: string,
-      tokenAmount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    setCategory(
-      category: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setCategory(uint256)"(
-      category: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
     setFeeTracker(
       addr: string,
       overrides?: Overrides
@@ -359,39 +291,7 @@ export class INFTGemPool extends Contract {
       addr: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
-
-    setValidateErc20(
-      arg0: boolean,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setValidateErc20(bool)"(
-      arg0: boolean,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    setVisible(
-      visible: boolean,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setVisible(bool)"(
-      visible: boolean,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    validateErc20(overrides?: CallOverrides): Promise<[boolean]>;
-
-    "validateErc20()"(overrides?: CallOverrides): Promise<[boolean]>;
-
-    visible(overrides?: CallOverrides): Promise<[boolean]>;
-
-    "visible()"(overrides?: CallOverrides): Promise<[boolean]>;
   };
-
-  category(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "category()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   collectClaim(
     claimHash: BigNumberish,
@@ -487,28 +387,6 @@ export class INFTGemPool extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  rescue(
-    erc20token: string,
-    tokenAmount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "rescue(address,uint256)"(
-    erc20token: string,
-    tokenAmount: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  setCategory(
-    category: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setCategory(uint256)"(
-    category: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
   setFeeTracker(
     addr: string,
     overrides?: Overrides
@@ -549,39 +427,7 @@ export class INFTGemPool extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  setValidateErc20(
-    arg0: boolean,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setValidateErc20(bool)"(
-    arg0: boolean,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  setVisible(
-    visible: boolean,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setVisible(bool)"(
-    visible: boolean,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  validateErc20(overrides?: CallOverrides): Promise<boolean>;
-
-  "validateErc20()"(overrides?: CallOverrides): Promise<boolean>;
-
-  visible(overrides?: CallOverrides): Promise<boolean>;
-
-  "visible()"(overrides?: CallOverrides): Promise<boolean>;
-
   callStatic: {
-    category(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "category()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     collectClaim(
       claimHash: BigNumberish,
       overrides?: CallOverrides
@@ -676,28 +522,6 @@ export class INFTGemPool extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    rescue(
-      erc20token: string,
-      tokenAmount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "rescue(address,uint256)"(
-      erc20token: string,
-      tokenAmount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setCategory(
-      category: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "setCategory(uint256)"(
-      category: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     setFeeTracker(addr: string, overrides?: CallOverrides): Promise<void>;
 
     "setFeeTracker(address)"(
@@ -725,28 +549,6 @@ export class INFTGemPool extends Contract {
       addr: string,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    setValidateErc20(arg0: boolean, overrides?: CallOverrides): Promise<void>;
-
-    "setValidateErc20(bool)"(
-      arg0: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setVisible(visible: boolean, overrides?: CallOverrides): Promise<void>;
-
-    "setVisible(bool)"(
-      visible: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    validateErc20(overrides?: CallOverrides): Promise<boolean>;
-
-    "validateErc20()"(overrides?: CallOverrides): Promise<boolean>;
-
-    visible(overrides?: CallOverrides): Promise<boolean>;
-
-    "visible()"(overrides?: CallOverrides): Promise<boolean>;
   };
 
   filters: {
@@ -797,10 +599,6 @@ export class INFTGemPool extends Contract {
   };
 
   estimateGas: {
-    category(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "category()"(overrides?: CallOverrides): Promise<BigNumber>;
-
     collectClaim(
       claimHash: BigNumberish,
       overrides?: Overrides
@@ -892,28 +690,6 @@ export class INFTGemPool extends Contract {
     "mintGenesisGems(address,address)"(
       creator: string,
       funder: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    rescue(
-      erc20token: string,
-      tokenAmount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "rescue(address,uint256)"(
-      erc20token: string,
-      tokenAmount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    setCategory(
-      category: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "setCategory(uint256)"(
-      category: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -944,35 +720,9 @@ export class INFTGemPool extends Contract {
       addr: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
-
-    setValidateErc20(arg0: boolean, overrides?: Overrides): Promise<BigNumber>;
-
-    "setValidateErc20(bool)"(
-      arg0: boolean,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    setVisible(visible: boolean, overrides?: Overrides): Promise<BigNumber>;
-
-    "setVisible(bool)"(
-      visible: boolean,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    validateErc20(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "validateErc20()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    visible(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "visible()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    category(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "category()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     collectClaim(
       claimHash: BigNumberish,
       overrides?: Overrides
@@ -1064,28 +814,6 @@ export class INFTGemPool extends Contract {
     "mintGenesisGems(address,address)"(
       creator: string,
       funder: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    rescue(
-      erc20token: string,
-      tokenAmount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "rescue(address,uint256)"(
-      erc20token: string,
-      tokenAmount: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    setCategory(
-      category: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setCategory(uint256)"(
-      category: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -1128,33 +856,5 @@ export class INFTGemPool extends Contract {
       addr: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
-
-    setValidateErc20(
-      arg0: boolean,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setValidateErc20(bool)"(
-      arg0: boolean,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    setVisible(
-      visible: boolean,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setVisible(bool)"(
-      visible: boolean,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    validateErc20(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "validateErc20()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    visible(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "visible()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

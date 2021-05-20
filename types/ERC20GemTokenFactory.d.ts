@@ -28,6 +28,7 @@ interface ERC20GemTokenFactoryInterface extends ethers.utils.Interface {
     "createItem(string,string,address,address,uint8)": FunctionFragment;
     "getItem(uint256)": FunctionFragment;
     "isController(address)": FunctionFragment;
+    "items()": FunctionFragment;
     "relinquishControl()": FunctionFragment;
   };
 
@@ -55,6 +56,7 @@ interface ERC20GemTokenFactoryInterface extends ethers.utils.Interface {
     functionFragment: "isController",
     values: [string]
   ): string;
+  encodeFunctionData(functionFragment: "items", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "relinquishControl",
     values?: undefined
@@ -75,6 +77,7 @@ interface ERC20GemTokenFactoryInterface extends ethers.utils.Interface {
     functionFragment: "isController",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "items", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "relinquishControl",
     data: BytesLike
@@ -167,6 +170,10 @@ export class ERC20GemTokenFactory extends Contract {
       overrides?: CallOverrides
     ): Promise<[boolean] & { allowed: boolean }>;
 
+    items(overrides?: CallOverrides): Promise<[string[]]>;
+
+    "items()"(overrides?: CallOverrides): Promise<[string[]]>;
+
     relinquishControl(overrides?: CallOverrides): Promise<[void]>;
 
     "relinquishControl()"(overrides?: CallOverrides): Promise<[void]>;
@@ -228,6 +235,10 @@ export class ERC20GemTokenFactory extends Contract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  items(overrides?: CallOverrides): Promise<string[]>;
+
+  "items()"(overrides?: CallOverrides): Promise<string[]>;
+
   relinquishControl(overrides?: CallOverrides): Promise<void>;
 
   "relinquishControl()"(overrides?: CallOverrides): Promise<void>;
@@ -288,6 +299,10 @@ export class ERC20GemTokenFactory extends Contract {
       _address: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    items(overrides?: CallOverrides): Promise<string[]>;
+
+    "items()"(overrides?: CallOverrides): Promise<string[]>;
 
     relinquishControl(overrides?: CallOverrides): Promise<void>;
 
@@ -373,6 +388,10 @@ export class ERC20GemTokenFactory extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    items(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "items()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     relinquishControl(overrides?: CallOverrides): Promise<BigNumber>;
 
     "relinquishControl()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -442,6 +461,10 @@ export class ERC20GemTokenFactory extends Contract {
       _address: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    items(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "items()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     relinquishControl(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

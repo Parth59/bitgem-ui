@@ -5,10 +5,11 @@ import {ExclamationIcon} from '@heroicons/react/outline';
 function ConfirmationModal({
   title,
   text,
-  confirmText,
+  hasCancel = true,
+  confirmText = 'Ok',
   open,
   toggle,
-  onConfirm
+  onConfirm = () => null
 }) {
   const handleConfirm = () => {
     toggle();
@@ -68,23 +69,27 @@ function ConfirmationModal({
                     {title}
                   </Dialog.Title>
                 </div>
-                <div className="pt-4 sm:pt-6 text-green-200">{text}</div>
+                <div className="pt-4 text-center sm:pt-6 text-green-200">
+                  {text}
+                </div>
               </div>
               <div className="flex mt-5 sm:mt-6 gap-1 sm:gap-5 lg:gap-7">
-                <button
-                  type="button"
-                  className="flex -z-10 flex-col flex-1 items-center text-xs mx-3 gap-2 justify-between w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 sm:text-sm text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 "
-                  onClick={toggle}
-                >
-                  Cancel
-                </button>
+                {hasCancel ? (
+                  <button
+                    type="button"
+                    className="flex -z-10 flex-col flex-1 items-center text-xs mx-3 gap-2 justify-between w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 sm:text-sm text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 "
+                    onClick={toggle}
+                  >
+                    Cancel
+                  </button>
+                ) : null}
                 <button
                   type="button"
                   name="walletConnect"
                   className="flex flex-col flex-1 items-center whitespace-nowrap text-xs mx-3 gap-2 justify-between w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 sm:text-sm text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   onClick={handleConfirm}
                 >
-                  {confirmText || 'Ok'}
+                  {confirmText}
                 </button>
               </div>
             </div>

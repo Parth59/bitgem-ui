@@ -23,18 +23,26 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 interface NFTGemPoolFactoryInterface extends ethers.utils.Interface {
   functions: {
     "addController(address)": FunctionFragment;
+    "addCustomNFTGemPool(address,string,string)": FunctionFragment;
     "allNFTGemPools(uint256)": FunctionFragment;
     "allNFTGemPoolsLength()": FunctionFragment;
     "createCustomNFTGemPool(bytes,string,string)": FunctionFragment;
     "createNFTGemPool(string,string,uint256,uint256,uint256,uint256,uint256,address)": FunctionFragment;
     "getNFTGemPool(uint256)": FunctionFragment;
     "isController(address)": FunctionFragment;
+    "nftGemPools()": FunctionFragment;
     "relinquishControl()": FunctionFragment;
+    "removeGemPool(uint256)": FunctionFragment;
+    "removeGemPoolAt(uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "addController",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addCustomNFTGemPool",
+    values: [string, string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "allNFTGemPools",
@@ -70,12 +78,28 @@ interface NFTGemPoolFactoryInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
+    functionFragment: "nftGemPools",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "relinquishControl",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "removeGemPool",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "removeGemPoolAt",
+    values: [BigNumberish]
   ): string;
 
   decodeFunctionResult(
     functionFragment: "addController",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "addCustomNFTGemPool",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -103,7 +127,19 @@ interface NFTGemPoolFactoryInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "nftGemPools",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "relinquishControl",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "removeGemPool",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "removeGemPoolAt",
     data: BytesLike
   ): Result;
 
@@ -141,6 +177,20 @@ export class NFTGemPoolFactory extends Contract {
 
     "addController(address)"(
       _controller: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    addCustomNFTGemPool(
+      poolAddress: string,
+      gemSymbol: string,
+      gemName: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "addCustomNFTGemPool(address,string,string)"(
+      poolAddress: string,
+      gemSymbol: string,
+      gemName: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -216,9 +266,33 @@ export class NFTGemPoolFactory extends Contract {
       overrides?: CallOverrides
     ): Promise<[boolean] & { allowed: boolean }>;
 
+    nftGemPools(overrides?: CallOverrides): Promise<[string[]]>;
+
+    "nftGemPools()"(overrides?: CallOverrides): Promise<[string[]]>;
+
     relinquishControl(overrides?: CallOverrides): Promise<[void]>;
 
     "relinquishControl()"(overrides?: CallOverrides): Promise<[void]>;
+
+    removeGemPool(
+      poolHash: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "removeGemPool(uint256)"(
+      poolHash: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    removeGemPoolAt(
+      ndx: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "removeGemPoolAt(uint256)"(
+      ndx: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
   };
 
   addController(
@@ -228,6 +302,20 @@ export class NFTGemPoolFactory extends Contract {
 
   "addController(address)"(
     _controller: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  addCustomNFTGemPool(
+    poolAddress: string,
+    gemSymbol: string,
+    gemName: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "addCustomNFTGemPool(address,string,string)"(
+    poolAddress: string,
+    gemSymbol: string,
+    gemName: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -297,9 +385,33 @@ export class NFTGemPoolFactory extends Contract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  nftGemPools(overrides?: CallOverrides): Promise<string[]>;
+
+  "nftGemPools()"(overrides?: CallOverrides): Promise<string[]>;
+
   relinquishControl(overrides?: CallOverrides): Promise<void>;
 
   "relinquishControl()"(overrides?: CallOverrides): Promise<void>;
+
+  removeGemPool(
+    poolHash: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "removeGemPool(uint256)"(
+    poolHash: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  removeGemPoolAt(
+    ndx: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "removeGemPoolAt(uint256)"(
+    ndx: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
 
   callStatic: {
     addController(
@@ -311,6 +423,20 @@ export class NFTGemPoolFactory extends Contract {
       _controller: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    addCustomNFTGemPool(
+      poolAddress: string,
+      gemSymbol: string,
+      gemName: string,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    "addCustomNFTGemPool(address,string,string)"(
+      poolAddress: string,
+      gemSymbol: string,
+      gemName: string,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     allNFTGemPools(
       idx: BigNumberish,
@@ -381,9 +507,33 @@ export class NFTGemPoolFactory extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    nftGemPools(overrides?: CallOverrides): Promise<string[]>;
+
+    "nftGemPools()"(overrides?: CallOverrides): Promise<string[]>;
+
     relinquishControl(overrides?: CallOverrides): Promise<void>;
 
     "relinquishControl()"(overrides?: CallOverrides): Promise<void>;
+
+    removeGemPool(
+      poolHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "removeGemPool(uint256)"(
+      poolHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    removeGemPoolAt(
+      ndx: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "removeGemPoolAt(uint256)"(
+      ndx: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
@@ -419,6 +569,20 @@ export class NFTGemPoolFactory extends Contract {
 
     "addController(address)"(
       _controller: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    addCustomNFTGemPool(
+      poolAddress: string,
+      gemSymbol: string,
+      gemName: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "addCustomNFTGemPool(address,string,string)"(
+      poolAddress: string,
+      gemSymbol: string,
+      gemName: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -494,9 +658,33 @@ export class NFTGemPoolFactory extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    nftGemPools(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "nftGemPools()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     relinquishControl(overrides?: CallOverrides): Promise<BigNumber>;
 
     "relinquishControl()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    removeGemPool(
+      poolHash: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "removeGemPool(uint256)"(
+      poolHash: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    removeGemPoolAt(
+      ndx: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "removeGemPoolAt(uint256)"(
+      ndx: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -507,6 +695,20 @@ export class NFTGemPoolFactory extends Contract {
 
     "addController(address)"(
       _controller: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    addCustomNFTGemPool(
+      poolAddress: string,
+      gemSymbol: string,
+      gemName: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "addCustomNFTGemPool(address,string,string)"(
+      poolAddress: string,
+      gemSymbol: string,
+      gemName: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -586,10 +788,34 @@ export class NFTGemPoolFactory extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    nftGemPools(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "nftGemPools()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     relinquishControl(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "relinquishControl()"(
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    removeGemPool(
+      poolHash: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "removeGemPool(uint256)"(
+      poolHash: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    removeGemPoolAt(
+      ndx: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "removeGemPoolAt(uint256)"(
+      ndx: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
 }

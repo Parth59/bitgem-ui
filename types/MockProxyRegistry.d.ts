@@ -13,7 +13,6 @@ import {
 import {
   Contract,
   ContractTransaction,
-  Overrides,
   CallOverrides,
 } from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
@@ -46,20 +45,17 @@ export class MockProxyRegistry extends Contract {
   interface: MockProxyRegistryInterface;
 
   functions: {
-    proxies(input: string, overrides?: Overrides): Promise<ContractTransaction>;
+    proxies(input: string, overrides?: CallOverrides): Promise<[string]>;
 
     "proxies(address)"(
       input: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[string]>;
   };
 
-  proxies(input: string, overrides?: Overrides): Promise<ContractTransaction>;
+  proxies(input: string, overrides?: CallOverrides): Promise<string>;
 
-  "proxies(address)"(
-    input: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
+  "proxies(address)"(input: string, overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
     proxies(input: string, overrides?: CallOverrides): Promise<string>;
@@ -73,23 +69,23 @@ export class MockProxyRegistry extends Contract {
   filters: {};
 
   estimateGas: {
-    proxies(input: string, overrides?: Overrides): Promise<BigNumber>;
+    proxies(input: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "proxies(address)"(
       input: string,
-      overrides?: Overrides
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     proxies(
       input: string,
-      overrides?: Overrides
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "proxies(address)"(
       input: string,
-      overrides?: Overrides
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

@@ -1,22 +1,41 @@
+import * as React from 'react';
 import {useBlockchain} from 'components/blockchain-context';
 import {SectionHeader} from 'components/section-header';
-import {StatusPanel} from 'components/status-panel';
 import {Pool} from 'components/pool';
+import {Pool as TPool} from 'types/Pool';
+import {useQuery} from 'react-query';
+import {getPools} from 'lib/blockchain';
 
 function Pools(): JSX.Element {
-  const {isSuccess, data} = useBlockchain();
+  const {contracts, signer} = useBlockchain();
 
-  const gemPools = isSuccess ? data.gemPools : [];
+  const {
+    data: pools,
+    isError,
+    isIdle,
+    isLoading,
+    error
+  } = useQuery<TPool[], Error>(
+    'pools',
+    async () => getPools(contracts, signer),
+    {
+      enabled: contracts.factory !== null,
+      refetchOnWindowFocus: false
+    }
+  );
+
+  if (isIdle) return <div>Idle</div>;
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p className="text-white">{error.message}</p>;
 
   return (
     <main className="flex-1 px-1">
-      <SectionHeader title="BitGem Pools" />
       <div className="flex flex-col gap-6">
-        {gemPools.map(({address}) => (
-          <Pool key={address} address={address} />
+        <SectionHeader title="BitGem Pools" />
+        {pools.map((pool) => (
+          <Pool key={pool.address} pool={pool} />
         ))}
       </div>
-      <StatusPanel />
     </main>
   );
 }

@@ -5,7 +5,6 @@ import {BigNumber} from '@ethersproject/bignumber';
 import {parseEther} from 'lib/blockchain';
 
 const reducer = produce((draft, {type, payload}) => {
-  console.log({type, payload});
   switch (type) {
     case 'SET_VALUES': {
       let {price, duration} = payload;
@@ -63,10 +62,6 @@ function usePoolForm(pool) {
     getInitialState(pool)
   );
 
-  React.useEffect(() => {
-    console.log(formState);
-  }, [formState]);
-
   const handleSubmit = (event) => {
     event?.preventDefault();
     const {values} = formState;
@@ -121,7 +116,6 @@ function usePoolForm(pool) {
     let price = ['.', ''].includes(event.target.value)
       ? 0
       : parseFloat(event.target.value);
-    console.log('NEW PRICE IS', price);
 
     if (price === 0) {
       dispatch({type: 'ZERO_PRICE', payload: event.target.value});
@@ -129,15 +123,6 @@ function usePoolForm(pool) {
     }
 
     let length = (pool.minTime * formatEther(pool.ethPrice)) / price;
-
-    console.log({
-      price,
-      length,
-      eth: formatEther(pool.ethPrice),
-      mte: pool.minTime * formatEther(pool.ethPrice),
-      minTime: pool.minTime.toNumber(),
-      maxTime: pool.maxTime.toNumber()
-    });
 
     if (length > pool.minTime.toNumber() && length < pool.maxTime.toNumber()) {
       dispatch({

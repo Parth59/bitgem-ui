@@ -1,21 +1,21 @@
-import {useBlockchain} from 'components/blockchain-context';
 import {SectionHeader} from 'components/section-header';
 import {StatusPanel} from 'components/status-panel';
 import {Claim} from 'components/claim';
-import {formatEther} from 'lib/blockchain';
+import {filterClaims, formatEther} from 'lib/blockchain';
+import {useTokens} from 'hooks/use-tokens';
 
 function Claims(): JSX.Element {
-  const {isSuccess, data} = useBlockchain();
+  const {data: tokens, isLoading, isSuccess} = useTokens();
 
-  const claimList = isSuccess ? data.claimList : [];
-  console.dir(data);
+  if (!isSuccess || isLoading) return <div>Waiting</div>;
 
   return (
     <main className="flex-1 px-4">
       <SectionHeader title="My Claims" />
       <div className="flex flex-col gap-6">
-        {claimList.map(
-          ({hash, pool, amount, name, symbol, quantity, unlockTime}) => (
+        {tokens
+          .filter(filterClaims)
+          .map(({hash, pool, amount, name, symbol, quantity, unlockTime}) => (
             <Claim
               key={hash}
               hash={hash}
@@ -26,8 +26,7 @@ function Claims(): JSX.Element {
               unlockTime={unlockTime}
               symbol={symbol}
             />
-          )
-        )}
+          ))}
       </div>
       <StatusPanel />
     </main>

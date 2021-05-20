@@ -31,10 +31,14 @@ interface INFTGemMultiTokenInterface extends ethers.utils.Interface {
     "allTokenHoldersLength(uint256)": FunctionFragment;
     "burn(address,uint256,uint256)": FunctionFragment;
     "getRegistryManager()": FunctionFragment;
+    "getTokenData(uint256)": FunctionFragment;
+    "heldTokens(address)": FunctionFragment;
     "lock(uint256,uint256)": FunctionFragment;
     "mint(address,uint256,uint256)": FunctionFragment;
     "removeProxyRegistryAt(uint256)": FunctionFragment;
     "setRegistryManager(address)": FunctionFragment;
+    "setTokenData(uint256,uint8,address)": FunctionFragment;
+    "tokenHolders(uint256)": FunctionFragment;
     "totalBalances(uint256)": FunctionFragment;
     "unlockTime(address,uint256)": FunctionFragment;
   };
@@ -76,6 +80,11 @@ interface INFTGemMultiTokenInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "getTokenData",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: "heldTokens", values: [string]): string;
+  encodeFunctionData(
     functionFragment: "lock",
     values: [BigNumberish, BigNumberish]
   ): string;
@@ -90,6 +99,14 @@ interface INFTGemMultiTokenInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "setRegistryManager",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setTokenData",
+    values: [BigNumberish, BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "tokenHolders",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "totalBalances",
@@ -133,6 +150,11 @@ interface INFTGemMultiTokenInterface extends ethers.utils.Interface {
     functionFragment: "getRegistryManager",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "getTokenData",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "heldTokens", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "lock", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(
@@ -141,6 +163,14 @@ interface INFTGemMultiTokenInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setRegistryManager",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setTokenData",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "tokenHolders",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -254,6 +284,26 @@ export class INFTGemMultiToken extends Contract {
 
     "getRegistryManager()"(overrides?: CallOverrides): Promise<[string]>;
 
+    getTokenData(
+      tokenHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number, string]>;
+
+    "getTokenData(uint256)"(
+      tokenHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number, string]>;
+
+    heldTokens(
+      holder: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]]>;
+
+    "heldTokens(address)"(
+      holder: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]]>;
+
     lock(
       token: BigNumberish,
       timeframe: BigNumberish,
@@ -299,6 +349,30 @@ export class INFTGemMultiToken extends Contract {
       newManager: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    setTokenData(
+      tokenHash: BigNumberish,
+      tokenType: BigNumberish,
+      tokenPool: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setTokenData(uint256,uint8,address)"(
+      tokenHash: BigNumberish,
+      tokenType: BigNumberish,
+      tokenPool: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    tokenHolders(
+      _token: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string[]]>;
+
+    "tokenHolders(uint256)"(
+      _token: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string[]]>;
 
     totalBalances(
       _id: BigNumberish,
@@ -409,6 +483,23 @@ export class INFTGemMultiToken extends Contract {
 
   "getRegistryManager()"(overrides?: CallOverrides): Promise<string>;
 
+  getTokenData(
+    tokenHash: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<[number, string]>;
+
+  "getTokenData(uint256)"(
+    tokenHash: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<[number, string]>;
+
+  heldTokens(holder: string, overrides?: CallOverrides): Promise<BigNumber[]>;
+
+  "heldTokens(address)"(
+    holder: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber[]>;
+
   lock(
     token: BigNumberish,
     timeframe: BigNumberish,
@@ -454,6 +545,30 @@ export class INFTGemMultiToken extends Contract {
     newManager: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
+
+  setTokenData(
+    tokenHash: BigNumberish,
+    tokenType: BigNumberish,
+    tokenPool: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setTokenData(uint256,uint8,address)"(
+    tokenHash: BigNumberish,
+    tokenType: BigNumberish,
+    tokenPool: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  tokenHolders(
+    _token: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string[]>;
+
+  "tokenHolders(uint256)"(
+    _token: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string[]>;
 
   totalBalances(
     _id: BigNumberish,
@@ -564,6 +679,23 @@ export class INFTGemMultiToken extends Contract {
 
     "getRegistryManager()"(overrides?: CallOverrides): Promise<string>;
 
+    getTokenData(
+      tokenHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number, string]>;
+
+    "getTokenData(uint256)"(
+      tokenHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number, string]>;
+
+    heldTokens(holder: string, overrides?: CallOverrides): Promise<BigNumber[]>;
+
+    "heldTokens(address)"(
+      holder: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber[]>;
+
     lock(
       token: BigNumberish,
       timeframe: BigNumberish,
@@ -609,6 +741,30 @@ export class INFTGemMultiToken extends Contract {
       newManager: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    setTokenData(
+      tokenHash: BigNumberish,
+      tokenType: BigNumberish,
+      tokenPool: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "setTokenData(uint256,uint8,address)"(
+      tokenHash: BigNumberish,
+      tokenType: BigNumberish,
+      tokenPool: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    tokenHolders(
+      _token: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string[]>;
+
+    "tokenHolders(uint256)"(
+      _token: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string[]>;
 
     totalBalances(
       _id: BigNumberish,
@@ -722,6 +878,23 @@ export class INFTGemMultiToken extends Contract {
 
     "getRegistryManager()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getTokenData(
+      tokenHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getTokenData(uint256)"(
+      tokenHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    heldTokens(holder: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "heldTokens(address)"(
+      holder: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     lock(
       token: BigNumberish,
       timeframe: BigNumberish,
@@ -766,6 +939,30 @@ export class INFTGemMultiToken extends Contract {
     "setRegistryManager(address)"(
       newManager: string,
       overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    setTokenData(
+      tokenHash: BigNumberish,
+      tokenType: BigNumberish,
+      tokenPool: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "setTokenData(uint256,uint8,address)"(
+      tokenHash: BigNumberish,
+      tokenType: BigNumberish,
+      tokenPool: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    tokenHolders(
+      _token: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "tokenHolders(uint256)"(
+      _token: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     totalBalances(
@@ -886,6 +1083,26 @@ export class INFTGemMultiToken extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getTokenData(
+      tokenHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getTokenData(uint256)"(
+      tokenHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    heldTokens(
+      holder: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "heldTokens(address)"(
+      holder: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     lock(
       token: BigNumberish,
       timeframe: BigNumberish,
@@ -930,6 +1147,30 @@ export class INFTGemMultiToken extends Contract {
     "setRegistryManager(address)"(
       newManager: string,
       overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    setTokenData(
+      tokenHash: BigNumberish,
+      tokenType: BigNumberish,
+      tokenPool: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setTokenData(uint256,uint8,address)"(
+      tokenHash: BigNumberish,
+      tokenType: BigNumberish,
+      tokenPool: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    tokenHolders(
+      _token: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "tokenHolders(uint256)"(
+      _token: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     totalBalances(

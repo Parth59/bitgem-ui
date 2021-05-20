@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 // Beware: arg needs to have a stable identity (use useMemo on refrence types)
-const useTimerTrigger = ({duration, fn, arg}) => {
+function useTimerTrigger({duration, fn, arg}) {
   const fnRef = React.useRef();
   fnRef.current = fn;
 
@@ -9,6 +9,6 @@ const useTimerTrigger = ({duration, fn, arg}) => {
     const tid = setTimeout(() => fnRef.current(arg), duration);
     return () => clearTimeout(tid);
   }, [arg, duration]);
-};
+}
 
 export {useTimerTrigger};

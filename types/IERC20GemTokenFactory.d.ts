@@ -26,6 +26,7 @@ interface IERC20GemTokenFactoryInterface extends ethers.utils.Interface {
     "allItemsLength()": FunctionFragment;
     "createItem(string,string,address,address,uint8)": FunctionFragment;
     "getItem(uint256)": FunctionFragment;
+    "items()": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -44,6 +45,7 @@ interface IERC20GemTokenFactoryInterface extends ethers.utils.Interface {
     functionFragment: "getItem",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "items", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "allItems", data: BytesLike): Result;
   decodeFunctionResult(
@@ -52,6 +54,7 @@ interface IERC20GemTokenFactoryInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "createItem", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getItem", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "items", data: BytesLike): Result;
 
   events: {
     "ERC20GemTokenCreated(address,address,string,string)": EventFragment;
@@ -112,6 +115,10 @@ export class IERC20GemTokenFactory extends Contract {
       _symbolHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    items(overrides?: CallOverrides): Promise<[string[]]>;
+
+    "items()"(overrides?: CallOverrides): Promise<[string[]]>;
   };
 
   allItems(idx: BigNumberish, overrides?: CallOverrides): Promise<string>;
@@ -153,6 +160,10 @@ export class IERC20GemTokenFactory extends Contract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  items(overrides?: CallOverrides): Promise<string[]>;
+
+  "items()"(overrides?: CallOverrides): Promise<string[]>;
+
   callStatic: {
     allItems(idx: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -192,6 +203,10 @@ export class IERC20GemTokenFactory extends Contract {
       _symbolHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    items(overrides?: CallOverrides): Promise<string[]>;
+
+    "items()"(overrides?: CallOverrides): Promise<string[]>;
   };
 
   filters: {
@@ -242,6 +257,10 @@ export class IERC20GemTokenFactory extends Contract {
       _symbolHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    items(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "items()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -288,5 +307,9 @@ export class IERC20GemTokenFactory extends Contract {
       _symbolHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    items(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "items()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

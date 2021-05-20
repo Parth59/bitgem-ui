@@ -18,9 +18,13 @@ function ConnectModal({open, setOpen}) {
 
   const handleConnectClick = (source) => {
     if (open) setOpen(false);
-    if (!active) {
-      if (source === 'metamask') activate(injected);
-      else if (source === 'walletConnect') activate(walletConnect);
+    try {
+      if (!active) {
+        if (source === 'metamask') activate(injected);
+        else if (source === 'walletConnect') activate(walletConnect);
+      }
+    } catch (error) {
+      console.log('ERROR', error);
     }
   };
 

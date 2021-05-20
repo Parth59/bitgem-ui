@@ -34,6 +34,8 @@ interface NFTGemMultiTokenInterface extends ethers.utils.Interface {
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
     "burn(address,uint256,uint256)": FunctionFragment;
     "getRegistryManager()": FunctionFragment;
+    "getTokenData(uint256)": FunctionFragment;
+    "heldTokens(address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "isController(address)": FunctionFragment;
     "lock(uint256,uint256)": FunctionFragment;
@@ -47,7 +49,9 @@ interface NFTGemMultiTokenInterface extends ethers.utils.Interface {
     "safeTransferFrom(address,address,uint256,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setRegistryManager(address)": FunctionFragment;
+    "setTokenData(uint256,uint8,address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
+    "tokenHolders(uint256)": FunctionFragment;
     "totalBalances(uint256)": FunctionFragment;
     "unlockTime(address,uint256)": FunctionFragment;
     "uri(uint256)": FunctionFragment;
@@ -102,6 +106,11 @@ interface NFTGemMultiTokenInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "getTokenData",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: "heldTokens", values: [string]): string;
+  encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [string, string]
   ): string;
@@ -151,8 +160,16 @@ interface NFTGemMultiTokenInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
+    functionFragment: "setTokenData",
+    values: [BigNumberish, BigNumberish, string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "tokenHolders",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "totalBalances",
@@ -207,6 +224,11 @@ interface NFTGemMultiTokenInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getTokenData",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "heldTokens", data: BytesLike): Result;
+  decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
@@ -250,7 +272,15 @@ interface NFTGemMultiTokenInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setTokenData",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "supportsInterface",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "tokenHolders",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -417,6 +447,26 @@ export class NFTGemMultiToken extends Contract {
 
     "getRegistryManager()"(overrides?: CallOverrides): Promise<[string]>;
 
+    getTokenData(
+      tokenHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number, string] & { tokenType: number; tokenPool: string }>;
+
+    "getTokenData(uint256)"(
+      tokenHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number, string] & { tokenType: number; tokenPool: string }>;
+
+    heldTokens(
+      holder: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]]>;
+
+    "heldTokens(address)"(
+      holder: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]]>;
+
     isApprovedForAll(
       _owner: string,
       _operator: string,
@@ -577,6 +627,20 @@ export class NFTGemMultiToken extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    setTokenData(
+      tokenHash: BigNumberish,
+      tokenType: BigNumberish,
+      tokenPool: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setTokenData(uint256,uint8,address)"(
+      tokenHash: BigNumberish,
+      tokenType: BigNumberish,
+      tokenPool: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
@@ -586,6 +650,16 @@ export class NFTGemMultiToken extends Contract {
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
+
+    tokenHolders(
+      _token: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string[]]>;
+
+    "tokenHolders(uint256)"(
+      _token: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string[]]>;
 
     totalBalances(
       _id: BigNumberish,
@@ -736,6 +810,23 @@ export class NFTGemMultiToken extends Contract {
   getRegistryManager(overrides?: CallOverrides): Promise<string>;
 
   "getRegistryManager()"(overrides?: CallOverrides): Promise<string>;
+
+  getTokenData(
+    tokenHash: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<[number, string] & { tokenType: number; tokenPool: string }>;
+
+  "getTokenData(uint256)"(
+    tokenHash: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<[number, string] & { tokenType: number; tokenPool: string }>;
+
+  heldTokens(holder: string, overrides?: CallOverrides): Promise<BigNumber[]>;
+
+  "heldTokens(address)"(
+    holder: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber[]>;
 
   isApprovedForAll(
     _owner: string,
@@ -894,6 +985,20 @@ export class NFTGemMultiToken extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  setTokenData(
+    tokenHash: BigNumberish,
+    tokenType: BigNumberish,
+    tokenPool: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setTokenData(uint256,uint8,address)"(
+    tokenHash: BigNumberish,
+    tokenType: BigNumberish,
+    tokenPool: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   supportsInterface(
     interfaceId: BytesLike,
     overrides?: CallOverrides
@@ -903,6 +1008,16 @@ export class NFTGemMultiToken extends Contract {
     interfaceId: BytesLike,
     overrides?: CallOverrides
   ): Promise<boolean>;
+
+  tokenHolders(
+    _token: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string[]>;
+
+  "tokenHolders(uint256)"(
+    _token: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string[]>;
 
   totalBalances(
     _id: BigNumberish,
@@ -1050,6 +1165,23 @@ export class NFTGemMultiToken extends Contract {
     getRegistryManager(overrides?: CallOverrides): Promise<string>;
 
     "getRegistryManager()"(overrides?: CallOverrides): Promise<string>;
+
+    getTokenData(
+      tokenHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number, string] & { tokenType: number; tokenPool: string }>;
+
+    "getTokenData(uint256)"(
+      tokenHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number, string] & { tokenType: number; tokenPool: string }>;
+
+    heldTokens(holder: string, overrides?: CallOverrides): Promise<BigNumber[]>;
+
+    "heldTokens(address)"(
+      holder: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber[]>;
 
     isApprovedForAll(
       _owner: string,
@@ -1208,6 +1340,20 @@ export class NFTGemMultiToken extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setTokenData(
+      tokenHash: BigNumberish,
+      tokenType: BigNumberish,
+      tokenPool: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "setTokenData(uint256,uint8,address)"(
+      tokenHash: BigNumberish,
+      tokenType: BigNumberish,
+      tokenPool: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
@@ -1217,6 +1363,16 @@ export class NFTGemMultiToken extends Contract {
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    tokenHolders(
+      _token: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string[]>;
+
+    "tokenHolders(uint256)"(
+      _token: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string[]>;
 
     totalBalances(
       _id: BigNumberish,
@@ -1409,6 +1565,23 @@ export class NFTGemMultiToken extends Contract {
 
     "getRegistryManager()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getTokenData(
+      tokenHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getTokenData(uint256)"(
+      tokenHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    heldTokens(holder: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "heldTokens(address)"(
+      holder: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     isApprovedForAll(
       _owner: string,
       _operator: string,
@@ -1569,6 +1742,20 @@ export class NFTGemMultiToken extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    setTokenData(
+      tokenHash: BigNumberish,
+      tokenType: BigNumberish,
+      tokenPool: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "setTokenData(uint256,uint8,address)"(
+      tokenHash: BigNumberish,
+      tokenType: BigNumberish,
+      tokenPool: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
@@ -1576,6 +1763,16 @@ export class NFTGemMultiToken extends Contract {
 
     "supportsInterface(bytes4)"(
       interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenHolders(
+      _token: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "tokenHolders(uint256)"(
+      _token: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1735,6 +1932,26 @@ export class NFTGemMultiToken extends Contract {
     ): Promise<PopulatedTransaction>;
 
     "getRegistryManager()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getTokenData(
+      tokenHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getTokenData(uint256)"(
+      tokenHash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    heldTokens(
+      holder: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "heldTokens(address)"(
+      holder: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1900,6 +2117,20 @@ export class NFTGemMultiToken extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
+    setTokenData(
+      tokenHash: BigNumberish,
+      tokenType: BigNumberish,
+      tokenPool: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setTokenData(uint256,uint8,address)"(
+      tokenHash: BigNumberish,
+      tokenType: BigNumberish,
+      tokenPool: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
@@ -1907,6 +2138,16 @@ export class NFTGemMultiToken extends Contract {
 
     "supportsInterface(bytes4)"(
       interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tokenHolders(
+      _token: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "tokenHolders(uint256)"(
+      _token: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

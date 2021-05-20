@@ -131,7 +131,7 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "balanceOF",
+    name: "balanceOf",
     outputs: [
       {
         internalType: "uint256",

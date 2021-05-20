@@ -22,21 +22,27 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface NFTGemFeeManagerInterface extends ethers.utils.Interface {
   functions: {
-    "balanceOF(address)": FunctionFragment;
+    "addController(address)": FunctionFragment;
+    "balanceOf(address)": FunctionFragment;
     "defaultFeeDivisor()": FunctionFragment;
     "defaultLiquidity()": FunctionFragment;
     "ethBalanceOf()": FunctionFragment;
     "feeDivisor(address)": FunctionFragment;
+    "isController(address)": FunctionFragment;
     "liquidity(address)": FunctionFragment;
+    "relinquishControl()": FunctionFragment;
     "setDefaultFeeDivisor(uint256)": FunctionFragment;
     "setDefaultLiquidity(uint256)": FunctionFragment;
     "setFeeDivisor(address,uint256)": FunctionFragment;
-    "setOperator(address)": FunctionFragment;
     "transferEth(address,uint256)": FunctionFragment;
     "transferToken(address,address,uint256)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "balanceOF", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "addController",
+    values: [string]
+  ): string;
+  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
     functionFragment: "defaultFeeDivisor",
     values?: undefined
@@ -50,7 +56,15 @@ interface NFTGemFeeManagerInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "feeDivisor", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "isController",
+    values: [string]
+  ): string;
   encodeFunctionData(functionFragment: "liquidity", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "relinquishControl",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "setDefaultFeeDivisor",
     values: [BigNumberish]
@@ -63,7 +77,6 @@ interface NFTGemFeeManagerInterface extends ethers.utils.Interface {
     functionFragment: "setFeeDivisor",
     values: [string, BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "setOperator", values: [string]): string;
   encodeFunctionData(
     functionFragment: "transferEth",
     values: [string, BigNumberish]
@@ -73,7 +86,11 @@ interface NFTGemFeeManagerInterface extends ethers.utils.Interface {
     values: [string, string, BigNumberish]
   ): string;
 
-  decodeFunctionResult(functionFragment: "balanceOF", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "addController",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "defaultFeeDivisor",
     data: BytesLike
@@ -87,7 +104,15 @@ interface NFTGemFeeManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "feeDivisor", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isController",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "liquidity", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "relinquishControl",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "setDefaultFeeDivisor",
     data: BytesLike
@@ -101,10 +126,6 @@ interface NFTGemFeeManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setOperator",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "transferEth",
     data: BytesLike
   ): Result;
@@ -114,12 +135,16 @@ interface NFTGemFeeManagerInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
+    "ControllerAdded(address,address)": EventFragment;
+    "ControllerRemoved(address,address)": EventFragment;
     "DefaultFeeDivisorChanged(address,uint256,uint256)": EventFragment;
     "ETHReceived(address,address,uint256)": EventFragment;
     "FeeDivisorChanged(address,address,uint256,uint256)": EventFragment;
     "LiquidityChanged(address,uint256,uint256)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "ControllerAdded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ControllerRemoved"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "DefaultFeeDivisorChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ETHReceived"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "FeeDivisorChanged"): EventFragment;
@@ -140,9 +165,19 @@ export class NFTGemFeeManager extends Contract {
   interface: NFTGemFeeManagerInterface;
 
   functions: {
-    balanceOF(token: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    addController(
+      _controller: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
 
-    "balanceOF(address)"(
+    "addController(address)"(
+      _controller: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    balanceOf(token: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "balanceOf(address)"(
       token: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
@@ -177,12 +212,26 @@ export class NFTGemFeeManager extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { divisor: BigNumber }>;
 
+    isController(
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean] & { allowed: boolean }>;
+
+    "isController(address)"(
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean] & { allowed: boolean }>;
+
     liquidity(token: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "liquidity(address)"(
       token: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    relinquishControl(overrides?: CallOverrides): Promise<[void]>;
+
+    "relinquishControl()"(overrides?: CallOverrides): Promise<[void]>;
 
     setDefaultFeeDivisor(
       _feeDivisor: BigNumberish,
@@ -216,16 +265,6 @@ export class NFTGemFeeManager extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    setOperator(
-      _operator: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setOperator(address)"(
-      _operator: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
     transferEth(
       recipient: string,
       amount: BigNumberish,
@@ -253,9 +292,19 @@ export class NFTGemFeeManager extends Contract {
     ): Promise<ContractTransaction>;
   };
 
-  balanceOF(token: string, overrides?: CallOverrides): Promise<BigNumber>;
+  addController(
+    _controller: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
 
-  "balanceOF(address)"(
+  "addController(address)"(
+    _controller: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  balanceOf(token: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  "balanceOf(address)"(
     token: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
@@ -279,12 +328,23 @@ export class NFTGemFeeManager extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  isController(_address: string, overrides?: CallOverrides): Promise<boolean>;
+
+  "isController(address)"(
+    _address: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   liquidity(token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   "liquidity(address)"(
     token: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  relinquishControl(overrides?: CallOverrides): Promise<void>;
+
+  "relinquishControl()"(overrides?: CallOverrides): Promise<void>;
 
   setDefaultFeeDivisor(
     _feeDivisor: BigNumberish,
@@ -318,16 +378,6 @@ export class NFTGemFeeManager extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  setOperator(
-    _operator: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setOperator(address)"(
-    _operator: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
   transferEth(
     recipient: string,
     amount: BigNumberish,
@@ -355,9 +405,19 @@ export class NFTGemFeeManager extends Contract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    balanceOF(token: string, overrides?: CallOverrides): Promise<BigNumber>;
+    addController(
+      _controller: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
-    "balanceOF(address)"(
+    "addController(address)"(
+      _controller: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    balanceOf(token: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "balanceOf(address)"(
       token: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -381,12 +441,23 @@ export class NFTGemFeeManager extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    isController(_address: string, overrides?: CallOverrides): Promise<boolean>;
+
+    "isController(address)"(
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     liquidity(token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "liquidity(address)"(
       token: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    relinquishControl(overrides?: CallOverrides): Promise<void>;
+
+    "relinquishControl()"(overrides?: CallOverrides): Promise<void>;
 
     setDefaultFeeDivisor(
       _feeDivisor: BigNumberish,
@@ -419,13 +490,6 @@ export class NFTGemFeeManager extends Contract {
       _feeDivisor: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    setOperator(_operator: string, overrides?: CallOverrides): Promise<void>;
-
-    "setOperator(address)"(
-      _operator: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     transferEth(
       recipient: string,
@@ -455,6 +519,16 @@ export class NFTGemFeeManager extends Contract {
   };
 
   filters: {
+    ControllerAdded(
+      contractAddress: string | null,
+      controllerAddress: string | null
+    ): EventFilter;
+
+    ControllerRemoved(
+      contractAddress: string | null,
+      controllerAddress: string | null
+    ): EventFilter;
+
     DefaultFeeDivisorChanged(
       operator: string | null,
       oldValue: null,
@@ -478,9 +552,19 @@ export class NFTGemFeeManager extends Contract {
   };
 
   estimateGas: {
-    balanceOF(token: string, overrides?: CallOverrides): Promise<BigNumber>;
+    addController(
+      _controller: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
 
-    "balanceOF(address)"(
+    "addController(address)"(
+      _controller: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    balanceOf(token: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "balanceOf(address)"(
       token: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -504,12 +588,26 @@ export class NFTGemFeeManager extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    isController(
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "isController(address)"(
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     liquidity(token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "liquidity(address)"(
       token: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    relinquishControl(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "relinquishControl()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     setDefaultFeeDivisor(
       _feeDivisor: BigNumberish,
@@ -540,13 +638,6 @@ export class NFTGemFeeManager extends Contract {
     "setFeeDivisor(address,uint256)"(
       token: string,
       _feeDivisor: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    setOperator(_operator: string, overrides?: Overrides): Promise<BigNumber>;
-
-    "setOperator(address)"(
-      _operator: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -578,12 +669,22 @@ export class NFTGemFeeManager extends Contract {
   };
 
   populateTransaction: {
-    balanceOF(
+    addController(
+      _controller: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "addController(address)"(
+      _controller: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    balanceOf(
       token: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "balanceOF(address)"(
+    "balanceOf(address)"(
       token: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -614,6 +715,16 @@ export class NFTGemFeeManager extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    isController(
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "isController(address)"(
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     liquidity(
       token: string,
       overrides?: CallOverrides
@@ -621,6 +732,12 @@ export class NFTGemFeeManager extends Contract {
 
     "liquidity(address)"(
       token: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    relinquishControl(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "relinquishControl()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -653,16 +770,6 @@ export class NFTGemFeeManager extends Contract {
     "setFeeDivisor(address,uint256)"(
       token: string,
       _feeDivisor: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    setOperator(
-      _operator: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setOperator(address)"(
-      _operator: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

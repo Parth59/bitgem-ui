@@ -27,6 +27,9 @@ interface ERC20WrappedGemInterface extends ethers.utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
+    "getReserves()": FunctionFragment;
+    "getTokenAddress()": FunctionFragment;
+    "getTokenId()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(string,string,address,address,uint8)": FunctionFragment;
     "name()": FunctionFragment;
@@ -54,6 +57,18 @@ interface ERC20WrappedGemInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "decreaseAllowance",
     values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getReserves",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getTokenAddress",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getTokenId",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
@@ -103,6 +118,15 @@ interface ERC20WrappedGemInterface extends ethers.utils.Interface {
     functionFragment: "decreaseAllowance",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "getReserves",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getTokenAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getTokenId", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
@@ -207,6 +231,18 @@ export class ERC20WrappedGem extends Contract {
       subtractedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    getReserves(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "getReserves()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getTokenAddress(overrides?: CallOverrides): Promise<[string]>;
+
+    "getTokenAddress()"(overrides?: CallOverrides): Promise<[string]>;
+
+    getTokenId(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "getTokenId()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     increaseAllowance(
       spender: string,
@@ -390,6 +426,18 @@ export class ERC20WrappedGem extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  getReserves(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "getReserves()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+  getTokenAddress(overrides?: CallOverrides): Promise<string>;
+
+  "getTokenAddress()"(overrides?: CallOverrides): Promise<string>;
+
+  getTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "getTokenId()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
@@ -571,6 +619,18 @@ export class ERC20WrappedGem extends Contract {
       subtractedValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    getReserves(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getReserves()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getTokenAddress(overrides?: CallOverrides): Promise<string>;
+
+    "getTokenAddress()"(overrides?: CallOverrides): Promise<string>;
+
+    getTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getTokenId()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseAllowance(
       spender: string,
@@ -763,6 +823,18 @@ export class ERC20WrappedGem extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    getReserves(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getReserves()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getTokenAddress(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getTokenAddress()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getTokenId()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -942,6 +1014,20 @@ export class ERC20WrappedGem extends Contract {
       subtractedValue: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
+
+    getReserves(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getReserves()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getTokenAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getTokenAddress()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getTokenId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getTokenId()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     increaseAllowance(
       spender: string,

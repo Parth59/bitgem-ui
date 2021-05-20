@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {gemPics, networkCoins} from 'lib/blockchain';
-import {usePool} from './blockchain-context';
+// import {usePool} from './blockchain-context';
 import {usePoolForm} from 'hooks/use-pool-form';
 import {useTimerSwitch} from 'hooks/use-timer-switch';
 import {useWeb3React} from '@web3-react/core';
 
-function Pool({address}) {
+function Pool({pool}) {
+  console.dir(pool);
   const {chainId} = useWeb3React();
-  const pool = usePool(address);
   const {
     formValues,
     formErrors,
@@ -67,7 +67,7 @@ function Pool({address}) {
           <input
             type="text"
             name="duration"
-            id={`${address}_duration`}
+            id={`${pool.address}_duration`}
             className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-400 bg-yellow-300"
             value={formValues.duration}
             onChange={handleDurationChange}
@@ -83,7 +83,7 @@ function Pool({address}) {
           <input
             type="text"
             name="price"
-            id={`${address}_price`}
+            id={`${pool.address}_price`}
             className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-400 bg-yellow-300"
             value={formValues.price}
             onChange={handlePriceChange}
@@ -99,7 +99,7 @@ function Pool({address}) {
           <input
             type="text"
             name="gems"
-            id={`${address}_gems`}
+            id={`${pool.address}_gems`}
             className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-400 bg-yellow-300"
             value={formValues.gems}
             onChange={handleGemsChange}

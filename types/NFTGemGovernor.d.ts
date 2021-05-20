@@ -33,6 +33,7 @@ interface NFTGemGovernorInterface extends ethers.utils.Interface {
     "destroyProposalVoteTokens(uint256)": FunctionFragment;
     "executeProposal(address)": FunctionFragment;
     "initialize(address,address,address,address,address)": FunctionFragment;
+    "initialized()": FunctionFragment;
     "isController(address)": FunctionFragment;
     "issueFuelToken(address,uint256)": FunctionFragment;
     "issueInitialGovernanceTokens(address)": FunctionFragment;
@@ -119,6 +120,10 @@ interface NFTGemGovernorInterface extends ethers.utils.Interface {
     values: [string, string, string, string, string]
   ): string;
   encodeFunctionData(
+    functionFragment: "initialized",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "isController",
     values: [string]
   ): string;
@@ -194,6 +199,10 @@ interface NFTGemGovernorInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "initialized",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "isController",
     data: BytesLike
@@ -452,6 +461,10 @@ export class NFTGemGovernor extends Contract {
       _swapHelper: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    initialized(overrides?: CallOverrides): Promise<[boolean]>;
+
+    "initialized()"(overrides?: CallOverrides): Promise<[boolean]>;
 
     isController(
       _address: string,
@@ -735,6 +748,10 @@ export class NFTGemGovernor extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  initialized(overrides?: CallOverrides): Promise<boolean>;
+
+  "initialized()"(overrides?: CallOverrides): Promise<boolean>;
+
   isController(_address: string, overrides?: CallOverrides): Promise<boolean>;
 
   "isController(address)"(
@@ -1004,6 +1021,10 @@ export class NFTGemGovernor extends Contract {
       _swapHelper: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    initialized(overrides?: CallOverrides): Promise<boolean>;
+
+    "initialized()"(overrides?: CallOverrides): Promise<boolean>;
 
     isController(_address: string, overrides?: CallOverrides): Promise<boolean>;
 
@@ -1315,6 +1336,10 @@ export class NFTGemGovernor extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    initialized(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "initialized()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     isController(
       _address: string,
       overrides?: CallOverrides
@@ -1582,6 +1607,10 @@ export class NFTGemGovernor extends Contract {
       _swapHelper: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
+
+    initialized(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "initialized()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     isController(
       _address: string,

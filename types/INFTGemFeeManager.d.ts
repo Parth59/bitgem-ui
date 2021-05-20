@@ -22,7 +22,7 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface INFTGemFeeManagerInterface extends ethers.utils.Interface {
   functions: {
-    "balanceOF(address)": FunctionFragment;
+    "balanceOf(address)": FunctionFragment;
     "defaultFeeDivisor()": FunctionFragment;
     "defaultLiquidity()": FunctionFragment;
     "ethBalanceOf()": FunctionFragment;
@@ -35,7 +35,7 @@ interface INFTGemFeeManagerInterface extends ethers.utils.Interface {
     "transferToken(address,address,uint256)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "balanceOF", values: [string]): string;
+  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
     functionFragment: "defaultFeeDivisor",
     values?: undefined
@@ -71,7 +71,7 @@ interface INFTGemFeeManagerInterface extends ethers.utils.Interface {
     values: [string, string, BigNumberish]
   ): string;
 
-  decodeFunctionResult(functionFragment: "balanceOF", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "defaultFeeDivisor",
     data: BytesLike
@@ -134,9 +134,9 @@ export class INFTGemFeeManager extends Contract {
   interface: INFTGemFeeManagerInterface;
 
   functions: {
-    balanceOF(token: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    balanceOf(token: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "balanceOF(address)"(
+    "balanceOf(address)"(
       token: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
@@ -226,9 +226,9 @@ export class INFTGemFeeManager extends Contract {
     ): Promise<ContractTransaction>;
   };
 
-  balanceOF(token: string, overrides?: CallOverrides): Promise<BigNumber>;
+  balanceOf(token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  "balanceOF(address)"(
+  "balanceOf(address)"(
     token: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
@@ -318,9 +318,9 @@ export class INFTGemFeeManager extends Contract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    balanceOF(token: string, overrides?: CallOverrides): Promise<BigNumber>;
+    balanceOf(token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    "balanceOF(address)"(
+    "balanceOf(address)"(
       token: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -434,9 +434,9 @@ export class INFTGemFeeManager extends Contract {
   };
 
   estimateGas: {
-    balanceOF(token: string, overrides?: CallOverrides): Promise<BigNumber>;
+    balanceOf(token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    "balanceOF(address)"(
+    "balanceOf(address)"(
       token: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -527,12 +527,12 @@ export class INFTGemFeeManager extends Contract {
   };
 
   populateTransaction: {
-    balanceOF(
+    balanceOf(
       token: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "balanceOF(address)"(
+    "balanceOf(address)"(
       token: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

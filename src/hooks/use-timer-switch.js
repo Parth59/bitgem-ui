@@ -1,9 +1,6 @@
 import {useState, useEffect, useCallback} from 'react';
 
-export const useTimerSwitch = (
-  initialDuration = 1500,
-  isInitiallyOn = false
-) => {
+function useTimerSwitch(initialDuration = 1500, isInitiallyOn = false) {
   const [isOn, setIsOn] = useState(isInitiallyOn);
   const [duration, setDuration] = useState(initialDuration);
 
@@ -18,6 +15,6 @@ export const useTimerSwitch = (
   }, [duration, isOn]);
 
   return {isOn, turnOn, setDuration};
-};
+}
 
-export default useTimerSwitch;
+export {useTimerSwitch};

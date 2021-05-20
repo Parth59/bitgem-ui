@@ -188,6 +188,49 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
+        name: "tokenHash",
+        type: "uint256",
+      },
+    ],
+    name: "getTokenData",
+    outputs: [
+      {
+        internalType: "uint8",
+        name: "",
+        type: "uint8",
+      },
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "holder",
+        type: "address",
+      },
+    ],
+    name: "heldTokens",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
         name: "token",
         type: "uint256",
       },
@@ -249,6 +292,48 @@ const _abi = [
     name: "setRegistryManager",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenHash",
+        type: "uint256",
+      },
+      {
+        internalType: "uint8",
+        name: "tokenType",
+        type: "uint8",
+      },
+      {
+        internalType: "address",
+        name: "tokenPool",
+        type: "address",
+      },
+    ],
+    name: "setTokenData",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_token",
+        type: "uint256",
+      },
+    ],
+    name: "tokenHolders",
+    outputs: [
+      {
+        internalType: "address[]",
+        name: "",
+        type: "address[]",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {

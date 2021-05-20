@@ -22,11 +22,26 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface IERC20WrappedGemInterface extends ethers.utils.Interface {
   functions: {
+    "getReserves()": FunctionFragment;
+    "getTokenAddress()": FunctionFragment;
+    "getTokenId()": FunctionFragment;
     "initialize(string,string,address,address,uint8)": FunctionFragment;
     "unwrap(uint256)": FunctionFragment;
     "wrap(uint256)": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "getReserves",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getTokenAddress",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getTokenId",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "initialize",
     values: [string, string, string, string, BigNumberish]
@@ -37,6 +52,15 @@ interface IERC20WrappedGemInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "wrap", values: [BigNumberish]): string;
 
+  decodeFunctionResult(
+    functionFragment: "getReserves",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getTokenAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getTokenId", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "unwrap", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "wrap", data: BytesLike): Result;
@@ -64,21 +88,33 @@ export class IERC20WrappedGem extends Contract {
   interface: IERC20WrappedGemInterface;
 
   functions: {
+    getReserves(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "getReserves()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+    getTokenAddress(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "getTokenAddress()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+    getTokenId(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "getTokenId()"(overrides?: Overrides): Promise<ContractTransaction>;
+
     initialize(
-      tokenSymbol: string,
-      tokenName: string,
-      poolAddress: string,
-      tokenAddress: string,
-      decimals: BigNumberish,
+      arg0: string,
+      arg1: string,
+      arg2: string,
+      arg3: string,
+      arg4: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "initialize(string,string,address,address,uint8)"(
-      tokenSymbol: string,
-      tokenName: string,
-      poolAddress: string,
-      tokenAddress: string,
-      decimals: BigNumberish,
+      arg0: string,
+      arg1: string,
+      arg2: string,
+      arg3: string,
+      arg4: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -103,21 +139,33 @@ export class IERC20WrappedGem extends Contract {
     ): Promise<ContractTransaction>;
   };
 
+  getReserves(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "getReserves()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+  getTokenAddress(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "getTokenAddress()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+  getTokenId(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "getTokenId()"(overrides?: Overrides): Promise<ContractTransaction>;
+
   initialize(
-    tokenSymbol: string,
-    tokenName: string,
-    poolAddress: string,
-    tokenAddress: string,
-    decimals: BigNumberish,
+    arg0: string,
+    arg1: string,
+    arg2: string,
+    arg3: string,
+    arg4: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "initialize(string,string,address,address,uint8)"(
-    tokenSymbol: string,
-    tokenName: string,
-    poolAddress: string,
-    tokenAddress: string,
-    decimals: BigNumberish,
+    arg0: string,
+    arg1: string,
+    arg2: string,
+    arg3: string,
+    arg4: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -142,21 +190,33 @@ export class IERC20WrappedGem extends Contract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    getReserves(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getReserves()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getTokenAddress(overrides?: CallOverrides): Promise<string>;
+
+    "getTokenAddress()"(overrides?: CallOverrides): Promise<string>;
+
+    getTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getTokenId()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     initialize(
-      tokenSymbol: string,
-      tokenName: string,
-      poolAddress: string,
-      tokenAddress: string,
-      decimals: BigNumberish,
+      arg0: string,
+      arg1: string,
+      arg2: string,
+      arg3: string,
+      arg4: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "initialize(string,string,address,address,uint8)"(
-      tokenSymbol: string,
-      tokenName: string,
-      poolAddress: string,
-      tokenAddress: string,
-      decimals: BigNumberish,
+      arg0: string,
+      arg1: string,
+      arg2: string,
+      arg3: string,
+      arg4: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -182,21 +242,33 @@ export class IERC20WrappedGem extends Contract {
   };
 
   estimateGas: {
+    getReserves(overrides?: Overrides): Promise<BigNumber>;
+
+    "getReserves()"(overrides?: Overrides): Promise<BigNumber>;
+
+    getTokenAddress(overrides?: Overrides): Promise<BigNumber>;
+
+    "getTokenAddress()"(overrides?: Overrides): Promise<BigNumber>;
+
+    getTokenId(overrides?: Overrides): Promise<BigNumber>;
+
+    "getTokenId()"(overrides?: Overrides): Promise<BigNumber>;
+
     initialize(
-      tokenSymbol: string,
-      tokenName: string,
-      poolAddress: string,
-      tokenAddress: string,
-      decimals: BigNumberish,
+      arg0: string,
+      arg1: string,
+      arg2: string,
+      arg3: string,
+      arg4: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "initialize(string,string,address,address,uint8)"(
-      tokenSymbol: string,
-      tokenName: string,
-      poolAddress: string,
-      tokenAddress: string,
-      decimals: BigNumberish,
+      arg0: string,
+      arg1: string,
+      arg2: string,
+      arg3: string,
+      arg4: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -216,21 +288,33 @@ export class IERC20WrappedGem extends Contract {
   };
 
   populateTransaction: {
+    getReserves(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "getReserves()"(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    getTokenAddress(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "getTokenAddress()"(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    getTokenId(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "getTokenId()"(overrides?: Overrides): Promise<PopulatedTransaction>;
+
     initialize(
-      tokenSymbol: string,
-      tokenName: string,
-      poolAddress: string,
-      tokenAddress: string,
-      decimals: BigNumberish,
+      arg0: string,
+      arg1: string,
+      arg2: string,
+      arg3: string,
+      arg4: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "initialize(string,string,address,address,uint8)"(
-      tokenSymbol: string,
-      tokenName: string,
-      poolAddress: string,
-      tokenAddress: string,
-      decimals: BigNumberish,
+      arg0: string,
+      arg1: string,
+      arg2: string,
+      arg3: string,
+      arg4: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

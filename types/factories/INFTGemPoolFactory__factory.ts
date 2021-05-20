@@ -94,6 +94,35 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "poolAddress",
+        type: "address",
+      },
+      {
+        internalType: "string",
+        name: "gemSymbol",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "gemName",
+        type: "string",
+      },
+    ],
+    name: "addCustomNFTGemPool",
+    outputs: [
+      {
+        internalType: "address payable",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
         name: "idx",
         type: "uint256",
@@ -223,6 +252,45 @@ const _abi = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "nftGemPools",
+    outputs: [
+      {
+        internalType: "address[]",
+        name: "",
+        type: "address[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "poolHash",
+        type: "uint256",
+      },
+    ],
+    name: "removeGemPool",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "ndx",
+        type: "uint256",
+      },
+    ],
+    name: "removeGemPoolAt",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
 ];

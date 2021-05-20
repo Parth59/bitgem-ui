@@ -4,22 +4,52 @@ import {ConnectButton} from './connect-button';
 import {CloseIcon, MenuIcon} from './icons';
 import {useToggle} from 'hooks/use-toggle';
 import {useRouter} from 'next/dist/client/router';
-import {useBlockchain} from './blockchain-context';
 import {useWeb3React} from '@web3-react/core';
-import {networkCoins, formatEther, emptyBlockchainData} from 'lib/blockchain';
+import {networkCoins, formatEther} from 'lib/blockchain';
+import {useBlockchain} from './blockchain-context';
+import {BigNumber} from '@ethersproject/bignumber';
+import {useQuery} from 'react-query';
+import {usePools} from 'hooks/use-pools';
+import {useTokens} from 'hooks/use-tokens';
 
 function Header(): JSX.Element {
   const router = useRouter();
   const [isMenuOpen, toggleMenu, setMenuState] = useToggle(false);
-  const {chainId} = useWeb3React();
-  const {isSuccess, data} = useBlockchain();
+  const {chainId, account} = useWeb3React();
+  const {contracts} = useBlockchain();
+  const {data: governanceTokenBalance} = useQuery<BigNumber, Error>(
+    'balance',
+    () => contracts.token.balanceOf(account, 0),
+    {enabled: !!contracts?.token}
+  );
+  const {data: pools} = usePools();
+  const {data: tokens} = useTokens();
 
   // closes the menu when user picks a route on mobile
   React.useEffect(() => {
     setMenuState(false);
   }, [router.pathname, setMenuState]);
 
-  const blockchainData = isSuccess ? data : emptyBlockchainData;
+  const balance = governanceTokenBalance?.toString() ?? '0';
+  let totals = {claims: 0, minted: 0, staked: BigNumber.from(0)};
+  let claimCount = 0;
+  let gemCount = 0;
+  if (pools?.length > 0) {
+    totals = pools.reduce(
+      (acc, pool) => ({
+        claims: (acc.claims += pool.claimedCount.toNumber()),
+        minted: (acc.minted += pool.mintedCount.toNumber()),
+        staked: acc.staked.add(pool.totalStakedEth)
+      }),
+      totals
+    );
+  }
+  if (tokens?.length > 0) {
+    tokens.forEach((token) => {
+      if (token.type === 1) claimCount++;
+      if (token.type === 2) gemCount++;
+    });
+  }
 
   return (
     <header className="relative z-10">
@@ -43,9 +73,11 @@ function Header(): JSX.Element {
             <div className="-mr-2 flex items-center  gap-1">
               <MenuItems
                 className="hidden md:block menu-item"
-                balance={blockchainData.balances.governance.toString()}
+                balance={balance}
+                gemCount={gemCount}
+                claimCount={claimCount}
               />
-              <ConnectButton className="px-4 py-2 font-bold rounded-md focus:ring-2 focus:outline-none text-red-500 text-shadow-sm hover:text-shadow-md" />
+              <ConnectButton className="px-4 py-2 font-bold rounded-md focus:ring-2 focus:outline-none text-red-500 text-shadow-sm" />
 
               <button
                 type="button"
@@ -79,7 +111,9 @@ function Header(): JSX.Element {
               <div className="text-yellow-300 text-shadow-sm px-2 space-y-1">
                 <MenuItems
                   className="menu-item-sm"
-                  balance={blockchainData.balances.governance.toString()}
+                  balance={balance}
+                  gemCount={gemCount}
+                  claimCount={claimCount}
                 />
               </div>
             </div>
@@ -103,12 +137,10 @@ function Header(): JSX.Element {
       </div>
       <div className="my-1 mx-auto max-w-max text-center">
         <span className="block text-shadow-lg text-[0.5rem] sm:text-sm md:text-lg lg:text-2xl text-green-300">
-          {`staked: ${parseFloat(
-            formatEther(blockchainData.totals.staked)
-          ).toFixed(3)} ${networkCoins[chainId] ?? 'ETH'} - claims ${
-            blockchainData.totals.claims
-          } -
-          minted: ${blockchainData.totals.minted} gems`}
+          {`staked: ${parseFloat(formatEther(totals.staked)).toFixed(3)} ${
+            networkCoins[chainId] ?? 'ETH'
+          } - claims ${totals.claims} -
+          minted: ${totals.minted} gems`}
         </span>
         <span className="block mt-2 sm:mt-3 mb-4 sm:mb-5 text-sm text-shadow-sm sm:text-2xl md:text-3xl lg:text-4xl text-pink-500">
           stake anything - earn nft gems
@@ -121,19 +153,26 @@ function Header(): JSX.Element {
 type MenuItemsProps = {
   className: string;
   balance: string;
+  claimCount: number;
+  gemCount: number;
 };
 
-function MenuItems({className, balance}: MenuItemsProps): JSX.Element {
+function MenuItems({
+  className,
+  balance,
+  claimCount,
+  gemCount
+}: MenuItemsProps): JSX.Element {
   return (
     <>
       <Link href="/pools">
         <a className={className}>stake</a>
       </Link>
       <Link href="/claims">
-        <a className={className}>claims</a>
+        <a className={className}>claims ({claimCount})</a>
       </Link>
       <Link href="/gems">
-        <a className={className}>gems</a>
+        <a className={className}>gems ({gemCount})</a>
       </Link>
       <Link href="/faq">
         <a className={className}>faq</a>

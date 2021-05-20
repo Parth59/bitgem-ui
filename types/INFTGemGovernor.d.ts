@@ -32,6 +32,7 @@ interface INFTGemGovernorInterface extends ethers.utils.Interface {
     "destroyProposalVoteTokens(uint256)": FunctionFragment;
     "executeProposal(address)": FunctionFragment;
     "initialize(address,address,address,address,address)": FunctionFragment;
+    "initialized()": FunctionFragment;
     "issueFuelToken(address,uint256)": FunctionFragment;
     "issueInitialGovernanceTokens(address)": FunctionFragment;
     "maybeIssueGovernanceToken(address)": FunctionFragment;
@@ -107,6 +108,10 @@ interface INFTGemGovernorInterface extends ethers.utils.Interface {
     values: [string, string, string, string, string]
   ): string;
   encodeFunctionData(
+    functionFragment: "initialized",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "issueFuelToken",
     values: [string, BigNumberish]
   ): string;
@@ -153,6 +158,10 @@ interface INFTGemGovernorInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "initialized",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "issueFuelToken",
     data: BytesLike
@@ -373,6 +382,10 @@ export class INFTGemGovernor extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    initialized(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "initialized()"(overrides?: Overrides): Promise<ContractTransaction>;
+
     issueFuelToken(
       receiver: string,
       amount: BigNumberish,
@@ -584,6 +597,10 @@ export class INFTGemGovernor extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  initialized(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "initialized()"(overrides?: Overrides): Promise<ContractTransaction>;
+
   issueFuelToken(
     receiver: string,
     amount: BigNumberish,
@@ -794,6 +811,10 @@ export class INFTGemGovernor extends Contract {
       _swapHelper: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    initialized(overrides?: CallOverrides): Promise<boolean>;
+
+    "initialized()"(overrides?: CallOverrides): Promise<boolean>;
 
     issueFuelToken(
       receiver: string,
@@ -1042,6 +1063,10 @@ export class INFTGemGovernor extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    initialized(overrides?: Overrides): Promise<BigNumber>;
+
+    "initialized()"(overrides?: Overrides): Promise<BigNumber>;
+
     issueFuelToken(
       receiver: string,
       amount: BigNumberish,
@@ -1253,6 +1278,10 @@ export class INFTGemGovernor extends Contract {
       _swapHelper: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
+
+    initialized(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "initialized()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     issueFuelToken(
       receiver: string,
