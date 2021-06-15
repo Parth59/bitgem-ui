@@ -13,7 +13,11 @@ function useTokens(): UseQueryResult<Array<Token>, Error> {
   return useQuery<Array<Token>, Error>(
     'tokens',
     () => getTokens(account, contracts, poolsResult.data),
-    {enabled: poolsResult.isSuccess}
+    {
+      enabled: poolsResult.isSuccess,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false
+    }
   );
 }
 

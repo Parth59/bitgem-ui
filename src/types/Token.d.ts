@@ -1,5 +1,5 @@
-import { BigNumber } from 'ethers';
-import { Pool } from "./Pool";
+import {BigNumber} from 'ethers';
+import {Pool} from './Pool';
 
 export type Token = {
   type: number;
@@ -14,4 +14,4 @@ export type Token = {
   gemQuantity: number;
   token: string;
   pool: Pool;
-}
+};

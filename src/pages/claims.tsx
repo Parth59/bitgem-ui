@@ -6,10 +6,13 @@ import {useTokens} from 'hooks/use-tokens';
 import {Skeleton} from 'components/skeleton';
 
 function Claims(): JSX.Element {
-  const {data: tokens, isLoading, isError, error, isIdle} = useTokens();
+  const {data: tokens, isLoading, status, isError, error, isIdle} = useTokens();
 
+  console.log('STATUS', status);
   if (isIdle) return <div>Idle</div>;
   if (isError) return <p className="text-white">{error.message}</p>;
+
+  console.log('TOKENS', tokens.filter(filterClaims));
 
   return (
     <main className="flex-1 px-4">

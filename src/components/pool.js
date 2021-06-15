@@ -6,7 +6,6 @@ import {useTimerSwitch} from 'hooks/use-timer-switch';
 import {useWeb3React} from '@web3-react/core';
 
 function Pool({pool}) {
-  console.dir(pool);
   const {chainId} = useWeb3React();
   const {
     formValues,

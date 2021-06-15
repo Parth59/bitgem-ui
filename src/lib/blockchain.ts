@@ -192,6 +192,7 @@ export const getTokens = async (
   contracts: GemContracts,
   pools: Pool[]
 ): Promise<Token[]> => {
+  console.log('GETTING TOKENS');
   const heldTokenHashes = (await contracts.token.heldTokens(account)).filter(
     filterValidTokens
   );

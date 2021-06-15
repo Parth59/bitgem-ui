@@ -16,6 +16,9 @@ import {
   useWeb3Notification
 } from 'hooks/use-web3-event';
 
+const GEMS = 2;
+const CLAIMS = 1;
+
 function Header(): JSX.Element {
   const router = useRouter();
   const [isMenuOpen, toggleMenu, setMenuState] = useToggle(false);
@@ -49,22 +52,23 @@ function Header(): JSX.Element {
   // derive state for balances and totals.
   const balance = governanceTokenBalance?.toString() ?? '0';
   let totals = {claims: 0, minted: 0, staked: BigNumber.from(0)};
-  let claimCount = 0;
-  let gemCount = 0;
+  const balances = {
+    [CLAIMS]: 0,
+    [GEMS]: 0
+  };
   if (pools?.length > 0) {
     totals = pools.reduce(
       (acc, pool) => ({
-        claims: (acc.claims += pool.claimedCount.toNumber()),
-        minted: (acc.minted += pool.mintedCount.toNumber()),
+        claims: acc.claims + pool.claimedCount.toNumber(),
+        minted: acc.minted + pool.mintedCount.toNumber(),
         staked: acc.staked.add(pool.totalStakedEth)
       }),
       totals
     );
   }
   if (tokens?.length > 0) {
-    tokens.forEach((token) => {
-      if (token.type === 1) claimCount++;
-      if (token.type === 2) gemCount++;
+    tokens.forEach(({type}) => {
+      if ([CLAIMS, GEMS].includes(type)) balances[type]++;
     });
   }
 
@@ -91,8 +95,8 @@ function Header(): JSX.Element {
               <MenuItems
                 className="hidden md:block menu-item"
                 balance={balance}
-                gemCount={gemCount}
-                claimCount={claimCount}
+                gemCount={balances[GEMS]}
+                claimCount={balances[CLAIMS]}
               />
               <ConnectButton className="px-4 py-2 font-bold rounded-md focus:ring-2 focus:outline-none text-red-500 text-shadow-sm" />
 
@@ -129,8 +133,8 @@ function Header(): JSX.Element {
                 <MenuItems
                   className="menu-item-sm"
                   balance={balance}
-                  gemCount={gemCount}
-                  claimCount={claimCount}
+                  gemCount={balances[GEMS]}
+                  claimCount={balances[CLAIMS]}
                 />
               </div>
             </div>

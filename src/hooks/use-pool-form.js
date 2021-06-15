@@ -3,6 +3,7 @@ import {formatEther} from 'lib/blockchain';
 import produce from 'immer';
 import {BigNumber} from '@ethersproject/bignumber';
 import {parseEther} from 'lib/blockchain';
+import {useMutation, useQueryClient} from 'react-query';
 
 const reducer = produce((draft, {type, payload}) => {
   switch (type) {
@@ -61,10 +62,51 @@ function usePoolForm(pool) {
     reducer,
     getInitialState(pool)
   );
+  const queryClient = useQueryClient();
+  const {mutate} = useMutation((claimValues) => submitClaim(claimValues), {
+    onMutate: async (claimValues) => {
+      // create our temporary token. The made up hash value will
+      // help us delete this temp item once tx fails or succeeds.
+      const hash = Date.now().toString(36);
+      let token = {
+        type: 1,
+        id: 0,
+        hash,
+        name: pool.name,
+        symbol: pool.symbol,
+        unlockTime: 0,
+        amount: BigNumber.from(0),
+        quantity: BigNumber.from(claimValues.gems),
+        token: '',
+        pool
+      };
+      // Cancel any currently running queries.
+      await queryClient.cancelQueries('tokens');
+      // manually insert optimistic update
+      queryClient.setQueryData('tokens', (previous) => {
+        let newQueryData = [...previous, token];
+        console.log('SETTING QUERY DATA TO', newQueryData);
+        return newQueryData;
+      });
+      console.log('QUERYCLIENT', queryClient);
+      return {hash};
+    },
+    onSettled: (txReceipt, error, variables, context) => {
+      console.log('Claim settled', {txReceipt, context});
+      queryClient.invalidateQueries('tokens');
+      // queryClient.setQueryData('tokens', (previous) =>
+      //   previous.filter((token) => token.hash !== context.hash)
+      // );
+    }
+  });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event?.preventDefault();
-    const {values} = formState;
+    // submitClaim(formState.values);
+    mutate(formState.values);
+  };
+
+  const submitClaim = async (values) => {
     const timeframe = BigNumber.from(values.duration * 86400);
     const count = BigNumber.from(values.gems);
     const ethPrice = BigNumber.from(parseEther(values.price));
@@ -72,9 +114,11 @@ function usePoolForm(pool) {
     if (timeframe.gt(pool.maxTime) || myPrice.gt(ethPrice)) {
       return;
     }
-    return pool.contract.createClaims(timeframe, count, {
+    const txResponse = await pool.contract.createClaims(timeframe, count, {
       value: ethPrice.mul(count).toHexString()
     });
+
+    return txResponse.wait();
   };
 
   const handleDurationChange = (event) => {

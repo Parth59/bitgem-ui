@@ -33,7 +33,8 @@ function BlockchainProvider({
     () => getBlockChainData(chainId, library),
     {
       initialData: emptyBlockchainData,
-      enabled: !!library && !!account
+      enabled: !!library && !!account,
+      refetchOnWindowFocus: false
     }
   );
 
