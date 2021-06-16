@@ -4,7 +4,7 @@ import {useWeb3React} from '@web3-react/core';
 import {useToggle} from 'hooks/use-toggle';
 import {ConfirmationModal} from 'components/confirmation-modal';
 
-function Claim({hash, amount, pool, name, symbol, quantity, unlockTime}) {
+const Claim = ({hash, amount, pool, name, symbol, quantity, unlockTime}) => {
   const {chainId} = useWeb3React();
   const [isConfirmOpen, toggleConfirm] = useToggle(false);
   const date = new Date(unlockTime * 1000);
@@ -84,6 +84,6 @@ function Claim({hash, amount, pool, name, symbol, quantity, unlockTime}) {
       />
     </div>
   );
-}
+};
 
 export {Claim};

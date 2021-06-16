@@ -1,6 +1,6 @@
 import {SectionHeader} from 'components/section-header';
 
-function Faq(): JSX.Element {
+const Faq = (): JSX.Element => {
   return (
     <main className="flex-1">
       <SectionHeader title="FAQ" />
@@ -140,6 +140,6 @@ function Faq(): JSX.Element {
       </div>
     </main>
   );
-}
+};
 
 export default Faq;

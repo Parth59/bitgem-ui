@@ -4,7 +4,7 @@ import {Pool} from 'components/pool';
 import {usePools} from 'hooks/use-pools';
 import {Skeleton} from 'components/skeleton';
 
-function Pools(): JSX.Element {
+const Pools = (): JSX.Element => {
   const {data: pools, isError, isIdle, isLoading, error} = usePools();
 
   if (isIdle) return <div>Idle</div>;
@@ -22,6 +22,6 @@ function Pools(): JSX.Element {
       </div>
     </main>
   );
-}
+};
 
 export default Pools;

@@ -13,7 +13,7 @@ const generateId = () => {
   return first + second;
 };
 
-function ToastProvider({children}) {
+const ToastProvider = ({children}) => {
   const [toasts, setToasts] = React.useState([]);
 
   const add = React.useCallback(
@@ -45,16 +45,16 @@ function ToastProvider({children}) {
       )}
     </ToastContext.Provider>
   );
-}
+};
 
-function useToast() {
+const useToast = () => {
   const state = React.useContext(ToastContext);
   if (state === null)
     throw new Error('useToast called outside a ToastProvider');
   return state;
-}
+};
 
-function Toast({id, message, remove}) {
+const Toast = ({id, message, remove}) => {
   useTimerTrigger({duration: TOAST_DURATION, fn: remove, arg: id});
 
   return (
@@ -62,6 +62,6 @@ function Toast({id, message, remove}) {
       <span>{message}</span>
     </div>
   );
-}
+};
 
 export {ToastProvider, useToast};

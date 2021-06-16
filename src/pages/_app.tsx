@@ -13,11 +13,11 @@ import {opengraphData} from 'lib/data';
 
 const queryClient = new QueryClient();
 
-function getLibrary(provider) {
+const getLibrary = (provider) => {
   return new ethers.providers.Web3Provider(provider);
-}
+};
 
-function MyApp({Component, pageProps}: AppProps): JSX.Element {
+const MyApp = ({Component, pageProps}: AppProps): JSX.Element => {
   return (
     <>
       <Head>
@@ -52,6 +52,6 @@ function MyApp({Component, pageProps}: AppProps): JSX.Element {
       </ToastProvider>
     </>
   );
-}
+};
 
 export default MyApp;

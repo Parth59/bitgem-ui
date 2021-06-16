@@ -16,11 +16,11 @@ export const emptyBlockchainData: Blockchain = {
 const BlockchainContext = React.createContext<Blockchain | null>(null);
 BlockchainContext.displayName = 'BlockchainContext';
 
-function BlockchainProvider({
+const BlockchainProvider = ({
   children
 }: {
   children: React.ReactNode;
-}): JSX.Element {
+}): JSX.Element => {
   const [isErrorModalOpen, toggleErrorModal] = useToggle(false);
   const {chainId, library, account} = useWeb3React<Web3Provider>();
   const queryClient = useQueryClient();
@@ -65,10 +65,10 @@ function BlockchainProvider({
       />
     </BlockchainContext.Provider>
   );
-}
+};
 
-function useBlockchain(): Blockchain {
+const useBlockchain = (): Blockchain => {
   return useVerifiedContext(BlockchainContext);
-}
+};
 
 export {BlockchainProvider, useBlockchain};

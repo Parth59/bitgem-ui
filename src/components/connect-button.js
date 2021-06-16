@@ -3,7 +3,7 @@ import {getWalletName} from 'lib/blockchain';
 import * as React from 'react';
 import {ConnectModal} from './connect-modal';
 
-function ConnectButton({className}) {
+const ConnectButton = ({className}) => {
   const {active, chainId, account} = useWeb3React();
   const [open, setOpen] = React.useState(false);
 
@@ -21,6 +21,6 @@ function ConnectButton({className}) {
       <ConnectModal open={open} setOpen={setOpen} />
     </div>
   );
-}
+};
 
 export {ConnectButton};

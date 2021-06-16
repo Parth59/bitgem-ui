@@ -4,7 +4,7 @@ const defaultState = {status: 'loading', data: null, error: null};
 const simpleReducer = (state, updates) => ({...state, ...updates});
 
 // @pricklywiggles: Need to make this safe for unmounting.
-function useAsync(initialState) {
+const useAsync = (initialState) => {
   const initialStateRef = React.useRef({
     ...defaultState,
     ...initialState
@@ -53,6 +53,6 @@ function useAsync(initialState) {
     run,
     ...state
   };
-}
+};
 
 export {useAsync};

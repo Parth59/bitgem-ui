@@ -57,7 +57,7 @@ const getInitialState = (pool) => ({
   }
 });
 
-function usePoolForm(pool) {
+const usePoolForm = (pool) => {
   const [formState, dispatch] = React.useReducer(
     reducer,
     getInitialState(pool)
@@ -195,6 +195,6 @@ function usePoolForm(pool) {
     handlePriceChange,
     handleGemsChange
   };
-}
+};
 
 export {usePoolForm};

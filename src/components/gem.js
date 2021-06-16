@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {gemPics} from 'lib/blockchain';
 
-function Gem({gemQuantity, name, symbol, id, hash}) {
+const Gem = ({gemQuantity, name, symbol, id, hash}) => {
   return (
     <div className="flex items-center text-xl justify-between w-full px-3 py-4 rounded-md bg-indigo-900">
       <div className="flex items-center justify-start gap-4 md:gap-6 lg:gap-10 sm:mr-8 sm:text-lg lg:text-2xl xl:text-3xl">
@@ -21,6 +21,6 @@ function Gem({gemQuantity, name, symbol, id, hash}) {
       </div>
     </div>
   );
-}
+};
 
 export {Gem};

@@ -5,7 +5,7 @@ import {filterClaims, formatEther} from 'lib/blockchain';
 import {useTokens} from 'hooks/use-tokens';
 import {Skeleton} from 'components/skeleton';
 
-function Claims(): JSX.Element {
+const Claims = (): JSX.Element => {
   const {data: tokens, isLoading, status, isError, error, isIdle} = useTokens();
 
   console.log('STATUS', status);
@@ -42,6 +42,6 @@ function Claims(): JSX.Element {
       <StatusPanel />
     </main>
   );
-}
+};
 
 export default Claims;

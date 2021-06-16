@@ -3,7 +3,7 @@ import {getPools} from 'lib/blockchain';
 import {useQuery, UseQueryResult} from 'react-query';
 import {Pool} from 'types/Pool';
 
-function usePools(): UseQueryResult<Pool[], Error> {
+const usePools = (): UseQueryResult<Pool[], Error> => {
   const {contracts, signer} = useBlockchain();
   const result = useQuery<Pool[], Error>(
     'pools',
@@ -15,6 +15,6 @@ function usePools(): UseQueryResult<Pool[], Error> {
   );
 
   return result;
-}
+};
 
 export {usePools};

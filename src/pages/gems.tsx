@@ -5,7 +5,7 @@ import {filterGems} from 'lib/blockchain';
 import {useTokens} from 'hooks/use-tokens';
 import {Skeleton} from 'components/skeleton';
 
-function Gems(): JSX.Element {
+const Gems = (): JSX.Element => {
   const {data: tokens, isLoading, error, isError, isIdle} = useTokens();
 
   if (isIdle) return <div>Idle</div>;
@@ -35,6 +35,6 @@ function Gems(): JSX.Element {
       <StatusPanel />
     </main>
   );
-}
+};
 
 export default Gems;

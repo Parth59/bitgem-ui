@@ -1,7 +1,7 @@
 import {SectionHeader} from 'components/section-header';
 import {StatusPanel} from 'components/status-panel';
 
-function Home(): JSX.Element {
+const Home = (): JSX.Element => {
   return (
     <main className="flex-1 px-4 md:px-0">
       <SectionHeader title="Welcome" />
@@ -34,7 +34,7 @@ function Home(): JSX.Element {
       <StatusPanel />
     </main>
   );
-}
+};
 
 Home.displayName = 'Home';
 

@@ -5,7 +5,7 @@ import {useQuery, UseQueryResult} from 'react-query';
 import {Token} from 'types/Token';
 import {usePools} from './use-pools';
 
-function useTokens(): UseQueryResult<Array<Token>, Error> {
+const useTokens = (): UseQueryResult<Array<Token>, Error> => {
   const {account} = useWeb3React();
   const {contracts} = useBlockchain();
   const poolsResult = usePools();
@@ -19,6 +19,6 @@ function useTokens(): UseQueryResult<Array<Token>, Error> {
       refetchOnMount: false
     }
   );
-}
+};
 
 export {useTokens};

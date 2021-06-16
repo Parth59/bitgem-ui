@@ -5,7 +5,7 @@ import {usePoolForm} from 'hooks/use-pool-form';
 import {useTimerSwitch} from 'hooks/use-timer-switch';
 import {useWeb3React} from '@web3-react/core';
 
-function Pool({pool}) {
+const Pool = ({pool}) => {
   const {chainId} = useWeb3React();
   const {
     formValues,
@@ -133,6 +133,6 @@ function Pool({pool}) {
       </form>
     </div>
   );
-}
+};
 
 export {Pool};

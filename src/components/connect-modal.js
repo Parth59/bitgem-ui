@@ -6,7 +6,7 @@ import {injected, walletConnect} from 'lib/connectors';
 import {getWalletName} from 'lib/blockchain';
 import {useToast} from './toast-context';
 
-function ConnectModal({open, setOpen}) {
+const ConnectModal = ({open, setOpen}) => {
   const {active, activate, chainId, account} = useWeb3React();
   const {add} = useToast();
 
@@ -102,6 +102,6 @@ function ConnectModal({open, setOpen}) {
       </Dialog>
     </Transition.Root>
   );
-}
+};
 
 export {ConnectModal};

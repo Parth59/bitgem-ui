@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-function Footer(): JSX.Element {
+const Footer = (): JSX.Element => {
   return (
     <footer className="py-6" aria-labelledby="footerHeading">
       <h2 id="footerHeading" className="sr-only">
@@ -27,6 +27,6 @@ function Footer(): JSX.Element {
       </div>
     </footer>
   );
-}
+};
 
 export {Footer};

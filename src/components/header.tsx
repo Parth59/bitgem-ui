@@ -19,7 +19,7 @@ import {
 const GEMS = 2;
 const CLAIMS = 1;
 
-function Header(): JSX.Element {
+const Header = (): JSX.Element => {
   const router = useRouter();
   const [isMenuOpen, toggleMenu, setMenuState] = useToggle(false);
   const {chainId, account} = useWeb3React();
@@ -169,7 +169,7 @@ function Header(): JSX.Element {
       </div>
     </header>
   );
-}
+};
 
 type MenuItemsProps = {
   className: string;
@@ -178,12 +178,12 @@ type MenuItemsProps = {
   gemCount: number;
 };
 
-function MenuItems({
+const MenuItems = ({
   className,
   balance,
   claimCount,
   gemCount
-}: MenuItemsProps): JSX.Element {
+}: MenuItemsProps): JSX.Element => {
   return (
     <>
       <Link href="/pools">
@@ -208,6 +208,6 @@ function MenuItems({
       </Link>
     </>
   );
-}
+};
 
 export {Header};

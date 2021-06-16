@@ -1,6 +1,6 @@
 import {useWeb3React} from '@web3-react/core';
 
-function StatusPanel(): JSX.Element {
+const StatusPanel = (): JSX.Element => {
   const {active} = useWeb3React();
 
   return (
@@ -13,6 +13,6 @@ function StatusPanel(): JSX.Element {
       )}
     </>
   );
-}
+};
 
 export {StatusPanel};

@@ -1,7 +1,7 @@
 import {SectionHeader} from 'components/section-header';
 import {StatusPanel} from 'components/status-panel';
 
-function Governance(): JSX.Element {
+const Governance = (): JSX.Element => {
   return (
     <main className="flex-1 px-4 md:px-0">
       <SectionHeader title="Governance" />
@@ -56,6 +56,6 @@ function Governance(): JSX.Element {
       </div>
     </main>
   );
-}
+};
 
 export default Governance;

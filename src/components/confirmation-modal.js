@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Dialog, Transition} from '@headlessui/react';
 import {ExclamationIcon} from '@heroicons/react/outline';
 
-function ConfirmationModal({
+const ConfirmationModal = ({
   title,
   text,
   hasCancel = true,
@@ -10,7 +10,7 @@ function ConfirmationModal({
   open,
   toggle,
   onConfirm = () => null
-}) {
+}) => {
   const handleConfirm = () => {
     toggle();
     onConfirm();
@@ -98,6 +98,6 @@ function ConfirmationModal({
       </Dialog>
     </Transition.Root>
   );
-}
+};
 
 export {ConfirmationModal};

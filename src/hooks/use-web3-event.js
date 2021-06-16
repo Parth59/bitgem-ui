@@ -2,7 +2,7 @@ import React from 'react';
 import {useToast} from 'components/toast-context';
 import {useQueryClient} from 'react-query';
 
-function useWeb3Event(contract, eventId, eventHandler) {
+const useWeb3Event = (contract, eventId, eventHandler) => {
   const eventHandlerRef = React.useRef();
 
   React.useEffect(() => {
@@ -19,22 +19,22 @@ function useWeb3Event(contract, eventId, eventHandler) {
       };
     }
   }, [contract, eventId]);
-}
+};
 
-function useWeb3Notification(contract, eventId, message) {
+const useWeb3Notification = (contract, eventId, message) => {
   const {add} = useToast();
   const handler = React.useCallback(() => {
     add(message);
   }, [add, message]);
   useWeb3Event(contract, eventId, handler);
-}
+};
 
-function useCacheInvalidationOnEvent(contract, eventId, queryKey) {
+const useCacheInvalidationOnEvent = (contract, eventId, queryKey) => {
   const queryClient = useQueryClient();
   const handler = React.useCallback(() => {
     queryClient.invalidateQueries(queryKey);
   }, [queryClient, queryKey]);
   useWeb3Event(contract, eventId, handler);
-}
+};
 
 export {useWeb3Event, useWeb3Notification, useCacheInvalidationOnEvent};
