@@ -1,0 +1,16 @@
+overwrite: true
+schema: 'http://localhost:8000/subgraphs/name/nftgem/nftgem-subgraph'
+documents: 'src/graph/*.graphql'
+generates:
+  src/graph/index.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-query'
+    config:
+      fetcher: 'graphql-request'
+      errorType: 'Error'
+      scalars:
+        BigDecimal: string
+        BigInt: string
+        Bytes: string

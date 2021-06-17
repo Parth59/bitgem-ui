@@ -5,11 +5,19 @@ import {Footer} from 'components/footer';
 import Head from 'next/head';
 import '../styles/globals.css';
 import {Web3ReactProvider} from '@web3-react/core';
+// import {Web3ProviderNetwork} from 'components/web3-provider-network';
 import {ethers} from 'ethers';
 import {ToastProvider} from 'components/toast-context';
 import {BlockchainProvider} from 'components/blockchain-context';
 import {QueryClient, QueryClientProvider} from 'react-query';
+import {Web3ReactManager} from 'components/web3-react-manager';
 import {opengraphData} from 'lib/data';
+import dynamic from 'next/dynamic';
+
+const Web3ProviderNetwork = dynamic(
+  () => import('components/web3-provider-network'),
+  {ssr: false}
+);
 
 const queryClient = new QueryClient();
 
@@ -38,15 +46,19 @@ const MyApp = ({Component, pageProps}: AppProps): JSX.Element => {
       <ToastProvider>
         <QueryClientProvider client={queryClient}>
           <Web3ReactProvider getLibrary={getLibrary}>
-            <BlockchainProvider>
-              <div className="font-pixel bg-blue-1000 bg-app-wallpaper">
-                <div className="max-w-5xl min-h-screen flex flex-col mx-auto px-3 md:px-10">
-                  <Header />
-                  <Component {...pageProps} />
-                  <Footer />
-                </div>
-              </div>
-            </BlockchainProvider>
+            <Web3ProviderNetwork getLibrary={getLibrary}>
+              <Web3ReactManager>
+                <BlockchainProvider>
+                  <div className="font-pixel bg-blue-1000 bg-app-wallpaper">
+                    <div className="max-w-5xl min-h-screen flex flex-col mx-auto px-3 md:px-10">
+                      <Header />
+                      <Component {...pageProps} />
+                      <Footer />
+                    </div>
+                  </div>
+                </BlockchainProvider>
+              </Web3ReactManager>
+            </Web3ProviderNetwork>
           </Web3ReactProvider>
         </QueryClientProvider>
       </ToastProvider>

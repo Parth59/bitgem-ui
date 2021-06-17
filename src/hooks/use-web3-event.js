@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {useToast} from 'components/toast-context';
 import {useQueryClient} from 'react-query';
 

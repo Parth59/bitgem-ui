@@ -1,0 +1,25 @@
+query GetPools {
+  gemPools {
+    id
+    symbol
+    name
+    stakingPrice
+    minTimeSecs
+    maxTimeSecs
+    diffStep
+    maxMint
+  }
+}
+
+query GetPool($id: ID!) {
+  gemPool(id: $id) {
+    id
+    symbol
+    name
+    stakingPrice
+    minTimeSecs
+    maxTimeSecs
+    diffStep
+    maxMint
+  }
+}

@@ -4,15 +4,20 @@ import {gemPics, networkCoins} from 'lib/blockchain';
 import {usePoolForm} from 'hooks/use-pool-form';
 import {useTimerSwitch} from 'hooks/use-timer-switch';
 import {useWeb3React} from '@web3-react/core';
+import {GemPool} from 'graph';
 
-const Pool = ({pool}) => {
-  const {chainId} = useWeb3React();
+type PoolProps = {
+  pool: GemPool;
+};
+
+const Pool = ({pool}: PoolProps): JSX.Element => {
+  const {chainId = 1} = useWeb3React();
+  console.log('POOL', {pool});
   const {
     formValues,
     formErrors,
     enabled,
     handleSubmit,
-    handlePriceChange,
     handleGemsChange,
     handleDurationChange
   } = usePoolForm(pool);
@@ -59,37 +64,40 @@ const Pool = ({pool}) => {
         <div className="text-blue-300 hidden sm:block px-4 pt-4">
           using {networkCoins[chainId]} @ 1.0000/{networkCoins[chainId]}
         </div>
-        <div className="mt-1 flex rounded-md shadow-sm px-4">
-          <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-200 text-gray-500 sm:text-sm">
-            time
-          </span>
-          <input
-            type="text"
-            name="duration"
-            id={`${pool.address}_duration`}
-            className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-400 bg-yellow-300"
-            value={formValues.duration}
-            onChange={handleDurationChange}
-          />
-          <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-200 text-gray-500 sm:text-sm">
-            days
-          </span>
-        </div>
+
         <div className="mt-1 flex rounded-md shadow-sm px-4">
           <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-200 text-gray-500 sm:text-sm">
             price
           </span>
-          <input
-            type="text"
-            name="price"
-            id={`${pool.address}_price`}
-            className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-400 bg-yellow-300"
-            value={formValues.price}
-            onChange={handlePriceChange}
-          />
-          <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-200 text-gray-500 sm:text-sm">
-            {networkCoins[chainId]}
+          <span className="flex-1 min-w-0 rounded-r-md block w-full px-3 py-2 rounded-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-400 bg-gray-200 ">
+            {formValues.price} {networkCoins[chainId]}
           </span>
+        </div>
+        <div className="mt-1 flex rounded-md shadow-sm px-4">
+          <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-200 text-gray-500 sm:text-sm">
+            time
+          </span>
+          <span className="flex-1 rounded-r-md min-w-0 block w-full px-3 py-2 rounded-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-400 bg-gray-200">
+            {formValues.duration} seconds
+          </span>
+        </div>
+        <div className="mt-1 flex rounded-md shadow-sm px-4">
+          <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-200 text-gray-500 sm:text-sm">
+            adjust
+          </span>
+          <div className="flex-1 px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-200 text-gray-500 sm:text-sm">
+            <input
+              type="range"
+              name="duration"
+              id={`${pool.id}_duration`}
+              className="min-w-0 block w-full  py-2 rounded-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-400 bg-yellow-300"
+              min={pool.minTimeSecs}
+              max={pool.maxTimeSecs}
+              step="1"
+              value={formValues.duration}
+              onChange={handleDurationChange}
+            />
+          </div>
         </div>
         <div className="mt-1 flex rounded-md shadow-sm px-4">
           <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-200 text-gray-500 sm:text-sm">
@@ -98,7 +106,7 @@ const Pool = ({pool}) => {
           <input
             type="text"
             name="gems"
-            id={`${pool.address}_gems`}
+            id={`${pool.id}_gems`}
             className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-400 bg-yellow-300"
             value={formValues.gems}
             onChange={handleGemsChange}
@@ -116,8 +124,8 @@ const Pool = ({pool}) => {
         ) : null}
         {enabled ? (
           <div className="px-1 py-2  text-base text-center text-shadow-sm font-bold text-green-600">
-            {formValues.price * formValues.gems} {networkCoins[chainId]} will be
-            staked for {formValues.duration} day
+            {parseFloat(formValues.price) * formValues.gems}{' '}
+            {networkCoins[chainId]} will be staked for {formValues.duration} day
             {formValues.duration > 1 ? 's' : ''}
           </div>
         ) : null}
