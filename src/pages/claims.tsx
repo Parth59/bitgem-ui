@@ -1,18 +1,22 @@
 import {SectionHeader} from 'components/section-header';
 import {StatusPanel} from 'components/status-panel';
 import {Claim} from 'components/claim';
-import {filterClaims, formatEther} from 'lib/blockchain';
-import {useTokens} from 'hooks/use-tokens';
 import {Skeleton} from 'components/skeleton';
+import {useWeb3React} from '@web3-react/core';
+import {useGetUserClaimsQuery} from 'graph';
+import {client} from 'graph/client';
 
 const Claims = (): JSX.Element => {
-  const {data: tokens, isLoading, status, isError, error, isIdle} = useTokens();
+  const {account} = useWeb3React();
+  const {data, isLoading, isError, error, isIdle} = useGetUserClaimsQuery(
+    client,
+    {id: account.toLowerCase()}
+  );
 
-  console.log('STATUS', status);
   if (isIdle) return <div>Idle</div>;
+  if (isLoading) return <div>Loading</div>;
   if (isError) return <p className="text-white">{error.message}</p>;
-
-  console.log('TOKENS', tokens.filter(filterClaims));
+  const claims = data.user?.claims ?? [];
 
   return (
     <main className="flex-1 px-4">
@@ -22,22 +26,26 @@ const Claims = (): JSX.Element => {
           ? [...new Array(5)].map((_, i) => (
               <Skeleton key={i} className="bg-green-900 h-60 md:h-56" />
             ))
-          : tokens
-              .filter(filterClaims)
-              .map(
-                ({hash, pool, amount, name, symbol, quantity, unlockTime}) => (
-                  <Claim
-                    key={hash}
-                    hash={hash}
-                    pool={pool}
-                    amount={parseFloat(formatEther(amount)).toFixed(4)}
-                    name={name}
-                    quantity={quantity.toString()}
-                    unlockTime={unlockTime}
-                    symbol={symbol}
-                  />
-                )
-              )}
+          : claims.map(
+              ({
+                transactionHash,
+                gemPool,
+                stakedAmount,
+                quantity,
+                createdAtTimestamp,
+                stakedTimeSeconds
+              }) => (
+                <Claim
+                  key={transactionHash}
+                  quantity={quantity}
+                  stakedTimeSeconds={stakedTimeSeconds}
+                  createdAtTimestamp={createdAtTimestamp}
+                  stakedAmount={stakedAmount}
+                  transactionHash={transactionHash}
+                  gemPool={gemPool}
+                />
+              )
+            )}
       </div>
       <StatusPanel />
     </main>

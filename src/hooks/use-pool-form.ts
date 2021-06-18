@@ -1,10 +1,9 @@
 import * as React from 'react';
-import {formatEther} from 'lib/blockchain';
 import produce from 'immer';
 import {BigNumber} from '@ethersproject/bignumber';
-import {useMutation, useQueryClient} from 'react-query';
-import {GemPool} from 'graph';
-import {parseEther} from 'ethers/lib/utils';
+import {useMutation} from 'react-query';
+import {formatEther, parseEther} from 'ethers/lib/utils';
+import {PoolType} from 'components/pool';
 
 type PoolFormValues = {
   gems: number;
@@ -45,7 +44,7 @@ const reducer = produce((draft, {type, payload}) => {
   }
 });
 
-const getInitialState = (pool: GemPool) => ({
+const getInitialState = (pool: PoolType) => ({
   values: {
     gems: 1,
     duration: parseFloat(pool.minTimeSecs),
@@ -58,7 +57,7 @@ const getInitialState = (pool: GemPool) => ({
   }
 });
 
-const usePoolForm = (pool: GemPool): PoolForm => {
+const usePoolForm = (pool: PoolType): PoolForm => {
   const [formState, dispatch] = React.useReducer(
     reducer,
     getInitialState(pool)
@@ -112,7 +111,7 @@ const usePoolForm = (pool: GemPool): PoolForm => {
 
   const submitClaim = async (values: PoolFormValues) => {
     const timeframe = BigNumber.from(values.duration);
-    const count = BigNumber.from(values.gems);
+    // const count = BigNumber.from(values.gems);
     const pricePerUnit = parseEther(values.price);
 
     // just in case, make sure we're never giving out the farm at a discount
@@ -131,15 +130,15 @@ const usePoolForm = (pool: GemPool): PoolForm => {
 
   const handleDurationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const duration = parseInt(event.target.value);
-    const minPrice = BigNumber.from(pool.stakingPrice);
+    const minPriceWei = BigNumber.from(pool.stakingPrice);
 
-    const price = minPrice
+    const priceWei = minPriceWei
       .mul(BigNumber.from(pool.minTimeSecs))
       .div(BigNumber.from(duration));
 
     dispatch({
       type: 'SET_VALUES',
-      payload: {price: formatEther(price), duration: event.target.value}
+      payload: {price: formatEther(priceWei), duration: event.target.value}
     });
   };
 

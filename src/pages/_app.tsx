@@ -8,7 +8,7 @@ import {Web3ReactProvider} from '@web3-react/core';
 // import {Web3ProviderNetwork} from 'components/web3-provider-network';
 import {ethers} from 'ethers';
 import {ToastProvider} from 'components/toast-context';
-import {BlockchainProvider} from 'components/blockchain-context';
+import {Web3BitgemProvider} from 'components/web3-bitgem-context';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {Web3ReactManager} from 'components/web3-react-manager';
 import {opengraphData} from 'lib/data';
@@ -48,7 +48,7 @@ const MyApp = ({Component, pageProps}: AppProps): JSX.Element => {
           <Web3ReactProvider getLibrary={getLibrary}>
             <Web3ProviderNetwork getLibrary={getLibrary}>
               <Web3ReactManager>
-                <BlockchainProvider>
+                <Web3BitgemProvider>
                   <div className="font-pixel bg-blue-1000 bg-app-wallpaper">
                     <div className="max-w-5xl min-h-screen flex flex-col mx-auto px-3 md:px-10">
                       <Header />
@@ -56,7 +56,7 @@ const MyApp = ({Component, pageProps}: AppProps): JSX.Element => {
                       <Footer />
                     </div>
                   </div>
-                </BlockchainProvider>
+                </Web3BitgemProvider>
               </Web3ReactManager>
             </Web3ProviderNetwork>
           </Web3ReactProvider>

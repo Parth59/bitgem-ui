@@ -1,18 +1,31 @@
 import * as React from 'react';
-import {gemPics, networkCoins} from 'lib/blockchain';
 // import {usePool} from './blockchain-context';
 import {usePoolForm} from 'hooks/use-pool-form';
 import {useTimerSwitch} from 'hooks/use-timer-switch';
 import {useWeb3React} from '@web3-react/core';
 import {GemPool} from 'graph';
+import {getGemImage} from 'constants/gem-metadata';
+import {networks} from 'constants/networks';
+import {formatEther, parseEther} from 'ethers/lib/utils';
+
+export type PoolType = Pick<
+  GemPool,
+  | 'symbol'
+  | 'id'
+  | 'name'
+  | 'stakingPrice'
+  | 'minTimeSecs'
+  | 'maxTimeSecs'
+  | 'diffStep'
+  | 'maxMint'
+>;
 
 type PoolProps = {
-  pool: GemPool;
+  pool: PoolType;
 };
 
 const Pool = ({pool}: PoolProps): JSX.Element => {
   const {chainId = 1} = useWeb3React();
-  console.log('POOL', {pool});
   const {
     formValues,
     formErrors,
@@ -33,6 +46,7 @@ const Pool = ({pool}: PoolProps): JSX.Element => {
   if (!pool) return null;
 
   const {symbol, name} = pool;
+  const coin = networks[chainId]?.coin ?? 'ETH';
 
   return (
     <div className="sm:flex justify-between rounded-lg bg-blue-900">
@@ -40,7 +54,7 @@ const Pool = ({pool}: PoolProps): JSX.Element => {
         <img
           alt={name}
           className="h-20 sm:h-24 md:h-36 self-center"
-          src={`/img/${gemPics(symbol)}`}
+          src={getGemImage(symbol)}
         />
         <div className="flex flex-row w-full  sm:flex-col items-start pl-4 lg:pl-6 justify-between sm:justify-center py-1 sm:py-2">
           <div className="flex-1 sm:flex-none">
@@ -48,7 +62,7 @@ const Pool = ({pool}: PoolProps): JSX.Element => {
               {name}
             </div>
             <div className="text-blue-300 sm:hidden">
-              using {networkCoins[chainId]} @ 1.0000/{networkCoins[chainId]}
+              using {coin} @ 1.0000/{coin}
             </div>
           </div>
           <div className="text-blue-300 text-right sm:text-left text-xs sm:text-sm">
@@ -62,7 +76,7 @@ const Pool = ({pool}: PoolProps): JSX.Element => {
 
       <form className="sm:flex-1" onSubmit={handleSubmit}>
         <div className="text-blue-300 hidden sm:block px-4 pt-4">
-          using {networkCoins[chainId]} @ 1.0000/{networkCoins[chainId]}
+          using {coin} @ 1.0000/{coin}
         </div>
 
         <div className="mt-1 flex rounded-md shadow-sm px-4">
@@ -70,7 +84,7 @@ const Pool = ({pool}: PoolProps): JSX.Element => {
             price
           </span>
           <span className="flex-1 min-w-0 rounded-r-md block w-full px-3 py-2 rounded-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-400 bg-gray-200 ">
-            {formValues.price} {networkCoins[chainId]}
+            {formValues.price} {coin}
           </span>
         </div>
         <div className="mt-1 flex rounded-md shadow-sm px-4">
@@ -124,8 +138,8 @@ const Pool = ({pool}: PoolProps): JSX.Element => {
         ) : null}
         {enabled ? (
           <div className="px-1 py-2  text-base text-center text-shadow-sm font-bold text-green-600">
-            {parseFloat(formValues.price) * formValues.gems}{' '}
-            {networkCoins[chainId]} will be staked for {formValues.duration} day
+            {formatEther(parseEther(formValues.price).mul(formValues.gems))}{' '}
+            {coin} will be staked for {formValues.duration} day
             {formValues.duration > 1 ? 's' : ''}
           </div>
         ) : null}

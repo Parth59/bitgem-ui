@@ -32,9 +32,7 @@ export type Block_Height = {
 
 
 export type Claim = {
-  __typename?: 'Claim';
   id: Scalars['ID'];
-  factory: GemPoolFactory;
   gemPool: GemPool;
   owner: User;
   stakedTimeSeconds: Scalars['BigInt'];
@@ -42,144 +40,19 @@ export type Claim = {
   quantity: Scalars['BigInt'];
   /** creation timestamp for this token */
   createdAtTimestamp: Scalars['BigInt'];
-  /** creation block number for this token */
-  createdAtBlockNumber: Scalars['BigInt'];
   /** last update timestamp for this token */
-  updatedAtTimestamp: Scalars['BigInt'];
+  modifiedAtTimestamp: Scalars['BigInt'];
+  /** is this claim collected */
+  collected: Scalars['Boolean'];
+  /** collection timestamp for this token */
+  collectedAtTimestamp?: Maybe<Scalars['BigInt']>;
+  /** was this claim mature when it was collected */
+  collectedWhenMature?: Maybe<Scalars['Boolean']>;
+  /** total time this claim was staked when it was collected */
+  collectedAfterSeconds?: Maybe<Scalars['BigInt']>;
   /** transaction for the creation of this token */
   transactionHash?: Maybe<Scalars['Bytes']>;
 };
-
-export type ClaimSend = {
-  __typename?: 'ClaimSend';
-  id: Scalars['ID'];
-  factory: GemPoolFactory;
-  gemPool: GemPool;
-  claim: Claim;
-  to: User;
-  from: User;
-  /** creation timestamp for this send */
-  createdAtTimestamp: Scalars['BigInt'];
-  /** creation block number for this send */
-  createdAtBlockNumber: Scalars['BigInt'];
-  /** transaction for the creation of this send */
-  transactionHash?: Maybe<Scalars['Bytes']>;
-};
-
-export type ClaimSend_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  factory?: Maybe<Scalars['String']>;
-  factory_not?: Maybe<Scalars['String']>;
-  factory_gt?: Maybe<Scalars['String']>;
-  factory_lt?: Maybe<Scalars['String']>;
-  factory_gte?: Maybe<Scalars['String']>;
-  factory_lte?: Maybe<Scalars['String']>;
-  factory_in?: Maybe<Array<Scalars['String']>>;
-  factory_not_in?: Maybe<Array<Scalars['String']>>;
-  factory_contains?: Maybe<Scalars['String']>;
-  factory_not_contains?: Maybe<Scalars['String']>;
-  factory_starts_with?: Maybe<Scalars['String']>;
-  factory_not_starts_with?: Maybe<Scalars['String']>;
-  factory_ends_with?: Maybe<Scalars['String']>;
-  factory_not_ends_with?: Maybe<Scalars['String']>;
-  gemPool?: Maybe<Scalars['String']>;
-  gemPool_not?: Maybe<Scalars['String']>;
-  gemPool_gt?: Maybe<Scalars['String']>;
-  gemPool_lt?: Maybe<Scalars['String']>;
-  gemPool_gte?: Maybe<Scalars['String']>;
-  gemPool_lte?: Maybe<Scalars['String']>;
-  gemPool_in?: Maybe<Array<Scalars['String']>>;
-  gemPool_not_in?: Maybe<Array<Scalars['String']>>;
-  gemPool_contains?: Maybe<Scalars['String']>;
-  gemPool_not_contains?: Maybe<Scalars['String']>;
-  gemPool_starts_with?: Maybe<Scalars['String']>;
-  gemPool_not_starts_with?: Maybe<Scalars['String']>;
-  gemPool_ends_with?: Maybe<Scalars['String']>;
-  gemPool_not_ends_with?: Maybe<Scalars['String']>;
-  claim?: Maybe<Scalars['String']>;
-  claim_not?: Maybe<Scalars['String']>;
-  claim_gt?: Maybe<Scalars['String']>;
-  claim_lt?: Maybe<Scalars['String']>;
-  claim_gte?: Maybe<Scalars['String']>;
-  claim_lte?: Maybe<Scalars['String']>;
-  claim_in?: Maybe<Array<Scalars['String']>>;
-  claim_not_in?: Maybe<Array<Scalars['String']>>;
-  claim_contains?: Maybe<Scalars['String']>;
-  claim_not_contains?: Maybe<Scalars['String']>;
-  claim_starts_with?: Maybe<Scalars['String']>;
-  claim_not_starts_with?: Maybe<Scalars['String']>;
-  claim_ends_with?: Maybe<Scalars['String']>;
-  claim_not_ends_with?: Maybe<Scalars['String']>;
-  to?: Maybe<Scalars['String']>;
-  to_not?: Maybe<Scalars['String']>;
-  to_gt?: Maybe<Scalars['String']>;
-  to_lt?: Maybe<Scalars['String']>;
-  to_gte?: Maybe<Scalars['String']>;
-  to_lte?: Maybe<Scalars['String']>;
-  to_in?: Maybe<Array<Scalars['String']>>;
-  to_not_in?: Maybe<Array<Scalars['String']>>;
-  to_contains?: Maybe<Scalars['String']>;
-  to_not_contains?: Maybe<Scalars['String']>;
-  to_starts_with?: Maybe<Scalars['String']>;
-  to_not_starts_with?: Maybe<Scalars['String']>;
-  to_ends_with?: Maybe<Scalars['String']>;
-  to_not_ends_with?: Maybe<Scalars['String']>;
-  from?: Maybe<Scalars['String']>;
-  from_not?: Maybe<Scalars['String']>;
-  from_gt?: Maybe<Scalars['String']>;
-  from_lt?: Maybe<Scalars['String']>;
-  from_gte?: Maybe<Scalars['String']>;
-  from_lte?: Maybe<Scalars['String']>;
-  from_in?: Maybe<Array<Scalars['String']>>;
-  from_not_in?: Maybe<Array<Scalars['String']>>;
-  from_contains?: Maybe<Scalars['String']>;
-  from_not_contains?: Maybe<Scalars['String']>;
-  from_starts_with?: Maybe<Scalars['String']>;
-  from_not_starts_with?: Maybe<Scalars['String']>;
-  from_ends_with?: Maybe<Scalars['String']>;
-  from_not_ends_with?: Maybe<Scalars['String']>;
-  createdAtTimestamp?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_not?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_gt?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_lt?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_gte?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_lte?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_in?: Maybe<Array<Scalars['BigInt']>>;
-  createdAtTimestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  createdAtBlockNumber?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_not?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_gt?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_lt?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_gte?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_lte?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
-  createdAtBlockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  transactionHash?: Maybe<Scalars['Bytes']>;
-  transactionHash_not?: Maybe<Scalars['Bytes']>;
-  transactionHash_in?: Maybe<Array<Scalars['Bytes']>>;
-  transactionHash_not_in?: Maybe<Array<Scalars['Bytes']>>;
-  transactionHash_contains?: Maybe<Scalars['Bytes']>;
-  transactionHash_not_contains?: Maybe<Scalars['Bytes']>;
-};
-
-export enum ClaimSend_OrderBy {
-  Id = 'id',
-  Factory = 'factory',
-  GemPool = 'gemPool',
-  Claim = 'claim',
-  To = 'to',
-  From = 'from',
-  CreatedAtTimestamp = 'createdAtTimestamp',
-  CreatedAtBlockNumber = 'createdAtBlockNumber',
-  TransactionHash = 'transactionHash'
-}
 
 export type Claim_Filter = {
   id?: Maybe<Scalars['ID']>;
@@ -190,20 +63,6 @@ export type Claim_Filter = {
   id_lte?: Maybe<Scalars['ID']>;
   id_in?: Maybe<Array<Scalars['ID']>>;
   id_not_in?: Maybe<Array<Scalars['ID']>>;
-  factory?: Maybe<Scalars['String']>;
-  factory_not?: Maybe<Scalars['String']>;
-  factory_gt?: Maybe<Scalars['String']>;
-  factory_lt?: Maybe<Scalars['String']>;
-  factory_gte?: Maybe<Scalars['String']>;
-  factory_lte?: Maybe<Scalars['String']>;
-  factory_in?: Maybe<Array<Scalars['String']>>;
-  factory_not_in?: Maybe<Array<Scalars['String']>>;
-  factory_contains?: Maybe<Scalars['String']>;
-  factory_not_contains?: Maybe<Scalars['String']>;
-  factory_starts_with?: Maybe<Scalars['String']>;
-  factory_not_starts_with?: Maybe<Scalars['String']>;
-  factory_ends_with?: Maybe<Scalars['String']>;
-  factory_not_ends_with?: Maybe<Scalars['String']>;
   gemPool?: Maybe<Scalars['String']>;
   gemPool_not?: Maybe<Scalars['String']>;
   gemPool_gt?: Maybe<Scalars['String']>;
@@ -264,22 +123,38 @@ export type Claim_Filter = {
   createdAtTimestamp_lte?: Maybe<Scalars['BigInt']>;
   createdAtTimestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   createdAtTimestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  createdAtBlockNumber?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_not?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_gt?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_lt?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_gte?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_lte?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
-  createdAtBlockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  updatedAtTimestamp?: Maybe<Scalars['BigInt']>;
-  updatedAtTimestamp_not?: Maybe<Scalars['BigInt']>;
-  updatedAtTimestamp_gt?: Maybe<Scalars['BigInt']>;
-  updatedAtTimestamp_lt?: Maybe<Scalars['BigInt']>;
-  updatedAtTimestamp_gte?: Maybe<Scalars['BigInt']>;
-  updatedAtTimestamp_lte?: Maybe<Scalars['BigInt']>;
-  updatedAtTimestamp_in?: Maybe<Array<Scalars['BigInt']>>;
-  updatedAtTimestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  modifiedAtTimestamp?: Maybe<Scalars['BigInt']>;
+  modifiedAtTimestamp_not?: Maybe<Scalars['BigInt']>;
+  modifiedAtTimestamp_gt?: Maybe<Scalars['BigInt']>;
+  modifiedAtTimestamp_lt?: Maybe<Scalars['BigInt']>;
+  modifiedAtTimestamp_gte?: Maybe<Scalars['BigInt']>;
+  modifiedAtTimestamp_lte?: Maybe<Scalars['BigInt']>;
+  modifiedAtTimestamp_in?: Maybe<Array<Scalars['BigInt']>>;
+  modifiedAtTimestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  collected?: Maybe<Scalars['Boolean']>;
+  collected_not?: Maybe<Scalars['Boolean']>;
+  collected_in?: Maybe<Array<Scalars['Boolean']>>;
+  collected_not_in?: Maybe<Array<Scalars['Boolean']>>;
+  collectedAtTimestamp?: Maybe<Scalars['BigInt']>;
+  collectedAtTimestamp_not?: Maybe<Scalars['BigInt']>;
+  collectedAtTimestamp_gt?: Maybe<Scalars['BigInt']>;
+  collectedAtTimestamp_lt?: Maybe<Scalars['BigInt']>;
+  collectedAtTimestamp_gte?: Maybe<Scalars['BigInt']>;
+  collectedAtTimestamp_lte?: Maybe<Scalars['BigInt']>;
+  collectedAtTimestamp_in?: Maybe<Array<Scalars['BigInt']>>;
+  collectedAtTimestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  collectedWhenMature?: Maybe<Scalars['Boolean']>;
+  collectedWhenMature_not?: Maybe<Scalars['Boolean']>;
+  collectedWhenMature_in?: Maybe<Array<Scalars['Boolean']>>;
+  collectedWhenMature_not_in?: Maybe<Array<Scalars['Boolean']>>;
+  collectedAfterSeconds?: Maybe<Scalars['BigInt']>;
+  collectedAfterSeconds_not?: Maybe<Scalars['BigInt']>;
+  collectedAfterSeconds_gt?: Maybe<Scalars['BigInt']>;
+  collectedAfterSeconds_lt?: Maybe<Scalars['BigInt']>;
+  collectedAfterSeconds_gte?: Maybe<Scalars['BigInt']>;
+  collectedAfterSeconds_lte?: Maybe<Scalars['BigInt']>;
+  collectedAfterSeconds_in?: Maybe<Array<Scalars['BigInt']>>;
+  collectedAfterSeconds_not_in?: Maybe<Array<Scalars['BigInt']>>;
   transactionHash?: Maybe<Scalars['Bytes']>;
   transactionHash_not?: Maybe<Scalars['Bytes']>;
   transactionHash_in?: Maybe<Array<Scalars['Bytes']>>;
@@ -290,40 +165,87 @@ export type Claim_Filter = {
 
 export enum Claim_OrderBy {
   Id = 'id',
-  Factory = 'factory',
   GemPool = 'gemPool',
   Owner = 'owner',
   StakedTimeSeconds = 'stakedTimeSeconds',
   StakedAmount = 'stakedAmount',
   Quantity = 'quantity',
   CreatedAtTimestamp = 'createdAtTimestamp',
-  CreatedAtBlockNumber = 'createdAtBlockNumber',
-  UpdatedAtTimestamp = 'updatedAtTimestamp',
+  ModifiedAtTimestamp = 'modifiedAtTimestamp',
+  Collected = 'collected',
+  CollectedAtTimestamp = 'collectedAtTimestamp',
+  CollectedWhenMature = 'collectedWhenMature',
+  CollectedAfterSeconds = 'collectedAfterSeconds',
   TransactionHash = 'transactionHash'
 }
 
-export type Gem = {
-  __typename?: 'Gem';
+export type Game = {
+  /** Global id */
   id: Scalars['ID'];
-  factory: GemPoolFactory;
+  /** number of of outstanding claims */
+  claimCount: Scalars['BigInt'];
+  /** number of claims minted */
+  gemCount: Scalars['BigInt'];
+  /** amount of coin currently staked */
+  stakedAmount: Scalars['BigInt'];
+};
+
+export type Game_Filter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  claimCount?: Maybe<Scalars['BigInt']>;
+  claimCount_not?: Maybe<Scalars['BigInt']>;
+  claimCount_gt?: Maybe<Scalars['BigInt']>;
+  claimCount_lt?: Maybe<Scalars['BigInt']>;
+  claimCount_gte?: Maybe<Scalars['BigInt']>;
+  claimCount_lte?: Maybe<Scalars['BigInt']>;
+  claimCount_in?: Maybe<Array<Scalars['BigInt']>>;
+  claimCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  gemCount?: Maybe<Scalars['BigInt']>;
+  gemCount_not?: Maybe<Scalars['BigInt']>;
+  gemCount_gt?: Maybe<Scalars['BigInt']>;
+  gemCount_lt?: Maybe<Scalars['BigInt']>;
+  gemCount_gte?: Maybe<Scalars['BigInt']>;
+  gemCount_lte?: Maybe<Scalars['BigInt']>;
+  gemCount_in?: Maybe<Array<Scalars['BigInt']>>;
+  gemCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  stakedAmount?: Maybe<Scalars['BigInt']>;
+  stakedAmount_not?: Maybe<Scalars['BigInt']>;
+  stakedAmount_gt?: Maybe<Scalars['BigInt']>;
+  stakedAmount_lt?: Maybe<Scalars['BigInt']>;
+  stakedAmount_gte?: Maybe<Scalars['BigInt']>;
+  stakedAmount_lte?: Maybe<Scalars['BigInt']>;
+  stakedAmount_in?: Maybe<Array<Scalars['BigInt']>>;
+  stakedAmount_not_in?: Maybe<Array<Scalars['BigInt']>>;
+};
+
+export enum Game_OrderBy {
+  Id = 'id',
+  ClaimCount = 'claimCount',
+  GemCount = 'gemCount',
+  StakedAmount = 'stakedAmount'
+}
+
+export type Gem = {
+  id: Scalars['ID'];
   gemPool: GemPool;
   owner: User;
   claim: Claim;
   quantity: Scalars['BigInt'];
   /** creation timestamp for this token */
   createdAtTimestamp: Scalars['BigInt'];
-  /** creation block number for this token */
-  createdAtBlockNumber: Scalars['BigInt'];
-  /** last update timestamp for this token */
-  updatedAtTimestamp: Scalars['BigInt'];
   /** transaction for the creation of this token */
   transactionHash?: Maybe<Scalars['Bytes']>;
 };
 
 export type GemPool = {
-  __typename?: 'GemPool';
   id: Scalars['ID'];
-  factory: GemPoolFactory;
   /** unique symbol for this gem pool */
   symbol: Scalars['String'];
   /** name of this gem pool */
@@ -338,34 +260,10 @@ export type GemPool = {
   diffStep: Scalars['BigInt'];
   /** the maximum number of gem mints this gem pool allows */
   maxMint: Scalars['BigInt'];
-  /** limit staking to this ERC20 token */
-  allowedToken?: Maybe<Scalars['String']>;
   /** active claims for this staking pool */
   claims: Array<Claim>;
   /** gems created for this staking pool */
   gems: Array<Gem>;
-  /** claims created */
-  claimsCount: Scalars['BigInt'];
-  /** total quantity on created claims */
-  claimsQuantity: Scalars['BigInt'];
-  /** total funds staked on created claims */
-  claimsStakedAmount: Scalars['BigDecimal'];
-  /** total gem staking time in seconds */
-  claimsStakedTimeSecs: Scalars['BigInt'];
-  /** number of claim send transactions */
-  claimsSentCount: Scalars['BigInt'];
-  /** number of gems minted */
-  gemsMintedCount: Scalars['BigInt'];
-  /** total quantity specified on minted gems */
-  gemsMintedQuantity: Scalars['BigInt'];
-  /** total funds staked on minted gems */
-  gemsStakedAmount: Scalars['BigDecimal'];
-  /** number of gem send transactions */
-  gemsSentCount: Scalars['BigInt'];
-  /** total quantity of gems in gem send transactions */
-  gemsSentQuantity: Scalars['BigInt'];
-  /** total time staked by this user, including immature claim collections */
-  stakedTimeSecs: Scalars['BigInt'];
 };
 
 
@@ -386,184 +284,6 @@ export type GemPoolGemsArgs = {
   where?: Maybe<Gem_Filter>;
 };
 
-export type GemPoolFactory = {
-  __typename?: 'GemPoolFactory';
-  id: Scalars['ID'];
-  factoryAddress: Scalars['String'];
-  /** total time staked by this user, including immature claim collections */
-  stakedTimeSecs: Scalars['BigInt'];
-  /** claims created */
-  claimsCount: Scalars['BigInt'];
-  /** total quantity on created claims */
-  claimsQuantity: Scalars['BigInt'];
-  /** total funds staked on created claims */
-  claimsStakedAmount: Scalars['BigDecimal'];
-  /** total gem staking time in seconds */
-  claimsStakedTimeSecs: Scalars['BigInt'];
-  /** number of claim send transactions */
-  claimsSentCount: Scalars['BigInt'];
-  /** number of gems minted */
-  gemsMintedCount: Scalars['BigInt'];
-  /** total quantity specified on minted gems */
-  gemsMintedQuantity: Scalars['BigInt'];
-  /** total funds staked on minted gems */
-  gemsStakedAmount: Scalars['BigDecimal'];
-  /** number of gem send transactions */
-  gemsSentCount: Scalars['BigInt'];
-  /** total quantity of gems in gem send transactions */
-  gemsSentQuantity: Scalars['BigInt'];
-  gemPoolsCount: Scalars['Int'];
-  gemPools: Array<GemPool>;
-};
-
-
-export type GemPoolFactoryGemPoolsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<GemPool_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<GemPool_Filter>;
-};
-
-export type GemPoolFactory_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  factoryAddress?: Maybe<Scalars['String']>;
-  factoryAddress_not?: Maybe<Scalars['String']>;
-  factoryAddress_gt?: Maybe<Scalars['String']>;
-  factoryAddress_lt?: Maybe<Scalars['String']>;
-  factoryAddress_gte?: Maybe<Scalars['String']>;
-  factoryAddress_lte?: Maybe<Scalars['String']>;
-  factoryAddress_in?: Maybe<Array<Scalars['String']>>;
-  factoryAddress_not_in?: Maybe<Array<Scalars['String']>>;
-  factoryAddress_contains?: Maybe<Scalars['String']>;
-  factoryAddress_not_contains?: Maybe<Scalars['String']>;
-  factoryAddress_starts_with?: Maybe<Scalars['String']>;
-  factoryAddress_not_starts_with?: Maybe<Scalars['String']>;
-  factoryAddress_ends_with?: Maybe<Scalars['String']>;
-  factoryAddress_not_ends_with?: Maybe<Scalars['String']>;
-  stakedTimeSecs?: Maybe<Scalars['BigInt']>;
-  stakedTimeSecs_not?: Maybe<Scalars['BigInt']>;
-  stakedTimeSecs_gt?: Maybe<Scalars['BigInt']>;
-  stakedTimeSecs_lt?: Maybe<Scalars['BigInt']>;
-  stakedTimeSecs_gte?: Maybe<Scalars['BigInt']>;
-  stakedTimeSecs_lte?: Maybe<Scalars['BigInt']>;
-  stakedTimeSecs_in?: Maybe<Array<Scalars['BigInt']>>;
-  stakedTimeSecs_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsCount?: Maybe<Scalars['BigInt']>;
-  claimsCount_not?: Maybe<Scalars['BigInt']>;
-  claimsCount_gt?: Maybe<Scalars['BigInt']>;
-  claimsCount_lt?: Maybe<Scalars['BigInt']>;
-  claimsCount_gte?: Maybe<Scalars['BigInt']>;
-  claimsCount_lte?: Maybe<Scalars['BigInt']>;
-  claimsCount_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsQuantity?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_not?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_gt?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_lt?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_gte?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_lte?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsQuantity_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsStakedAmount?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedAmount_not?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedAmount_gt?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedAmount_lt?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedAmount_gte?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedAmount_lte?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedAmount_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  claimsStakedAmount_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  claimsStakedTimeSecs?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_not?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_gt?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_lt?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_gte?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_lte?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsStakedTimeSecs_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsSentCount?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_not?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_gt?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_lt?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_gte?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_lte?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsSentCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsMintedCount?: Maybe<Scalars['BigInt']>;
-  gemsMintedCount_not?: Maybe<Scalars['BigInt']>;
-  gemsMintedCount_gt?: Maybe<Scalars['BigInt']>;
-  gemsMintedCount_lt?: Maybe<Scalars['BigInt']>;
-  gemsMintedCount_gte?: Maybe<Scalars['BigInt']>;
-  gemsMintedCount_lte?: Maybe<Scalars['BigInt']>;
-  gemsMintedCount_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsMintedCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsMintedQuantity?: Maybe<Scalars['BigInt']>;
-  gemsMintedQuantity_not?: Maybe<Scalars['BigInt']>;
-  gemsMintedQuantity_gt?: Maybe<Scalars['BigInt']>;
-  gemsMintedQuantity_lt?: Maybe<Scalars['BigInt']>;
-  gemsMintedQuantity_gte?: Maybe<Scalars['BigInt']>;
-  gemsMintedQuantity_lte?: Maybe<Scalars['BigInt']>;
-  gemsMintedQuantity_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsMintedQuantity_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsStakedAmount?: Maybe<Scalars['BigDecimal']>;
-  gemsStakedAmount_not?: Maybe<Scalars['BigDecimal']>;
-  gemsStakedAmount_gt?: Maybe<Scalars['BigDecimal']>;
-  gemsStakedAmount_lt?: Maybe<Scalars['BigDecimal']>;
-  gemsStakedAmount_gte?: Maybe<Scalars['BigDecimal']>;
-  gemsStakedAmount_lte?: Maybe<Scalars['BigDecimal']>;
-  gemsStakedAmount_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  gemsStakedAmount_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  gemsSentCount?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_not?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_gt?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_lt?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_gte?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_lte?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsSentCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsSentQuantity?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_not?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_gt?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_lt?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_gte?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_lte?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsSentQuantity_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemPoolsCount?: Maybe<Scalars['Int']>;
-  gemPoolsCount_not?: Maybe<Scalars['Int']>;
-  gemPoolsCount_gt?: Maybe<Scalars['Int']>;
-  gemPoolsCount_lt?: Maybe<Scalars['Int']>;
-  gemPoolsCount_gte?: Maybe<Scalars['Int']>;
-  gemPoolsCount_lte?: Maybe<Scalars['Int']>;
-  gemPoolsCount_in?: Maybe<Array<Scalars['Int']>>;
-  gemPoolsCount_not_in?: Maybe<Array<Scalars['Int']>>;
-};
-
-export enum GemPoolFactory_OrderBy {
-  Id = 'id',
-  FactoryAddress = 'factoryAddress',
-  StakedTimeSecs = 'stakedTimeSecs',
-  ClaimsCount = 'claimsCount',
-  ClaimsQuantity = 'claimsQuantity',
-  ClaimsStakedAmount = 'claimsStakedAmount',
-  ClaimsStakedTimeSecs = 'claimsStakedTimeSecs',
-  ClaimsSentCount = 'claimsSentCount',
-  GemsMintedCount = 'gemsMintedCount',
-  GemsMintedQuantity = 'gemsMintedQuantity',
-  GemsStakedAmount = 'gemsStakedAmount',
-  GemsSentCount = 'gemsSentCount',
-  GemsSentQuantity = 'gemsSentQuantity',
-  GemPoolsCount = 'gemPoolsCount',
-  GemPools = 'gemPools'
-}
-
 export type GemPool_Filter = {
   id?: Maybe<Scalars['ID']>;
   id_not?: Maybe<Scalars['ID']>;
@@ -573,20 +293,6 @@ export type GemPool_Filter = {
   id_lte?: Maybe<Scalars['ID']>;
   id_in?: Maybe<Array<Scalars['ID']>>;
   id_not_in?: Maybe<Array<Scalars['ID']>>;
-  factory?: Maybe<Scalars['String']>;
-  factory_not?: Maybe<Scalars['String']>;
-  factory_gt?: Maybe<Scalars['String']>;
-  factory_lt?: Maybe<Scalars['String']>;
-  factory_gte?: Maybe<Scalars['String']>;
-  factory_lte?: Maybe<Scalars['String']>;
-  factory_in?: Maybe<Array<Scalars['String']>>;
-  factory_not_in?: Maybe<Array<Scalars['String']>>;
-  factory_contains?: Maybe<Scalars['String']>;
-  factory_not_contains?: Maybe<Scalars['String']>;
-  factory_starts_with?: Maybe<Scalars['String']>;
-  factory_not_starts_with?: Maybe<Scalars['String']>;
-  factory_ends_with?: Maybe<Scalars['String']>;
-  factory_not_ends_with?: Maybe<Scalars['String']>;
   symbol?: Maybe<Scalars['String']>;
   symbol_not?: Maybe<Scalars['String']>;
   symbol_gt?: Maybe<Scalars['String']>;
@@ -655,113 +361,10 @@ export type GemPool_Filter = {
   maxMint_lte?: Maybe<Scalars['BigInt']>;
   maxMint_in?: Maybe<Array<Scalars['BigInt']>>;
   maxMint_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  allowedToken?: Maybe<Scalars['String']>;
-  allowedToken_not?: Maybe<Scalars['String']>;
-  allowedToken_gt?: Maybe<Scalars['String']>;
-  allowedToken_lt?: Maybe<Scalars['String']>;
-  allowedToken_gte?: Maybe<Scalars['String']>;
-  allowedToken_lte?: Maybe<Scalars['String']>;
-  allowedToken_in?: Maybe<Array<Scalars['String']>>;
-  allowedToken_not_in?: Maybe<Array<Scalars['String']>>;
-  allowedToken_contains?: Maybe<Scalars['String']>;
-  allowedToken_not_contains?: Maybe<Scalars['String']>;
-  allowedToken_starts_with?: Maybe<Scalars['String']>;
-  allowedToken_not_starts_with?: Maybe<Scalars['String']>;
-  allowedToken_ends_with?: Maybe<Scalars['String']>;
-  allowedToken_not_ends_with?: Maybe<Scalars['String']>;
-  claimsCount?: Maybe<Scalars['BigInt']>;
-  claimsCount_not?: Maybe<Scalars['BigInt']>;
-  claimsCount_gt?: Maybe<Scalars['BigInt']>;
-  claimsCount_lt?: Maybe<Scalars['BigInt']>;
-  claimsCount_gte?: Maybe<Scalars['BigInt']>;
-  claimsCount_lte?: Maybe<Scalars['BigInt']>;
-  claimsCount_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsQuantity?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_not?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_gt?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_lt?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_gte?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_lte?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsQuantity_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsStakedAmount?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedAmount_not?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedAmount_gt?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedAmount_lt?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedAmount_gte?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedAmount_lte?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedAmount_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  claimsStakedAmount_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  claimsStakedTimeSecs?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_not?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_gt?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_lt?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_gte?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_lte?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsStakedTimeSecs_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsSentCount?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_not?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_gt?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_lt?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_gte?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_lte?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsSentCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsMintedCount?: Maybe<Scalars['BigInt']>;
-  gemsMintedCount_not?: Maybe<Scalars['BigInt']>;
-  gemsMintedCount_gt?: Maybe<Scalars['BigInt']>;
-  gemsMintedCount_lt?: Maybe<Scalars['BigInt']>;
-  gemsMintedCount_gte?: Maybe<Scalars['BigInt']>;
-  gemsMintedCount_lte?: Maybe<Scalars['BigInt']>;
-  gemsMintedCount_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsMintedCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsMintedQuantity?: Maybe<Scalars['BigInt']>;
-  gemsMintedQuantity_not?: Maybe<Scalars['BigInt']>;
-  gemsMintedQuantity_gt?: Maybe<Scalars['BigInt']>;
-  gemsMintedQuantity_lt?: Maybe<Scalars['BigInt']>;
-  gemsMintedQuantity_gte?: Maybe<Scalars['BigInt']>;
-  gemsMintedQuantity_lte?: Maybe<Scalars['BigInt']>;
-  gemsMintedQuantity_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsMintedQuantity_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsStakedAmount?: Maybe<Scalars['BigDecimal']>;
-  gemsStakedAmount_not?: Maybe<Scalars['BigDecimal']>;
-  gemsStakedAmount_gt?: Maybe<Scalars['BigDecimal']>;
-  gemsStakedAmount_lt?: Maybe<Scalars['BigDecimal']>;
-  gemsStakedAmount_gte?: Maybe<Scalars['BigDecimal']>;
-  gemsStakedAmount_lte?: Maybe<Scalars['BigDecimal']>;
-  gemsStakedAmount_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  gemsStakedAmount_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  gemsSentCount?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_not?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_gt?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_lt?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_gte?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_lte?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsSentCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsSentQuantity?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_not?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_gt?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_lt?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_gte?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_lte?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsSentQuantity_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  stakedTimeSecs?: Maybe<Scalars['BigInt']>;
-  stakedTimeSecs_not?: Maybe<Scalars['BigInt']>;
-  stakedTimeSecs_gt?: Maybe<Scalars['BigInt']>;
-  stakedTimeSecs_lt?: Maybe<Scalars['BigInt']>;
-  stakedTimeSecs_gte?: Maybe<Scalars['BigInt']>;
-  stakedTimeSecs_lte?: Maybe<Scalars['BigInt']>;
-  stakedTimeSecs_in?: Maybe<Array<Scalars['BigInt']>>;
-  stakedTimeSecs_not_in?: Maybe<Array<Scalars['BigInt']>>;
 };
 
 export enum GemPool_OrderBy {
   Id = 'id',
-  Factory = 'factory',
   Symbol = 'symbol',
   Name = 'name',
   StakingPrice = 'stakingPrice',
@@ -769,276 +372,8 @@ export enum GemPool_OrderBy {
   MaxTimeSecs = 'maxTimeSecs',
   DiffStep = 'diffStep',
   MaxMint = 'maxMint',
-  AllowedToken = 'allowedToken',
   Claims = 'claims',
-  Gems = 'gems',
-  ClaimsCount = 'claimsCount',
-  ClaimsQuantity = 'claimsQuantity',
-  ClaimsStakedAmount = 'claimsStakedAmount',
-  ClaimsStakedTimeSecs = 'claimsStakedTimeSecs',
-  ClaimsSentCount = 'claimsSentCount',
-  GemsMintedCount = 'gemsMintedCount',
-  GemsMintedQuantity = 'gemsMintedQuantity',
-  GemsStakedAmount = 'gemsStakedAmount',
-  GemsSentCount = 'gemsSentCount',
-  GemsSentQuantity = 'gemsSentQuantity',
-  StakedTimeSecs = 'stakedTimeSecs'
-}
-
-export type GemSend = {
-  __typename?: 'GemSend';
-  id: Scalars['ID'];
-  factory: GemPoolFactory;
-  gemPool: GemPool;
-  gem: Gem;
-  to: User;
-  from: User;
-  /** creation timestamp for this send */
-  createdAtTimestamp: Scalars['BigInt'];
-  /** creation block number for this send */
-  createdAtBlockNumber: Scalars['BigInt'];
-  /** transaction for the creation of this send */
-  transactionHash?: Maybe<Scalars['Bytes']>;
-};
-
-export type GemSend_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  factory?: Maybe<Scalars['String']>;
-  factory_not?: Maybe<Scalars['String']>;
-  factory_gt?: Maybe<Scalars['String']>;
-  factory_lt?: Maybe<Scalars['String']>;
-  factory_gte?: Maybe<Scalars['String']>;
-  factory_lte?: Maybe<Scalars['String']>;
-  factory_in?: Maybe<Array<Scalars['String']>>;
-  factory_not_in?: Maybe<Array<Scalars['String']>>;
-  factory_contains?: Maybe<Scalars['String']>;
-  factory_not_contains?: Maybe<Scalars['String']>;
-  factory_starts_with?: Maybe<Scalars['String']>;
-  factory_not_starts_with?: Maybe<Scalars['String']>;
-  factory_ends_with?: Maybe<Scalars['String']>;
-  factory_not_ends_with?: Maybe<Scalars['String']>;
-  gemPool?: Maybe<Scalars['String']>;
-  gemPool_not?: Maybe<Scalars['String']>;
-  gemPool_gt?: Maybe<Scalars['String']>;
-  gemPool_lt?: Maybe<Scalars['String']>;
-  gemPool_gte?: Maybe<Scalars['String']>;
-  gemPool_lte?: Maybe<Scalars['String']>;
-  gemPool_in?: Maybe<Array<Scalars['String']>>;
-  gemPool_not_in?: Maybe<Array<Scalars['String']>>;
-  gemPool_contains?: Maybe<Scalars['String']>;
-  gemPool_not_contains?: Maybe<Scalars['String']>;
-  gemPool_starts_with?: Maybe<Scalars['String']>;
-  gemPool_not_starts_with?: Maybe<Scalars['String']>;
-  gemPool_ends_with?: Maybe<Scalars['String']>;
-  gemPool_not_ends_with?: Maybe<Scalars['String']>;
-  gem?: Maybe<Scalars['String']>;
-  gem_not?: Maybe<Scalars['String']>;
-  gem_gt?: Maybe<Scalars['String']>;
-  gem_lt?: Maybe<Scalars['String']>;
-  gem_gte?: Maybe<Scalars['String']>;
-  gem_lte?: Maybe<Scalars['String']>;
-  gem_in?: Maybe<Array<Scalars['String']>>;
-  gem_not_in?: Maybe<Array<Scalars['String']>>;
-  gem_contains?: Maybe<Scalars['String']>;
-  gem_not_contains?: Maybe<Scalars['String']>;
-  gem_starts_with?: Maybe<Scalars['String']>;
-  gem_not_starts_with?: Maybe<Scalars['String']>;
-  gem_ends_with?: Maybe<Scalars['String']>;
-  gem_not_ends_with?: Maybe<Scalars['String']>;
-  to?: Maybe<Scalars['String']>;
-  to_not?: Maybe<Scalars['String']>;
-  to_gt?: Maybe<Scalars['String']>;
-  to_lt?: Maybe<Scalars['String']>;
-  to_gte?: Maybe<Scalars['String']>;
-  to_lte?: Maybe<Scalars['String']>;
-  to_in?: Maybe<Array<Scalars['String']>>;
-  to_not_in?: Maybe<Array<Scalars['String']>>;
-  to_contains?: Maybe<Scalars['String']>;
-  to_not_contains?: Maybe<Scalars['String']>;
-  to_starts_with?: Maybe<Scalars['String']>;
-  to_not_starts_with?: Maybe<Scalars['String']>;
-  to_ends_with?: Maybe<Scalars['String']>;
-  to_not_ends_with?: Maybe<Scalars['String']>;
-  from?: Maybe<Scalars['String']>;
-  from_not?: Maybe<Scalars['String']>;
-  from_gt?: Maybe<Scalars['String']>;
-  from_lt?: Maybe<Scalars['String']>;
-  from_gte?: Maybe<Scalars['String']>;
-  from_lte?: Maybe<Scalars['String']>;
-  from_in?: Maybe<Array<Scalars['String']>>;
-  from_not_in?: Maybe<Array<Scalars['String']>>;
-  from_contains?: Maybe<Scalars['String']>;
-  from_not_contains?: Maybe<Scalars['String']>;
-  from_starts_with?: Maybe<Scalars['String']>;
-  from_not_starts_with?: Maybe<Scalars['String']>;
-  from_ends_with?: Maybe<Scalars['String']>;
-  from_not_ends_with?: Maybe<Scalars['String']>;
-  createdAtTimestamp?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_not?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_gt?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_lt?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_gte?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_lte?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_in?: Maybe<Array<Scalars['BigInt']>>;
-  createdAtTimestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  createdAtBlockNumber?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_not?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_gt?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_lt?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_gte?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_lte?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
-  createdAtBlockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  transactionHash?: Maybe<Scalars['Bytes']>;
-  transactionHash_not?: Maybe<Scalars['Bytes']>;
-  transactionHash_in?: Maybe<Array<Scalars['Bytes']>>;
-  transactionHash_not_in?: Maybe<Array<Scalars['Bytes']>>;
-  transactionHash_contains?: Maybe<Scalars['Bytes']>;
-  transactionHash_not_contains?: Maybe<Scalars['Bytes']>;
-};
-
-export enum GemSend_OrderBy {
-  Id = 'id',
-  Factory = 'factory',
-  GemPool = 'gemPool',
-  Gem = 'gem',
-  To = 'to',
-  From = 'from',
-  CreatedAtTimestamp = 'createdAtTimestamp',
-  CreatedAtBlockNumber = 'createdAtBlockNumber',
-  TransactionHash = 'transactionHash'
-}
-
-export type GemWrap = {
-  __typename?: 'GemWrap';
-  id: Scalars['ID'];
-  factory: GemPoolFactory;
-  gemPool: GemPool;
-  gem: Gem;
-  user: User;
-  quantity: Scalars['BigInt'];
-  /** creation timestamp for this wrap */
-  createdAtTimestamp: Scalars['BigInt'];
-  /** creation block number for this wrap */
-  createdAtBlockNumber: Scalars['BigInt'];
-  /** transaction for the creation of this wrap */
-  transactionHash?: Maybe<Scalars['Bytes']>;
-};
-
-export type GemWrap_Filter = {
-  id?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  id_gt?: Maybe<Scalars['ID']>;
-  id_lt?: Maybe<Scalars['ID']>;
-  id_gte?: Maybe<Scalars['ID']>;
-  id_lte?: Maybe<Scalars['ID']>;
-  id_in?: Maybe<Array<Scalars['ID']>>;
-  id_not_in?: Maybe<Array<Scalars['ID']>>;
-  factory?: Maybe<Scalars['String']>;
-  factory_not?: Maybe<Scalars['String']>;
-  factory_gt?: Maybe<Scalars['String']>;
-  factory_lt?: Maybe<Scalars['String']>;
-  factory_gte?: Maybe<Scalars['String']>;
-  factory_lte?: Maybe<Scalars['String']>;
-  factory_in?: Maybe<Array<Scalars['String']>>;
-  factory_not_in?: Maybe<Array<Scalars['String']>>;
-  factory_contains?: Maybe<Scalars['String']>;
-  factory_not_contains?: Maybe<Scalars['String']>;
-  factory_starts_with?: Maybe<Scalars['String']>;
-  factory_not_starts_with?: Maybe<Scalars['String']>;
-  factory_ends_with?: Maybe<Scalars['String']>;
-  factory_not_ends_with?: Maybe<Scalars['String']>;
-  gemPool?: Maybe<Scalars['String']>;
-  gemPool_not?: Maybe<Scalars['String']>;
-  gemPool_gt?: Maybe<Scalars['String']>;
-  gemPool_lt?: Maybe<Scalars['String']>;
-  gemPool_gte?: Maybe<Scalars['String']>;
-  gemPool_lte?: Maybe<Scalars['String']>;
-  gemPool_in?: Maybe<Array<Scalars['String']>>;
-  gemPool_not_in?: Maybe<Array<Scalars['String']>>;
-  gemPool_contains?: Maybe<Scalars['String']>;
-  gemPool_not_contains?: Maybe<Scalars['String']>;
-  gemPool_starts_with?: Maybe<Scalars['String']>;
-  gemPool_not_starts_with?: Maybe<Scalars['String']>;
-  gemPool_ends_with?: Maybe<Scalars['String']>;
-  gemPool_not_ends_with?: Maybe<Scalars['String']>;
-  gem?: Maybe<Scalars['String']>;
-  gem_not?: Maybe<Scalars['String']>;
-  gem_gt?: Maybe<Scalars['String']>;
-  gem_lt?: Maybe<Scalars['String']>;
-  gem_gte?: Maybe<Scalars['String']>;
-  gem_lte?: Maybe<Scalars['String']>;
-  gem_in?: Maybe<Array<Scalars['String']>>;
-  gem_not_in?: Maybe<Array<Scalars['String']>>;
-  gem_contains?: Maybe<Scalars['String']>;
-  gem_not_contains?: Maybe<Scalars['String']>;
-  gem_starts_with?: Maybe<Scalars['String']>;
-  gem_not_starts_with?: Maybe<Scalars['String']>;
-  gem_ends_with?: Maybe<Scalars['String']>;
-  gem_not_ends_with?: Maybe<Scalars['String']>;
-  user?: Maybe<Scalars['String']>;
-  user_not?: Maybe<Scalars['String']>;
-  user_gt?: Maybe<Scalars['String']>;
-  user_lt?: Maybe<Scalars['String']>;
-  user_gte?: Maybe<Scalars['String']>;
-  user_lte?: Maybe<Scalars['String']>;
-  user_in?: Maybe<Array<Scalars['String']>>;
-  user_not_in?: Maybe<Array<Scalars['String']>>;
-  user_contains?: Maybe<Scalars['String']>;
-  user_not_contains?: Maybe<Scalars['String']>;
-  user_starts_with?: Maybe<Scalars['String']>;
-  user_not_starts_with?: Maybe<Scalars['String']>;
-  user_ends_with?: Maybe<Scalars['String']>;
-  user_not_ends_with?: Maybe<Scalars['String']>;
-  quantity?: Maybe<Scalars['BigInt']>;
-  quantity_not?: Maybe<Scalars['BigInt']>;
-  quantity_gt?: Maybe<Scalars['BigInt']>;
-  quantity_lt?: Maybe<Scalars['BigInt']>;
-  quantity_gte?: Maybe<Scalars['BigInt']>;
-  quantity_lte?: Maybe<Scalars['BigInt']>;
-  quantity_in?: Maybe<Array<Scalars['BigInt']>>;
-  quantity_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  createdAtTimestamp?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_not?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_gt?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_lt?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_gte?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_lte?: Maybe<Scalars['BigInt']>;
-  createdAtTimestamp_in?: Maybe<Array<Scalars['BigInt']>>;
-  createdAtTimestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  createdAtBlockNumber?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_not?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_gt?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_lt?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_gte?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_lte?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
-  createdAtBlockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  transactionHash?: Maybe<Scalars['Bytes']>;
-  transactionHash_not?: Maybe<Scalars['Bytes']>;
-  transactionHash_in?: Maybe<Array<Scalars['Bytes']>>;
-  transactionHash_not_in?: Maybe<Array<Scalars['Bytes']>>;
-  transactionHash_contains?: Maybe<Scalars['Bytes']>;
-  transactionHash_not_contains?: Maybe<Scalars['Bytes']>;
-};
-
-export enum GemWrap_OrderBy {
-  Id = 'id',
-  Factory = 'factory',
-  GemPool = 'gemPool',
-  Gem = 'gem',
-  User = 'user',
-  Quantity = 'quantity',
-  CreatedAtTimestamp = 'createdAtTimestamp',
-  CreatedAtBlockNumber = 'createdAtBlockNumber',
-  TransactionHash = 'transactionHash'
+  Gems = 'gems'
 }
 
 export type Gem_Filter = {
@@ -1050,20 +385,6 @@ export type Gem_Filter = {
   id_lte?: Maybe<Scalars['ID']>;
   id_in?: Maybe<Array<Scalars['ID']>>;
   id_not_in?: Maybe<Array<Scalars['ID']>>;
-  factory?: Maybe<Scalars['String']>;
-  factory_not?: Maybe<Scalars['String']>;
-  factory_gt?: Maybe<Scalars['String']>;
-  factory_lt?: Maybe<Scalars['String']>;
-  factory_gte?: Maybe<Scalars['String']>;
-  factory_lte?: Maybe<Scalars['String']>;
-  factory_in?: Maybe<Array<Scalars['String']>>;
-  factory_not_in?: Maybe<Array<Scalars['String']>>;
-  factory_contains?: Maybe<Scalars['String']>;
-  factory_not_contains?: Maybe<Scalars['String']>;
-  factory_starts_with?: Maybe<Scalars['String']>;
-  factory_not_starts_with?: Maybe<Scalars['String']>;
-  factory_ends_with?: Maybe<Scalars['String']>;
-  factory_not_ends_with?: Maybe<Scalars['String']>;
   gemPool?: Maybe<Scalars['String']>;
   gemPool_not?: Maybe<Scalars['String']>;
   gemPool_gt?: Maybe<Scalars['String']>;
@@ -1122,22 +443,6 @@ export type Gem_Filter = {
   createdAtTimestamp_lte?: Maybe<Scalars['BigInt']>;
   createdAtTimestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   createdAtTimestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  createdAtBlockNumber?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_not?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_gt?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_lt?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_gte?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_lte?: Maybe<Scalars['BigInt']>;
-  createdAtBlockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
-  createdAtBlockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  updatedAtTimestamp?: Maybe<Scalars['BigInt']>;
-  updatedAtTimestamp_not?: Maybe<Scalars['BigInt']>;
-  updatedAtTimestamp_gt?: Maybe<Scalars['BigInt']>;
-  updatedAtTimestamp_lt?: Maybe<Scalars['BigInt']>;
-  updatedAtTimestamp_gte?: Maybe<Scalars['BigInt']>;
-  updatedAtTimestamp_lte?: Maybe<Scalars['BigInt']>;
-  updatedAtTimestamp_in?: Maybe<Array<Scalars['BigInt']>>;
-  updatedAtTimestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
   transactionHash?: Maybe<Scalars['Bytes']>;
   transactionHash_not?: Maybe<Scalars['Bytes']>;
   transactionHash_in?: Maybe<Array<Scalars['Bytes']>>;
@@ -1148,14 +453,11 @@ export type Gem_Filter = {
 
 export enum Gem_OrderBy {
   Id = 'id',
-  Factory = 'factory',
   GemPool = 'gemPool',
   Owner = 'owner',
   Claim = 'claim',
   Quantity = 'quantity',
   CreatedAtTimestamp = 'createdAtTimestamp',
-  CreatedAtBlockNumber = 'createdAtBlockNumber',
-  UpdatedAtTimestamp = 'updatedAtTimestamp',
   TransactionHash = 'transactionHash'
 }
 
@@ -1165,9 +467,8 @@ export enum OrderDirection {
 }
 
 export type Query = {
-  __typename?: 'Query';
-  gemPoolFactory?: Maybe<GemPoolFactory>;
-  gemPoolFactories: Array<GemPoolFactory>;
+  game?: Maybe<Game>;
+  games: Array<Game>;
   gemPool?: Maybe<GemPool>;
   gemPools: Array<GemPool>;
   user?: Maybe<User>;
@@ -1176,29 +477,23 @@ export type Query = {
   claims: Array<Claim>;
   gem?: Maybe<Gem>;
   gems: Array<Gem>;
-  claimSend?: Maybe<ClaimSend>;
-  claimSends: Array<ClaimSend>;
-  gemSend?: Maybe<GemSend>;
-  gemSends: Array<GemSend>;
-  gemWrap?: Maybe<GemWrap>;
-  gemWraps: Array<GemWrap>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
 };
 
 
-export type QueryGemPoolFactoryArgs = {
+export type QueryGameArgs = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 };
 
 
-export type QueryGemPoolFactoriesArgs = {
+export type QueryGamesArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<GemPoolFactory_OrderBy>;
+  orderBy?: Maybe<Game_OrderBy>;
   orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<GemPoolFactory_Filter>;
+  where?: Maybe<Game_Filter>;
   block?: Maybe<Block_Height>;
 };
 
@@ -1267,62 +562,13 @@ export type QueryGemsArgs = {
 };
 
 
-export type QueryClaimSendArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-};
-
-
-export type QueryClaimSendsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<ClaimSend_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<ClaimSend_Filter>;
-  block?: Maybe<Block_Height>;
-};
-
-
-export type QueryGemSendArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-};
-
-
-export type QueryGemSendsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<GemSend_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<GemSend_Filter>;
-  block?: Maybe<Block_Height>;
-};
-
-
-export type QueryGemWrapArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-};
-
-
-export type QueryGemWrapsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<GemWrap_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<GemWrap_Filter>;
-  block?: Maybe<Block_Height>;
-};
-
-
 export type Query_MetaArgs = {
   block?: Maybe<Block_Height>;
 };
 
 export type Subscription = {
-  __typename?: 'Subscription';
-  gemPoolFactory?: Maybe<GemPoolFactory>;
-  gemPoolFactories: Array<GemPoolFactory>;
+  game?: Maybe<Game>;
+  games: Array<Game>;
   gemPool?: Maybe<GemPool>;
   gemPools: Array<GemPool>;
   user?: Maybe<User>;
@@ -1331,29 +577,23 @@ export type Subscription = {
   claims: Array<Claim>;
   gem?: Maybe<Gem>;
   gems: Array<Gem>;
-  claimSend?: Maybe<ClaimSend>;
-  claimSends: Array<ClaimSend>;
-  gemSend?: Maybe<GemSend>;
-  gemSends: Array<GemSend>;
-  gemWrap?: Maybe<GemWrap>;
-  gemWraps: Array<GemWrap>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
 };
 
 
-export type SubscriptionGemPoolFactoryArgs = {
+export type SubscriptionGameArgs = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 };
 
 
-export type SubscriptionGemPoolFactoriesArgs = {
+export type SubscriptionGamesArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<GemPoolFactory_OrderBy>;
+  orderBy?: Maybe<Game_OrderBy>;
   orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<GemPoolFactory_Filter>;
+  where?: Maybe<Game_Filter>;
   block?: Maybe<Block_Height>;
 };
 
@@ -1422,101 +662,19 @@ export type SubscriptionGemsArgs = {
 };
 
 
-export type SubscriptionClaimSendArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-};
-
-
-export type SubscriptionClaimSendsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<ClaimSend_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<ClaimSend_Filter>;
-  block?: Maybe<Block_Height>;
-};
-
-
-export type SubscriptionGemSendArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-};
-
-
-export type SubscriptionGemSendsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<GemSend_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<GemSend_Filter>;
-  block?: Maybe<Block_Height>;
-};
-
-
-export type SubscriptionGemWrapArgs = {
-  id: Scalars['ID'];
-  block?: Maybe<Block_Height>;
-};
-
-
-export type SubscriptionGemWrapsArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<GemWrap_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<GemWrap_Filter>;
-  block?: Maybe<Block_Height>;
-};
-
-
 export type Subscription_MetaArgs = {
   block?: Maybe<Block_Height>;
 };
 
 export type User = {
-  __typename?: 'User';
   /** wallet address */
   id: Scalars['ID'];
   claims: Array<Claim>;
-  claimsSent: Array<ClaimSend>;
-  claimsRecieved: Array<ClaimSend>;
   gems: Array<Gem>;
-  gemsSent: Array<GemSend>;
-  gemsRecieved: Array<GemSend>;
-  gemsERC20Wrapped: Array<GemWrap>;
   /** claims owned by this user */
-  claimsCount: Scalars['BigInt'];
-  /** claims owned by this user */
-  claimsQuantity: Scalars['BigInt'];
-  /** total funds staked on created claims */
-  claimsStakedTotalAmount: Scalars['BigDecimal'];
-  /** total gem staking time in seconds */
-  claimsStakedTimeSecs: Scalars['BigInt'];
-  /** number of claim send transactions */
-  claimsSentCount: Scalars['BigInt'];
+  claimCount: Scalars['BigInt'];
   /** gems owned by this user */
   gemCount: Scalars['BigInt'];
-  /** total quantity specified on minted gems */
-  gemQuantity: Scalars['BigInt'];
-  /** total funds staked on minted gems */
-  gemStakedTotalAmount: Scalars['BigDecimal'];
-  /** total gem staking time in seconds */
-  gemStakedTimeSecs: Scalars['BigInt'];
-  /** number of gem send transactions */
-  gemsSentCount: Scalars['BigInt'];
-  /** number of gem recieve transactions */
-  gemsRecievedCount: Scalars['BigInt'];
-  /** total quantity of gems in gem send transactions */
-  gemsSentQuantity: Scalars['BigInt'];
-  /** total quantity of gems in gem send transactions */
-  gemsRecievedQuantity: Scalars['BigInt'];
-  /** number of gem wrap transactions */
-  gemsERC20WrapCount: Scalars['BigInt'];
-  /** total quantity of gems in gem wrap transactions */
-  gemsERC20WrapQuantity: Scalars['BigInt'];
-  /** total time staked by this user, including immature claim collections */
-  actualStakedTimeSecs: Scalars['BigInt'];
 };
 
 
@@ -1529,57 +687,12 @@ export type UserClaimsArgs = {
 };
 
 
-export type UserClaimsSentArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<ClaimSend_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<ClaimSend_Filter>;
-};
-
-
-export type UserClaimsRecievedArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<ClaimSend_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<ClaimSend_Filter>;
-};
-
-
 export type UserGemsArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Gem_OrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<Gem_Filter>;
-};
-
-
-export type UserGemsSentArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<GemSend_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<GemSend_Filter>;
-};
-
-
-export type UserGemsRecievedArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<GemSend_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<GemSend_Filter>;
-};
-
-
-export type UserGemsErc20WrappedArgs = {
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<GemWrap_OrderBy>;
-  orderDirection?: Maybe<OrderDirection>;
-  where?: Maybe<GemWrap_Filter>;
 };
 
 export type User_Filter = {
@@ -1591,46 +704,14 @@ export type User_Filter = {
   id_lte?: Maybe<Scalars['ID']>;
   id_in?: Maybe<Array<Scalars['ID']>>;
   id_not_in?: Maybe<Array<Scalars['ID']>>;
-  claimsCount?: Maybe<Scalars['BigInt']>;
-  claimsCount_not?: Maybe<Scalars['BigInt']>;
-  claimsCount_gt?: Maybe<Scalars['BigInt']>;
-  claimsCount_lt?: Maybe<Scalars['BigInt']>;
-  claimsCount_gte?: Maybe<Scalars['BigInt']>;
-  claimsCount_lte?: Maybe<Scalars['BigInt']>;
-  claimsCount_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsQuantity?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_not?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_gt?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_lt?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_gte?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_lte?: Maybe<Scalars['BigInt']>;
-  claimsQuantity_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsQuantity_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsStakedTotalAmount?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedTotalAmount_not?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedTotalAmount_gt?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedTotalAmount_lt?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedTotalAmount_gte?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedTotalAmount_lte?: Maybe<Scalars['BigDecimal']>;
-  claimsStakedTotalAmount_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  claimsStakedTotalAmount_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  claimsStakedTimeSecs?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_not?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_gt?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_lt?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_gte?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_lte?: Maybe<Scalars['BigInt']>;
-  claimsStakedTimeSecs_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsStakedTimeSecs_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsSentCount?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_not?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_gt?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_lt?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_gte?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_lte?: Maybe<Scalars['BigInt']>;
-  claimsSentCount_in?: Maybe<Array<Scalars['BigInt']>>;
-  claimsSentCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  claimCount?: Maybe<Scalars['BigInt']>;
+  claimCount_not?: Maybe<Scalars['BigInt']>;
+  claimCount_gt?: Maybe<Scalars['BigInt']>;
+  claimCount_lt?: Maybe<Scalars['BigInt']>;
+  claimCount_gte?: Maybe<Scalars['BigInt']>;
+  claimCount_lte?: Maybe<Scalars['BigInt']>;
+  claimCount_in?: Maybe<Array<Scalars['BigInt']>>;
+  claimCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
   gemCount?: Maybe<Scalars['BigInt']>;
   gemCount_not?: Maybe<Scalars['BigInt']>;
   gemCount_gt?: Maybe<Scalars['BigInt']>;
@@ -1639,117 +720,17 @@ export type User_Filter = {
   gemCount_lte?: Maybe<Scalars['BigInt']>;
   gemCount_in?: Maybe<Array<Scalars['BigInt']>>;
   gemCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemQuantity?: Maybe<Scalars['BigInt']>;
-  gemQuantity_not?: Maybe<Scalars['BigInt']>;
-  gemQuantity_gt?: Maybe<Scalars['BigInt']>;
-  gemQuantity_lt?: Maybe<Scalars['BigInt']>;
-  gemQuantity_gte?: Maybe<Scalars['BigInt']>;
-  gemQuantity_lte?: Maybe<Scalars['BigInt']>;
-  gemQuantity_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemQuantity_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemStakedTotalAmount?: Maybe<Scalars['BigDecimal']>;
-  gemStakedTotalAmount_not?: Maybe<Scalars['BigDecimal']>;
-  gemStakedTotalAmount_gt?: Maybe<Scalars['BigDecimal']>;
-  gemStakedTotalAmount_lt?: Maybe<Scalars['BigDecimal']>;
-  gemStakedTotalAmount_gte?: Maybe<Scalars['BigDecimal']>;
-  gemStakedTotalAmount_lte?: Maybe<Scalars['BigDecimal']>;
-  gemStakedTotalAmount_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  gemStakedTotalAmount_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
-  gemStakedTimeSecs?: Maybe<Scalars['BigInt']>;
-  gemStakedTimeSecs_not?: Maybe<Scalars['BigInt']>;
-  gemStakedTimeSecs_gt?: Maybe<Scalars['BigInt']>;
-  gemStakedTimeSecs_lt?: Maybe<Scalars['BigInt']>;
-  gemStakedTimeSecs_gte?: Maybe<Scalars['BigInt']>;
-  gemStakedTimeSecs_lte?: Maybe<Scalars['BigInt']>;
-  gemStakedTimeSecs_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemStakedTimeSecs_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsSentCount?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_not?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_gt?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_lt?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_gte?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_lte?: Maybe<Scalars['BigInt']>;
-  gemsSentCount_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsSentCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsRecievedCount?: Maybe<Scalars['BigInt']>;
-  gemsRecievedCount_not?: Maybe<Scalars['BigInt']>;
-  gemsRecievedCount_gt?: Maybe<Scalars['BigInt']>;
-  gemsRecievedCount_lt?: Maybe<Scalars['BigInt']>;
-  gemsRecievedCount_gte?: Maybe<Scalars['BigInt']>;
-  gemsRecievedCount_lte?: Maybe<Scalars['BigInt']>;
-  gemsRecievedCount_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsRecievedCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsSentQuantity?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_not?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_gt?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_lt?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_gte?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_lte?: Maybe<Scalars['BigInt']>;
-  gemsSentQuantity_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsSentQuantity_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsRecievedQuantity?: Maybe<Scalars['BigInt']>;
-  gemsRecievedQuantity_not?: Maybe<Scalars['BigInt']>;
-  gemsRecievedQuantity_gt?: Maybe<Scalars['BigInt']>;
-  gemsRecievedQuantity_lt?: Maybe<Scalars['BigInt']>;
-  gemsRecievedQuantity_gte?: Maybe<Scalars['BigInt']>;
-  gemsRecievedQuantity_lte?: Maybe<Scalars['BigInt']>;
-  gemsRecievedQuantity_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsRecievedQuantity_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsERC20WrapCount?: Maybe<Scalars['BigInt']>;
-  gemsERC20WrapCount_not?: Maybe<Scalars['BigInt']>;
-  gemsERC20WrapCount_gt?: Maybe<Scalars['BigInt']>;
-  gemsERC20WrapCount_lt?: Maybe<Scalars['BigInt']>;
-  gemsERC20WrapCount_gte?: Maybe<Scalars['BigInt']>;
-  gemsERC20WrapCount_lte?: Maybe<Scalars['BigInt']>;
-  gemsERC20WrapCount_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsERC20WrapCount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsERC20WrapQuantity?: Maybe<Scalars['BigInt']>;
-  gemsERC20WrapQuantity_not?: Maybe<Scalars['BigInt']>;
-  gemsERC20WrapQuantity_gt?: Maybe<Scalars['BigInt']>;
-  gemsERC20WrapQuantity_lt?: Maybe<Scalars['BigInt']>;
-  gemsERC20WrapQuantity_gte?: Maybe<Scalars['BigInt']>;
-  gemsERC20WrapQuantity_lte?: Maybe<Scalars['BigInt']>;
-  gemsERC20WrapQuantity_in?: Maybe<Array<Scalars['BigInt']>>;
-  gemsERC20WrapQuantity_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  actualStakedTimeSecs?: Maybe<Scalars['BigInt']>;
-  actualStakedTimeSecs_not?: Maybe<Scalars['BigInt']>;
-  actualStakedTimeSecs_gt?: Maybe<Scalars['BigInt']>;
-  actualStakedTimeSecs_lt?: Maybe<Scalars['BigInt']>;
-  actualStakedTimeSecs_gte?: Maybe<Scalars['BigInt']>;
-  actualStakedTimeSecs_lte?: Maybe<Scalars['BigInt']>;
-  actualStakedTimeSecs_in?: Maybe<Array<Scalars['BigInt']>>;
-  actualStakedTimeSecs_not_in?: Maybe<Array<Scalars['BigInt']>>;
 };
 
 export enum User_OrderBy {
   Id = 'id',
   Claims = 'claims',
-  ClaimsSent = 'claimsSent',
-  ClaimsRecieved = 'claimsRecieved',
   Gems = 'gems',
-  GemsSent = 'gemsSent',
-  GemsRecieved = 'gemsRecieved',
-  GemsErc20Wrapped = 'gemsERC20Wrapped',
-  ClaimsCount = 'claimsCount',
-  ClaimsQuantity = 'claimsQuantity',
-  ClaimsStakedTotalAmount = 'claimsStakedTotalAmount',
-  ClaimsStakedTimeSecs = 'claimsStakedTimeSecs',
-  ClaimsSentCount = 'claimsSentCount',
-  GemCount = 'gemCount',
-  GemQuantity = 'gemQuantity',
-  GemStakedTotalAmount = 'gemStakedTotalAmount',
-  GemStakedTimeSecs = 'gemStakedTimeSecs',
-  GemsSentCount = 'gemsSentCount',
-  GemsRecievedCount = 'gemsRecievedCount',
-  GemsSentQuantity = 'gemsSentQuantity',
-  GemsRecievedQuantity = 'gemsRecievedQuantity',
-  GemsErc20WrapCount = 'gemsERC20WrapCount',
-  GemsErc20WrapQuantity = 'gemsERC20WrapQuantity',
-  ActualStakedTimeSecs = 'actualStakedTimeSecs'
+  ClaimCount = 'claimCount',
+  GemCount = 'gemCount'
 }
 
 export type _Block_ = {
-  __typename?: '_Block_';
   /** The hash of the block */
   hash?: Maybe<Scalars['Bytes']>;
   /** The block number */
@@ -1758,7 +739,6 @@ export type _Block_ = {
 
 /** The type for the top-level _meta field */
 export type _Meta_ = {
-  __typename?: '_Meta_';
   /**
    * Information about a specific subgraph block. The hash of the block
    * will be null if the _meta field has a block constraint that asks for
@@ -1782,26 +762,46 @@ export enum _SubgraphErrorPolicy_ {
 export type GetPoolsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetPoolsQuery = (
-  { __typename?: 'Query' }
-  & { gemPools: Array<(
-    { __typename?: 'GemPool' }
-    & Pick<GemPool, 'id' | 'symbol' | 'name' | 'stakingPrice' | 'minTimeSecs' | 'maxTimeSecs' | 'diffStep' | 'maxMint'>
-  )> }
-);
+export type GetPoolsQuery = { gemPools: Array<Pick<GemPool, 'id' | 'symbol' | 'name' | 'stakingPrice' | 'minTimeSecs' | 'maxTimeSecs' | 'diffStep' | 'maxMint'>> };
 
 export type GetPoolQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type GetPoolQuery = (
-  { __typename?: 'Query' }
-  & { gemPool?: Maybe<(
-    { __typename?: 'GemPool' }
-    & Pick<GemPool, 'id' | 'symbol' | 'name' | 'stakingPrice' | 'minTimeSecs' | 'maxTimeSecs' | 'diffStep' | 'maxMint'>
-  )> }
-);
+export type GetPoolQuery = { gemPool?: Maybe<Pick<GemPool, 'id' | 'symbol' | 'name' | 'stakingPrice' | 'minTimeSecs' | 'maxTimeSecs' | 'diffStep' | 'maxMint'>> };
+
+export type GetStatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetStatsQuery = { game?: Maybe<Pick<Game, 'claimCount' | 'gemCount' | 'stakedAmount'>> };
+
+export type GetUserStatsQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetUserStatsQuery = { user?: Maybe<Pick<User, 'claimCount' | 'gemCount'>> };
+
+export type GetUserClaimsQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetUserClaimsQuery = { user?: Maybe<{ claims: Array<(
+      Pick<Claim, 'stakedAmount' | 'quantity' | 'createdAtTimestamp' | 'stakedTimeSeconds' | 'transactionHash'>
+      & { gemPool: Pick<GemPool, 'id' | 'symbol' | 'name'> }
+    )> }> };
+
+export type GetUserInventoryQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetUserInventoryQuery = { user?: Maybe<{ gems: Array<(
+      Pick<Gem, 'quantity' | 'createdAtTimestamp' | 'transactionHash'>
+      & { gemPool: Pick<GemPool, 'symbol' | 'name'> }
+    )> }> };
 
 
 export const GetPoolsDocument = `
@@ -1856,5 +856,107 @@ export const useGetPoolQuery = <
     useQuery<GetPoolQuery, TError, TData>(
       ['GetPool', variables],
       fetcher<GetPoolQuery, GetPoolQueryVariables>(client, GetPoolDocument, variables),
+      options
+    );
+export const GetStatsDocument = `
+    query GetStats {
+  game(id: "BITGEM") {
+    claimCount
+    gemCount
+    stakedAmount
+  }
+}
+    `;
+export const useGetStatsQuery = <
+      TData = GetStatsQuery,
+      TError = Error
+    >(
+      client: GraphQLClient, 
+      variables?: GetStatsQueryVariables, 
+      options?: UseQueryOptions<GetStatsQuery, TError, TData>
+    ) => 
+    useQuery<GetStatsQuery, TError, TData>(
+      ['GetStats', variables],
+      fetcher<GetStatsQuery, GetStatsQueryVariables>(client, GetStatsDocument, variables),
+      options
+    );
+export const GetUserStatsDocument = `
+    query GetUserStats($id: ID!) {
+  user(id: $id) {
+    claimCount
+    gemCount
+  }
+}
+    `;
+export const useGetUserStatsQuery = <
+      TData = GetUserStatsQuery,
+      TError = Error
+    >(
+      client: GraphQLClient, 
+      variables: GetUserStatsQueryVariables, 
+      options?: UseQueryOptions<GetUserStatsQuery, TError, TData>
+    ) => 
+    useQuery<GetUserStatsQuery, TError, TData>(
+      ['GetUserStats', variables],
+      fetcher<GetUserStatsQuery, GetUserStatsQueryVariables>(client, GetUserStatsDocument, variables),
+      options
+    );
+export const GetUserClaimsDocument = `
+    query GetUserClaims($id: ID!) {
+  user(id: $id) {
+    claims {
+      stakedAmount
+      quantity
+      createdAtTimestamp
+      stakedTimeSeconds
+      transactionHash
+      gemPool {
+        id
+        symbol
+        name
+      }
+    }
+  }
+}
+    `;
+export const useGetUserClaimsQuery = <
+      TData = GetUserClaimsQuery,
+      TError = Error
+    >(
+      client: GraphQLClient, 
+      variables: GetUserClaimsQueryVariables, 
+      options?: UseQueryOptions<GetUserClaimsQuery, TError, TData>
+    ) => 
+    useQuery<GetUserClaimsQuery, TError, TData>(
+      ['GetUserClaims', variables],
+      fetcher<GetUserClaimsQuery, GetUserClaimsQueryVariables>(client, GetUserClaimsDocument, variables),
+      options
+    );
+export const GetUserInventoryDocument = `
+    query GetUserInventory($id: ID!) {
+  user(id: $id) {
+    gems {
+      quantity
+      createdAtTimestamp
+      transactionHash
+      gemPool {
+        symbol
+        name
+      }
+    }
+  }
+}
+    `;
+export const useGetUserInventoryQuery = <
+      TData = GetUserInventoryQuery,
+      TError = Error
+    >(
+      client: GraphQLClient, 
+      variables: GetUserInventoryQueryVariables, 
+      options?: UseQueryOptions<GetUserInventoryQuery, TError, TData>
+    ) => 
+    useQuery<GetUserInventoryQuery, TError, TData>(
+      ['GetUserInventory', variables],
+      fetcher<GetUserInventoryQuery, GetUserInventoryQueryVariables>(client, GetUserInventoryDocument, variables),
       options
     );

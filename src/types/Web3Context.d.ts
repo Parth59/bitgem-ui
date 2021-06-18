@@ -1,4 +1,4 @@
-import {ethers} from 'ethers';
+import {ethers, Web3Provider} from 'ethers';
 import {
   NFTGemMultiToken,
   ERC20GemTokenFactory,
@@ -6,7 +6,17 @@ import {
   NFTGemPoolFactory
 } from '../../types';
 
-export type Blockchain = {
+export type GemContracts = {
+  token: NFTGemMultiToken;
+  factory: NFTGemPoolFactory;
+  tokenFactory: ERC20GemTokenFactory;
+  governor: NFTGemGovernor;
+};
+
+export type Web3Context = {
+  chainId: number;
+  library: Web3Provider;
+  account: string;
   contracts: GemContracts | null;
   signer: ethers.providers.JsonRpcSigner | null;
 };
@@ -14,10 +24,3 @@ export type Blockchain = {
 export type SignerOrProvider =
   | ethers.providers.JsonRpcSigner
   | ethers.providers.Provider;
-
-export type GemContracts = {
-  token: NFTGemMultiToken;
-  factory: NFTGemPoolFactory;
-  tokenFactory: ERC20GemTokenFactory;
-  governor: NFTGemGovernor;
-};

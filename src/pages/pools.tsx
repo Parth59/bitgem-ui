@@ -7,9 +7,6 @@ import {useGetPoolsQuery} from 'graph';
 import {client} from 'graph/client';
 
 const Pools = (): JSX.Element => {
-  const r = useGetPoolsQuery(client, {});
-  console.log('Receivied R', {r});
-
   const {data, isError, isIdle, isLoading, error} = useGetPoolsQuery(
     client,
     {}

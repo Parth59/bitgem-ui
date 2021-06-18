@@ -23,3 +23,49 @@ query GetPool($id: ID!) {
     maxMint
   }
 }
+
+query GetStats {
+  game(id: "BITGEM") {
+    claimCount
+    gemCount
+    stakedAmount
+  }
+}
+
+query GetUserStats($id: ID!) {
+  user(id: $id) {
+    claimCount
+    gemCount
+  }
+}
+
+query GetUserClaims($id: ID!) {
+  user(id: $id) {
+    claims {
+      stakedAmount
+      quantity
+      createdAtTimestamp
+      stakedTimeSeconds
+      transactionHash
+      gemPool {
+        id
+        symbol
+        name
+      }
+    }
+  }
+}
+
+query GetUserInventory($id: ID!) {
+  user(id: $id) {
+    gems {
+      quantity
+      createdAtTimestamp
+      transactionHash
+      gemPool {
+        symbol
+        name
+      }
+    }
+  }
+}
