@@ -26,6 +26,16 @@ const getContractRef = async (
   }
 };
 
+export const loadContract = (address: string, ABI: any, library: Web3Provider, signer?: ethers.providers.JsonRpcSigner): Contract | null => {
+  if (!address || !ABI || !library) return null;
+  try {
+    return new Contract(address, ABI, signer ?? library.getSigner() ?? library);
+  } catch (error) {
+    console.error('Failed to get contract', error);
+    return null;
+  }
+}
+
 const importContractData = async (chainId: number) => {
   let module;
   switch (chainId) {

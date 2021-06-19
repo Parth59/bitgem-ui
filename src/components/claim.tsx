@@ -7,8 +7,9 @@ import {BigNumber} from 'ethers';
 import {getGemImage} from 'constants/gem-metadata';
 import {setStringPrecision} from 'lib/utils';
 import {Claim as ClaimType, GemPool} from 'graph';
-import {useWeb3Bitgem} from './web3-bitgem-context';
+// import {useWeb3Bitgem} from './web3-bitgem-context';
 import {usePoolContract} from 'hooks/use-contract';
+import {useWeb3React} from '@web3-react/core';
 
 type ClaimProps = Pick<
   ClaimType,
@@ -29,7 +30,8 @@ const Claim = ({
   stakedTimeSeconds,
   createdAtTimestamp
 }: ClaimProps): JSX.Element => {
-  const {chainId} = useWeb3Bitgem();
+  // const {chainId} = useWeb3Bitgem();
+  const {chainId} = useWeb3React();
   const [isConfirmOpen, toggleConfirm] = useToggle(false);
   const poolContract = usePoolContract(pool.id);
 

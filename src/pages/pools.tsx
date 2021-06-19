@@ -17,6 +17,7 @@ const Pools = (): JSX.Element => {
   if (isError) return <p className="text-white">{error.message}</p>;
 
   const {gemPools} = data;
+  console.log({gemPools});
 
   return (
     <main className="flex-1 px-1">

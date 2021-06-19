@@ -39,9 +39,9 @@ query GetUserStats($id: ID!) {
   }
 }
 
-query GetUserClaims($id: ID!) {
+query GetUserClaims($id: ID!, $collected: Boolean) {
   user(id: $id) {
-    claims {
+    claims(where: {collected: $collected}) {
       stakedAmount
       quantity
       createdAtTimestamp

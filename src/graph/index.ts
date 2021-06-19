@@ -785,6 +785,7 @@ export type GetUserStatsQuery = { user?: Maybe<Pick<User, 'claimCount' | 'gemCou
 
 export type GetUserClaimsQueryVariables = Exact<{
   id: Scalars['ID'];
+  collected?: Maybe<Scalars['Boolean']>;
 }>;
 
 
@@ -902,9 +903,9 @@ export const useGetUserStatsQuery = <
       options
     );
 export const GetUserClaimsDocument = `
-    query GetUserClaims($id: ID!) {
+    query GetUserClaims($id: ID!, $collected: Boolean) {
   user(id: $id) {
-    claims {
+    claims(where: {collected: $collected}) {
       stakedAmount
       quantity
       createdAtTimestamp

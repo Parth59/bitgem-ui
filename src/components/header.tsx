@@ -5,19 +5,21 @@ import {CloseIcon, MenuIcon} from './icons';
 import {useToggle} from 'hooks/use-toggle';
 import {useRouter} from 'next/dist/client/router';
 import {ChainId, networks} from 'constants/networks';
-import {
-  useCacheInvalidationOnEvent,
-  useWeb3Notification
-} from 'hooks/use-web3-event';
-import {useWeb3Bitgem} from './web3-bitgem-context';
+// import {
+//   useCacheInvalidationOnEvent,
+//   useWeb3Notification
+// } from 'hooks/use-web3-event';
+// import {useWeb3Bitgem} from './web3-bitgem-context';
 import {useGetStatsQuery, useGetUserStatsQuery} from 'graph';
 import {client} from 'graph/client';
 import {formatEther} from 'ethers/lib/utils';
+import {useWeb3React} from '@web3-react/core';
 
 const Header = (): JSX.Element => {
   const router = useRouter();
   const [isMenuOpen, toggleMenu, setMenuState] = useToggle(false);
-  const {chainId, contracts, account} = useWeb3Bitgem();
+  // const {chainId, contracts, account} = useWeb3Bitgem();
+  const {chainId, account} = useWeb3React();
   const {data} = useGetStatsQuery(client, {});
   const {data: userStatsData} = useGetUserStatsQuery(
     client,
@@ -25,17 +27,18 @@ const Header = (): JSX.Element => {
     {enabled: !!account}
   );
 
-  useWeb3Notification(
-    contracts.governor,
-    'GovernanceTokenIssued',
-    'You just received a governance token!'
-  );
+  console.log('RAN THIS SHIT', userStatsData);
+  // useWeb3Notification(
+  //   contracts.governor,
+  //   'GovernanceTokenIssued',
+  //   'You just received a governance token!'
+  // );
 
-  useCacheInvalidationOnEvent(
-    contracts.governor,
-    'GovernanceTokenIssued',
-    'balance'
-  );
+  // useCacheInvalidationOnEvent(
+  //   contracts.governor,
+  //   'GovernanceTokenIssued',
+  //   'balance'
+  // );
 
   // closes the menu when user picks a route on mobile
   React.useEffect(() => {

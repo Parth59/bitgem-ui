@@ -10,7 +10,7 @@ const Claims = (): JSX.Element => {
   const {account} = useWeb3React();
   const {data, isLoading, isError, error, isIdle} = useGetUserClaimsQuery(
     client,
-    {id: account.toLowerCase()}
+    {id: account.toLowerCase(), collected: false}
   );
 
   if (isIdle) return <div>Idle</div>;
