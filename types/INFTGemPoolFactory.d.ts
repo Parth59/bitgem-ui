@@ -117,8 +117,8 @@ interface INFTGemPoolFactoryInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
-    "CustomNFTGemPoolCreated(string,string)": EventFragment;
-    "NFTGemPoolCreated(string,string,uint256,uint256,uint256,uint256,uint256,address)": EventFragment;
+    "CustomNFTGemPoolCreated(address,string,string)": EventFragment;
+    "NFTGemPoolCreated(address,string,string,uint256,uint256,uint256,uint256,uint256,address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "CustomNFTGemPoolCreated"): EventFragment;
@@ -440,13 +440,18 @@ export class INFTGemPoolFactory extends Contract {
   };
 
   filters: {
-    CustomNFTGemPoolCreated(gemSymbol: null, gemName: null): EventFilter;
+    CustomNFTGemPoolCreated(
+      gemPoolAdress: string | null,
+      gemSymbol: null,
+      gemName: null
+    ): EventFilter;
 
     NFTGemPoolCreated(
+      gemPoolAddress: string | null,
       gemSymbol: null,
       gemName: null,
       ethPrice: null,
-      mintTime: null,
+      minTime: null,
       maxTime: null,
       diffstep: null,
       maxMint: null,

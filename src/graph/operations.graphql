@@ -41,7 +41,12 @@ query GetUserStats($id: ID!) {
 
 query GetUserClaims($id: ID!, $collected: Boolean) {
   user(id: $id) {
-    claims(where: {collected: $collected}) {
+    claims(
+      where: {collected: $collected}
+      orderBy: createdAtTimestamp
+      orderDirection: desc
+    ) {
+      id
       stakedAmount
       quantity
       createdAtTimestamp
@@ -56,13 +61,15 @@ query GetUserClaims($id: ID!, $collected: Boolean) {
   }
 }
 
-query GetUserInventory($id: ID!) {
+query GetUserGems($id: ID!) {
   user(id: $id) {
     gems {
+      id
       quantity
       createdAtTimestamp
       transactionHash
       gemPool {
+        id
         symbol
         name
       }

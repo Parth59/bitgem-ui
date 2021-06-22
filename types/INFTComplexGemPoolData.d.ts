@@ -25,7 +25,6 @@ interface INFTComplexGemPoolDataInterface extends ethers.utils.Interface {
     "addAllowedToken(address)": FunctionFragment;
     "addAllowedTokenSource(address)": FunctionFragment;
     "addInputRequirement(address,address,uint8,uint256,uint256,bool,bool)": FunctionFragment;
-    "addLegacyToken(address,uint8,uint256,uint256,address,uint256)": FunctionFragment;
     "allInputRequirements(uint256)": FunctionFragment;
     "allInputRequirementsLength()": FunctionFragment;
     "allTokenHashes(uint256)": FunctionFragment;
@@ -45,6 +44,8 @@ interface INFTComplexGemPoolDataInterface extends ethers.utils.Interface {
     "enabled()": FunctionFragment;
     "ethPrice()": FunctionFragment;
     "gemClaimHash(uint256)": FunctionFragment;
+    "importLegacyGem(address,address,uint256,address)": FunctionFragment;
+    "isLegacyGemImported(uint256)": FunctionFragment;
     "isTokenAllowed(address)": FunctionFragment;
     "maxClaimsPerAccount()": FunctionFragment;
     "maxQuantityPerClaim()": FunctionFragment;
@@ -64,7 +65,6 @@ interface INFTComplexGemPoolDataInterface extends ethers.utils.Interface {
     "setMaxQuantityPerClaim(uint256)": FunctionFragment;
     "setNextIds(uint256,uint256)": FunctionFragment;
     "setPriceIncrementType(uint8)": FunctionFragment;
-    "setToken(uint256,uint8,uint256)": FunctionFragment;
     "setTokenHashes(uint256[])": FunctionFragment;
     "setValidateErc20(bool)": FunctionFragment;
     "setVisible(bool)": FunctionFragment;
@@ -100,17 +100,6 @@ interface INFTComplexGemPoolDataInterface extends ethers.utils.Interface {
       BigNumberish,
       boolean,
       boolean
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addLegacyToken",
-    values: [
-      string,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      string,
-      BigNumberish
     ]
   ): string;
   encodeFunctionData(
@@ -175,6 +164,14 @@ interface INFTComplexGemPoolDataInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "ethPrice", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "gemClaimHash",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "importLegacyGem",
+    values: [string, string, BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isLegacyGemImported",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
@@ -248,10 +245,6 @@ interface INFTComplexGemPoolDataInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "setToken",
-    values: [BigNumberish, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "setTokenHashes",
     values: [BigNumberish[]]
   ): string;
@@ -316,10 +309,6 @@ interface INFTComplexGemPoolDataInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "addLegacyToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "allInputRequirements",
     data: BytesLike
   ): Result;
@@ -381,6 +370,14 @@ interface INFTComplexGemPoolDataInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "ethPrice", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "gemClaimHash",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "importLegacyGem",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "isLegacyGemImported",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -450,7 +447,6 @@ interface INFTComplexGemPoolDataInterface extends ethers.utils.Interface {
     functionFragment: "setPriceIncrementType",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setToken", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setTokenHashes",
     data: BytesLike
@@ -488,7 +484,11 @@ interface INFTComplexGemPoolDataInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "visible", data: BytesLike): Result;
 
-  events: {};
+  events: {
+    "NFTGemImported(address,address,address,address,uint256,uint256)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "NFTGemImported"): EventFragment;
 }
 
 export class INFTComplexGemPoolData extends Contract {
@@ -526,10 +526,10 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<ContractTransaction>;
 
     addInputRequirement(
-      token: string,
+      theToken: string,
       pool: string,
       inputType: BigNumberish,
-      tokenId: BigNumberish,
+      theTokenId: BigNumberish,
       minAmount: BigNumberish,
       takeCustody: boolean,
       burn: boolean,
@@ -537,33 +537,13 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<ContractTransaction>;
 
     "addInputRequirement(address,address,uint8,uint256,uint256,bool,bool)"(
-      token: string,
+      theToken: string,
       pool: string,
       inputType: BigNumberish,
-      tokenId: BigNumberish,
+      theTokenId: BigNumberish,
       minAmount: BigNumberish,
       takeCustody: boolean,
       burn: boolean,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    addLegacyToken(
-      token: string,
-      tokenType: BigNumberish,
-      tokenHash: BigNumberish,
-      tokenId: BigNumberish,
-      recipient: string,
-      quantity: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "addLegacyToken(address,uint8,uint256,uint256,address,uint256)"(
-      token: string,
-      tokenType: BigNumberish,
-      tokenHash: BigNumberish,
-      tokenId: BigNumberish,
-      recipient: string,
-      quantity: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -607,11 +587,9 @@ export class INFTComplexGemPoolData extends Contract {
 
     "allowPurchase()"(overrides?: CallOverrides): Promise<[boolean]>;
 
-    allowedTokenSources(overrides?: Overrides): Promise<ContractTransaction>;
+    allowedTokenSources(overrides?: CallOverrides): Promise<[string[]]>;
 
-    "allowedTokenSources()"(
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+    "allowedTokenSources()"(overrides?: CallOverrides): Promise<[string[]]>;
 
     allowedTokens(
       idx: BigNumberish,
@@ -725,6 +703,32 @@ export class INFTComplexGemPoolData extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    importLegacyGem(
+      pool: string,
+      legacyToken: string,
+      tokenHash: BigNumberish,
+      recipient: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "importLegacyGem(address,address,uint256,address)"(
+      pool: string,
+      legacyToken: string,
+      tokenHash: BigNumberish,
+      recipient: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    isLegacyGemImported(
+      tokenhash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "isLegacyGemImported(uint256)"(
+      tokenhash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     isTokenAllowed(tkn: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     "isTokenAllowed(address)"(
@@ -795,22 +799,22 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<ContractTransaction>;
 
     setCategory(
-      category: BigNumberish,
+      theCategory: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setCategory(uint256)"(
-      category: BigNumberish,
+      theCategory: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setDescription(
-      description: string,
+      desc: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setDescription(string)"(
-      description: string,
+      desc: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -845,14 +849,14 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<ContractTransaction>;
 
     setNextIds(
-      nextClaimId: BigNumberish,
-      nextGemId: BigNumberish,
+      _nextClaimId: BigNumberish,
+      _nextGemId: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setNextIds(uint256,uint256)"(
-      nextClaimId: BigNumberish,
-      nextGemId: BigNumberish,
+      _nextClaimId: BigNumberish,
+      _nextGemId: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -866,27 +870,13 @@ export class INFTComplexGemPoolData extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    setToken(
-      tokenHash: BigNumberish,
-      tokenType: BigNumberish,
-      tokenId: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setToken(uint256,uint8,uint256)"(
-      tokenHash: BigNumberish,
-      tokenType: BigNumberish,
-      tokenId: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
     setTokenHashes(
-      tokenHashes: BigNumberish[],
+      inTokenHashes: BigNumberish[],
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setTokenHashes(uint256[])"(
-      tokenHashes: BigNumberish[],
+      inTokenHashes: BigNumberish[],
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -901,12 +891,12 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<ContractTransaction>;
 
     setVisible(
-      visible: boolean,
+      isVisible: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setVisible(bool)"(
-      visible: boolean,
+      isVisible: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -1084,7 +1074,7 @@ export class INFTComplexGemPoolData extends Contract {
 
     updateInputRequirement(
       ndx: BigNumberish,
-      token: string,
+      theToken: string,
       pool: string,
       inputType: BigNumberish,
       tid: BigNumberish,
@@ -1096,7 +1086,7 @@ export class INFTComplexGemPoolData extends Contract {
 
     "updateInputRequirement(uint256,address,address,uint8,uint256,uint256,bool,bool)"(
       ndx: BigNumberish,
-      token: string,
+      theToken: string,
       pool: string,
       inputType: BigNumberish,
       tid: BigNumberish,
@@ -1136,10 +1126,10 @@ export class INFTComplexGemPoolData extends Contract {
   ): Promise<ContractTransaction>;
 
   addInputRequirement(
-    token: string,
+    theToken: string,
     pool: string,
     inputType: BigNumberish,
-    tokenId: BigNumberish,
+    theTokenId: BigNumberish,
     minAmount: BigNumberish,
     takeCustody: boolean,
     burn: boolean,
@@ -1147,33 +1137,13 @@ export class INFTComplexGemPoolData extends Contract {
   ): Promise<ContractTransaction>;
 
   "addInputRequirement(address,address,uint8,uint256,uint256,bool,bool)"(
-    token: string,
+    theToken: string,
     pool: string,
     inputType: BigNumberish,
-    tokenId: BigNumberish,
+    theTokenId: BigNumberish,
     minAmount: BigNumberish,
     takeCustody: boolean,
     burn: boolean,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  addLegacyToken(
-    token: string,
-    tokenType: BigNumberish,
-    tokenHash: BigNumberish,
-    tokenId: BigNumberish,
-    recipient: string,
-    quantity: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "addLegacyToken(address,uint8,uint256,uint256,address,uint256)"(
-    token: string,
-    tokenType: BigNumberish,
-    tokenHash: BigNumberish,
-    tokenId: BigNumberish,
-    recipient: string,
-    quantity: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -1213,9 +1183,9 @@ export class INFTComplexGemPoolData extends Contract {
 
   "allowPurchase()"(overrides?: CallOverrides): Promise<boolean>;
 
-  allowedTokenSources(overrides?: Overrides): Promise<ContractTransaction>;
+  allowedTokenSources(overrides?: CallOverrides): Promise<string[]>;
 
-  "allowedTokenSources()"(overrides?: Overrides): Promise<ContractTransaction>;
+  "allowedTokenSources()"(overrides?: CallOverrides): Promise<string[]>;
 
   allowedTokens(idx: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -1326,6 +1296,32 @@ export class INFTComplexGemPoolData extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  importLegacyGem(
+    pool: string,
+    legacyToken: string,
+    tokenHash: BigNumberish,
+    recipient: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "importLegacyGem(address,address,uint256,address)"(
+    pool: string,
+    legacyToken: string,
+    tokenHash: BigNumberish,
+    recipient: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  isLegacyGemImported(
+    tokenhash: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  "isLegacyGemImported(uint256)"(
+    tokenhash: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   isTokenAllowed(tkn: string, overrides?: CallOverrides): Promise<boolean>;
 
   "isTokenAllowed(address)"(
@@ -1396,22 +1392,22 @@ export class INFTComplexGemPoolData extends Contract {
   ): Promise<ContractTransaction>;
 
   setCategory(
-    category: BigNumberish,
+    theCategory: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setCategory(uint256)"(
-    category: BigNumberish,
+    theCategory: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setDescription(
-    description: string,
+    desc: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setDescription(string)"(
-    description: string,
+    desc: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -1446,14 +1442,14 @@ export class INFTComplexGemPoolData extends Contract {
   ): Promise<ContractTransaction>;
 
   setNextIds(
-    nextClaimId: BigNumberish,
-    nextGemId: BigNumberish,
+    _nextClaimId: BigNumberish,
+    _nextGemId: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setNextIds(uint256,uint256)"(
-    nextClaimId: BigNumberish,
-    nextGemId: BigNumberish,
+    _nextClaimId: BigNumberish,
+    _nextGemId: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -1467,27 +1463,13 @@ export class INFTComplexGemPoolData extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  setToken(
-    tokenHash: BigNumberish,
-    tokenType: BigNumberish,
-    tokenId: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setToken(uint256,uint8,uint256)"(
-    tokenHash: BigNumberish,
-    tokenType: BigNumberish,
-    tokenId: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
   setTokenHashes(
-    tokenHashes: BigNumberish[],
+    inTokenHashes: BigNumberish[],
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setTokenHashes(uint256[])"(
-    tokenHashes: BigNumberish[],
+    inTokenHashes: BigNumberish[],
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -1502,12 +1484,12 @@ export class INFTComplexGemPoolData extends Contract {
   ): Promise<ContractTransaction>;
 
   setVisible(
-    visible: boolean,
+    isVisible: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setVisible(bool)"(
-    visible: boolean,
+    isVisible: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -1685,7 +1667,7 @@ export class INFTComplexGemPoolData extends Contract {
 
   updateInputRequirement(
     ndx: BigNumberish,
-    token: string,
+    theToken: string,
     pool: string,
     inputType: BigNumberish,
     tid: BigNumberish,
@@ -1697,7 +1679,7 @@ export class INFTComplexGemPoolData extends Contract {
 
   "updateInputRequirement(uint256,address,address,uint8,uint256,uint256,bool,bool)"(
     ndx: BigNumberish,
-    token: string,
+    theToken: string,
     pool: string,
     inputType: BigNumberish,
     tid: BigNumberish,
@@ -1734,10 +1716,10 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<void>;
 
     addInputRequirement(
-      token: string,
+      theToken: string,
       pool: string,
       inputType: BigNumberish,
-      tokenId: BigNumberish,
+      theTokenId: BigNumberish,
       minAmount: BigNumberish,
       takeCustody: boolean,
       burn: boolean,
@@ -1745,33 +1727,13 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<void>;
 
     "addInputRequirement(address,address,uint8,uint256,uint256,bool,bool)"(
-      token: string,
+      theToken: string,
       pool: string,
       inputType: BigNumberish,
-      tokenId: BigNumberish,
+      theTokenId: BigNumberish,
       minAmount: BigNumberish,
       takeCustody: boolean,
       burn: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    addLegacyToken(
-      token: string,
-      tokenType: BigNumberish,
-      tokenHash: BigNumberish,
-      tokenId: BigNumberish,
-      recipient: string,
-      quantity: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "addLegacyToken(address,uint8,uint256,uint256,address,uint256)"(
-      token: string,
-      tokenType: BigNumberish,
-      tokenHash: BigNumberish,
-      tokenId: BigNumberish,
-      recipient: string,
-      quantity: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1929,6 +1891,32 @@ export class INFTComplexGemPoolData extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    importLegacyGem(
+      pool: string,
+      legacyToken: string,
+      tokenHash: BigNumberish,
+      recipient: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "importLegacyGem(address,address,uint256,address)"(
+      pool: string,
+      legacyToken: string,
+      tokenHash: BigNumberish,
+      recipient: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    isLegacyGemImported(
+      tokenhash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "isLegacyGemImported(uint256)"(
+      tokenhash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     isTokenAllowed(tkn: string, overrides?: CallOverrides): Promise<boolean>;
 
     "isTokenAllowed(address)"(
@@ -1993,22 +1981,19 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<void>;
 
     setCategory(
-      category: BigNumberish,
+      theCategory: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "setCategory(uint256)"(
-      category: BigNumberish,
+      theCategory: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setDescription(
-      description: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    setDescription(desc: string, overrides?: CallOverrides): Promise<void>;
 
     "setDescription(string)"(
-      description: string,
+      desc: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -2040,14 +2025,14 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<void>;
 
     setNextIds(
-      nextClaimId: BigNumberish,
-      nextGemId: BigNumberish,
+      _nextClaimId: BigNumberish,
+      _nextGemId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "setNextIds(uint256,uint256)"(
-      nextClaimId: BigNumberish,
-      nextGemId: BigNumberish,
+      _nextClaimId: BigNumberish,
+      _nextGemId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -2061,27 +2046,13 @@ export class INFTComplexGemPoolData extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setToken(
-      tokenHash: BigNumberish,
-      tokenType: BigNumberish,
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "setToken(uint256,uint8,uint256)"(
-      tokenHash: BigNumberish,
-      tokenType: BigNumberish,
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     setTokenHashes(
-      tokenHashes: BigNumberish[],
+      inTokenHashes: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
     "setTokenHashes(uint256[])"(
-      tokenHashes: BigNumberish[],
+      inTokenHashes: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -2092,10 +2063,10 @@ export class INFTComplexGemPoolData extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setVisible(visible: boolean, overrides?: CallOverrides): Promise<void>;
+    setVisible(isVisible: boolean, overrides?: CallOverrides): Promise<void>;
 
     "setVisible(bool)"(
-      visible: boolean,
+      isVisible: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -2273,7 +2244,7 @@ export class INFTComplexGemPoolData extends Contract {
 
     updateInputRequirement(
       ndx: BigNumberish,
-      token: string,
+      theToken: string,
       pool: string,
       inputType: BigNumberish,
       tid: BigNumberish,
@@ -2285,7 +2256,7 @@ export class INFTComplexGemPoolData extends Contract {
 
     "updateInputRequirement(uint256,address,address,uint8,uint256,uint256,bool,bool)"(
       ndx: BigNumberish,
-      token: string,
+      theToken: string,
       pool: string,
       inputType: BigNumberish,
       tid: BigNumberish,
@@ -2304,7 +2275,16 @@ export class INFTComplexGemPoolData extends Contract {
     "visible()"(overrides?: CallOverrides): Promise<boolean>;
   };
 
-  filters: {};
+  filters: {
+    NFTGemImported(
+      converter: string | null,
+      pool: string | null,
+      oldPool: null,
+      oldToken: null,
+      gemHash: BigNumberish | null,
+      quantity: null
+    ): EventFilter;
+  };
 
   estimateGas: {
     addAllowedToken(tkn: string, overrides?: Overrides): Promise<BigNumber>;
@@ -2325,10 +2305,10 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<BigNumber>;
 
     addInputRequirement(
-      token: string,
+      theToken: string,
       pool: string,
       inputType: BigNumberish,
-      tokenId: BigNumberish,
+      theTokenId: BigNumberish,
       minAmount: BigNumberish,
       takeCustody: boolean,
       burn: boolean,
@@ -2336,33 +2316,13 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<BigNumber>;
 
     "addInputRequirement(address,address,uint8,uint256,uint256,bool,bool)"(
-      token: string,
+      theToken: string,
       pool: string,
       inputType: BigNumberish,
-      tokenId: BigNumberish,
+      theTokenId: BigNumberish,
       minAmount: BigNumberish,
       takeCustody: boolean,
       burn: boolean,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    addLegacyToken(
-      token: string,
-      tokenType: BigNumberish,
-      tokenHash: BigNumberish,
-      tokenId: BigNumberish,
-      recipient: string,
-      quantity: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "addLegacyToken(address,uint8,uint256,uint256,address,uint256)"(
-      token: string,
-      tokenType: BigNumberish,
-      tokenHash: BigNumberish,
-      tokenId: BigNumberish,
-      recipient: string,
-      quantity: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -2398,9 +2358,9 @@ export class INFTComplexGemPoolData extends Contract {
 
     "allowPurchase()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    allowedTokenSources(overrides?: Overrides): Promise<BigNumber>;
+    allowedTokenSources(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "allowedTokenSources()"(overrides?: Overrides): Promise<BigNumber>;
+    "allowedTokenSources()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     allowedTokens(
       idx: BigNumberish,
@@ -2496,6 +2456,32 @@ export class INFTComplexGemPoolData extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    importLegacyGem(
+      pool: string,
+      legacyToken: string,
+      tokenHash: BigNumberish,
+      recipient: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "importLegacyGem(address,address,uint256,address)"(
+      pool: string,
+      legacyToken: string,
+      tokenHash: BigNumberish,
+      recipient: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    isLegacyGemImported(
+      tokenhash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "isLegacyGemImported(uint256)"(
+      tokenhash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     isTokenAllowed(tkn: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "isTokenAllowed(address)"(
@@ -2560,22 +2546,19 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<BigNumber>;
 
     setCategory(
-      category: BigNumberish,
+      theCategory: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "setCategory(uint256)"(
-      category: BigNumberish,
+      theCategory: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setDescription(
-      description: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
+    setDescription(desc: string, overrides?: Overrides): Promise<BigNumber>;
 
     "setDescription(string)"(
-      description: string,
+      desc: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -2607,14 +2590,14 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<BigNumber>;
 
     setNextIds(
-      nextClaimId: BigNumberish,
-      nextGemId: BigNumberish,
+      _nextClaimId: BigNumberish,
+      _nextGemId: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "setNextIds(uint256,uint256)"(
-      nextClaimId: BigNumberish,
-      nextGemId: BigNumberish,
+      _nextClaimId: BigNumberish,
+      _nextGemId: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -2628,27 +2611,13 @@ export class INFTComplexGemPoolData extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setToken(
-      tokenHash: BigNumberish,
-      tokenType: BigNumberish,
-      tokenId: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "setToken(uint256,uint8,uint256)"(
-      tokenHash: BigNumberish,
-      tokenType: BigNumberish,
-      tokenId: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
     setTokenHashes(
-      tokenHashes: BigNumberish[],
+      inTokenHashes: BigNumberish[],
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "setTokenHashes(uint256[])"(
-      tokenHashes: BigNumberish[],
+      inTokenHashes: BigNumberish[],
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -2659,10 +2628,10 @@ export class INFTComplexGemPoolData extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setVisible(visible: boolean, overrides?: Overrides): Promise<BigNumber>;
+    setVisible(isVisible: boolean, overrides?: Overrides): Promise<BigNumber>;
 
     "setVisible(bool)"(
-      visible: boolean,
+      isVisible: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -2728,7 +2697,7 @@ export class INFTComplexGemPoolData extends Contract {
 
     updateInputRequirement(
       ndx: BigNumberish,
-      token: string,
+      theToken: string,
       pool: string,
       inputType: BigNumberish,
       tid: BigNumberish,
@@ -2740,7 +2709,7 @@ export class INFTComplexGemPoolData extends Contract {
 
     "updateInputRequirement(uint256,address,address,uint8,uint256,uint256,bool,bool)"(
       ndx: BigNumberish,
-      token: string,
+      theToken: string,
       pool: string,
       inputType: BigNumberish,
       tid: BigNumberish,
@@ -2781,10 +2750,10 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<PopulatedTransaction>;
 
     addInputRequirement(
-      token: string,
+      theToken: string,
       pool: string,
       inputType: BigNumberish,
-      tokenId: BigNumberish,
+      theTokenId: BigNumberish,
       minAmount: BigNumberish,
       takeCustody: boolean,
       burn: boolean,
@@ -2792,33 +2761,13 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<PopulatedTransaction>;
 
     "addInputRequirement(address,address,uint8,uint256,uint256,bool,bool)"(
-      token: string,
+      theToken: string,
       pool: string,
       inputType: BigNumberish,
-      tokenId: BigNumberish,
+      theTokenId: BigNumberish,
       minAmount: BigNumberish,
       takeCustody: boolean,
       burn: boolean,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    addLegacyToken(
-      token: string,
-      tokenType: BigNumberish,
-      tokenHash: BigNumberish,
-      tokenId: BigNumberish,
-      recipient: string,
-      quantity: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "addLegacyToken(address,uint8,uint256,uint256,address,uint256)"(
-      token: string,
-      tokenType: BigNumberish,
-      tokenHash: BigNumberish,
-      tokenId: BigNumberish,
-      recipient: string,
-      quantity: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -2862,10 +2811,12 @@ export class INFTComplexGemPoolData extends Contract {
 
     "allowPurchase()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    allowedTokenSources(overrides?: Overrides): Promise<PopulatedTransaction>;
+    allowedTokenSources(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     "allowedTokenSources()"(
-      overrides?: Overrides
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     allowedTokens(
@@ -2966,6 +2917,32 @@ export class INFTComplexGemPoolData extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    importLegacyGem(
+      pool: string,
+      legacyToken: string,
+      tokenHash: BigNumberish,
+      recipient: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "importLegacyGem(address,address,uint256,address)"(
+      pool: string,
+      legacyToken: string,
+      tokenHash: BigNumberish,
+      recipient: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    isLegacyGemImported(
+      tokenhash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "isLegacyGemImported(uint256)"(
+      tokenhash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     isTokenAllowed(
       tkn: string,
       overrides?: CallOverrides
@@ -3051,22 +3028,22 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<PopulatedTransaction>;
 
     setCategory(
-      category: BigNumberish,
+      theCategory: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setCategory(uint256)"(
-      category: BigNumberish,
+      theCategory: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setDescription(
-      description: string,
+      desc: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setDescription(string)"(
-      description: string,
+      desc: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -3101,14 +3078,14 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<PopulatedTransaction>;
 
     setNextIds(
-      nextClaimId: BigNumberish,
-      nextGemId: BigNumberish,
+      _nextClaimId: BigNumberish,
+      _nextGemId: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setNextIds(uint256,uint256)"(
-      nextClaimId: BigNumberish,
-      nextGemId: BigNumberish,
+      _nextClaimId: BigNumberish,
+      _nextGemId: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -3122,27 +3099,13 @@ export class INFTComplexGemPoolData extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    setToken(
-      tokenHash: BigNumberish,
-      tokenType: BigNumberish,
-      tokenId: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setToken(uint256,uint8,uint256)"(
-      tokenHash: BigNumberish,
-      tokenType: BigNumberish,
-      tokenId: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
     setTokenHashes(
-      tokenHashes: BigNumberish[],
+      inTokenHashes: BigNumberish[],
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setTokenHashes(uint256[])"(
-      tokenHashes: BigNumberish[],
+      inTokenHashes: BigNumberish[],
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -3157,12 +3120,12 @@ export class INFTComplexGemPoolData extends Contract {
     ): Promise<PopulatedTransaction>;
 
     setVisible(
-      visible: boolean,
+      isVisible: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setVisible(bool)"(
-      visible: boolean,
+      isVisible: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -3230,7 +3193,7 @@ export class INFTComplexGemPoolData extends Contract {
 
     updateInputRequirement(
       ndx: BigNumberish,
-      token: string,
+      theToken: string,
       pool: string,
       inputType: BigNumberish,
       tid: BigNumberish,
@@ -3242,7 +3205,7 @@ export class INFTComplexGemPoolData extends Contract {
 
     "updateInputRequirement(uint256,address,address,uint8,uint256,uint256,bool,bool)"(
       ndx: BigNumberish,
-      token: string,
+      theToken: string,
       pool: string,
       inputType: BigNumberish,
       tid: BigNumberish,

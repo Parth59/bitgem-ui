@@ -67,11 +67,11 @@
   }
 
   .button-card {
-    @apply rounded-b-md text-lg w-full text-white disabled:text-gray-300 py-2 text-shadow-lg disabled:text-shadow-sm bg-blue-600 hover:bg-blue-700 px-2 hover:outline-none hover:ring-1 hover:ring-gray-500 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500 disabled:bg-gray-500;
+    @apply rounded-b-md text-lg w-full text-white disabled:text-gray-500 py-2 text-shadow-lg disabled:text-shadow-sm bg-blue-600 hover:bg-blue-700 px-2 hover:outline-none hover:ring-1 hover:ring-gray-500 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500 disabled:bg-gray-800;
   }
 
   .button-basic {
-    @apply rounded-md py-2 px-3 text-shadow-sm bg-blue-700 hover:bg-blue-600 hover:ring-1 hover:ring-gray-500 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500 disabled:bg-gray-200;
+    @apply rounded-md py-2 px-3 text-shadow-sm bg-blue-700 hover:bg-blue-600 hover:ring-1 hover:ring-gray-500 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500 disabled:bg-gray-800 disabled:text-gray-500;
   }
 
   .placeholder {
@@ -93,7 +93,7 @@
       rgba(255, 255, 255, 0.3) 50%,
       transparent 100%
     );
-    animation: load 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    animation: load 0.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   }
 
   @keyframes load {

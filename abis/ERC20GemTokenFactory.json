@@ -144,6 +144,11 @@
         "internalType": "uint8",
         "name": "decimals",
         "type": "uint8"
+      },
+      {
+        "internalType": "address",
+        "name": "feeManager",
+        "type": "address"
       }
     ],
     "name": "createItem",
@@ -212,7 +217,7 @@
     "inputs": [],
     "name": "relinquishControl",
     "outputs": [],
-    "stateMutability": "view",
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

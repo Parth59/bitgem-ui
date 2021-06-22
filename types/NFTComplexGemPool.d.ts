@@ -27,7 +27,6 @@ interface NFTComplexGemPoolInterface extends ethers.utils.Interface {
     "addAllowedTokenSource(address)": FunctionFragment;
     "addController(address)": FunctionFragment;
     "addInputRequirement(address,address,uint8,uint256,uint256,bool,bool)": FunctionFragment;
-    "addLegacyToken(address,uint8,uint256,uint256,address,uint256)": FunctionFragment;
     "allInputRequirements(uint256)": FunctionFragment;
     "allInputRequirementsLength()": FunctionFragment;
     "allTokenHashes(uint256)": FunctionFragment;
@@ -43,7 +42,7 @@ interface NFTComplexGemPoolInterface extends ethers.utils.Interface {
     "claimTokenAmount(uint256)": FunctionFragment;
     "claimUnlockTime(uint256)": FunctionFragment;
     "claimedCount()": FunctionFragment;
-    "collectClaim(uint256)": FunctionFragment;
+    "collectClaim(uint256,bool)": FunctionFragment;
     "createClaim(uint256)": FunctionFragment;
     "createClaims(uint256,uint256)": FunctionFragment;
     "createERC20Claim(address,uint256)": FunctionFragment;
@@ -54,8 +53,10 @@ interface NFTComplexGemPoolInterface extends ethers.utils.Interface {
     "enabled()": FunctionFragment;
     "ethPrice()": FunctionFragment;
     "gemClaimHash(uint256)": FunctionFragment;
+    "importLegacyGem(address,address,uint256,address)": FunctionFragment;
     "initialize(string,string,uint256,uint256,uint256,uint256,uint256,address)": FunctionFragment;
     "isController(address)": FunctionFragment;
+    "isLegacyGemImported(uint256)": FunctionFragment;
     "isTokenAllowed(address)": FunctionFragment;
     "maxClaimsPerAccount()": FunctionFragment;
     "maxQuantityPerClaim()": FunctionFragment;
@@ -85,7 +86,6 @@ interface NFTComplexGemPoolInterface extends ethers.utils.Interface {
     "setNextIds(uint256,uint256)": FunctionFragment;
     "setPriceIncrementType(uint8)": FunctionFragment;
     "setSwapHelper(address)": FunctionFragment;
-    "setToken(uint256,uint8,uint256)": FunctionFragment;
     "setTokenHashes(uint256[])": FunctionFragment;
     "setValidateErc20(bool)": FunctionFragment;
     "setVisible(bool)": FunctionFragment;
@@ -128,17 +128,6 @@ interface NFTComplexGemPoolInterface extends ethers.utils.Interface {
       BigNumberish,
       boolean,
       boolean
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addLegacyToken",
-    values: [
-      string,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      string,
-      BigNumberish
     ]
   ): string;
   encodeFunctionData(
@@ -197,7 +186,7 @@ interface NFTComplexGemPoolInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "collectClaim",
-    values: [BigNumberish]
+    values: [BigNumberish, boolean]
   ): string;
   encodeFunctionData(
     functionFragment: "createClaim",
@@ -234,6 +223,10 @@ interface NFTComplexGemPoolInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "importLegacyGem",
+    values: [string, string, BigNumberish, string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "initialize",
     values: [
       string,
@@ -249,6 +242,10 @@ interface NFTComplexGemPoolInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "isController",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isLegacyGemImported",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "isTokenAllowed",
@@ -355,10 +352,6 @@ interface NFTComplexGemPoolInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "setToken",
-    values: [BigNumberish, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "setTokenHashes",
     values: [BigNumberish[]]
   ): string;
@@ -436,10 +429,6 @@ interface NFTComplexGemPoolInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "addInputRequirement",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "addLegacyToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -528,9 +517,17 @@ interface NFTComplexGemPoolInterface extends ethers.utils.Interface {
     functionFragment: "gemClaimHash",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "importLegacyGem",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isController",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "isLegacyGemImported",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -637,7 +634,6 @@ interface NFTComplexGemPoolInterface extends ethers.utils.Interface {
     functionFragment: "setSwapHelper",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setToken", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setTokenHashes",
     data: BytesLike
@@ -690,6 +686,7 @@ interface NFTComplexGemPoolInterface extends ethers.utils.Interface {
     "NFTGemCreated(address,address,uint256,uint256,uint256)": EventFragment;
     "NFTGemERC20ClaimCreated(address,address,uint256,uint256,address,uint256,uint256)": EventFragment;
     "NFTGemERC20ClaimRedeemed(address,address,uint256,address,uint256,uint256,uint256,uint256)": EventFragment;
+    "NFTGemImported(address,address,address,address,uint256,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "NFTGemClaimCreated"): EventFragment;
@@ -697,6 +694,7 @@ interface NFTComplexGemPoolInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "NFTGemCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NFTGemERC20ClaimCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NFTGemERC20ClaimRedeemed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NFTGemImported"): EventFragment;
 }
 
 export class NFTComplexGemPool extends Contract {
@@ -714,86 +712,66 @@ export class NFTComplexGemPool extends Contract {
 
   functions: {
     addAllowedToken(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "addAllowedToken(address)"(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     addAllowedTokenSource(
-      allowedToken: string,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "addAllowedTokenSource(address)"(
-      allowedToken: string,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     addController(
-      controller: string,
+      _controllerAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "addController(address)"(
-      controller: string,
+      _controllerAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     addInputRequirement(
-      token: string,
-      pool: string,
-      inputType: BigNumberish,
-      tid: BigNumberish,
-      minAmount: BigNumberish,
-      takeCustody: boolean,
-      burn: boolean,
+      _tokenAddress: string,
+      _poolAddress: string,
+      _inputType: BigNumberish,
+      _tokenId: BigNumberish,
+      _minAmount: BigNumberish,
+      _takeCustody: boolean,
+      _burn: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "addInputRequirement(address,address,uint8,uint256,uint256,bool,bool)"(
-      token: string,
-      pool: string,
-      inputType: BigNumberish,
-      tid: BigNumberish,
-      minAmount: BigNumberish,
-      takeCustody: boolean,
-      burn: boolean,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    addLegacyToken(
-      token: string,
-      tokenType: BigNumberish,
-      tokenHash: BigNumberish,
-      tokenId: BigNumberish,
-      recipient: string,
-      qty: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "addLegacyToken(address,uint8,uint256,uint256,address,uint256)"(
-      token: string,
-      tokenType: BigNumberish,
-      tokenHash: BigNumberish,
-      tokenId: BigNumberish,
-      recipient: string,
-      qty: BigNumberish,
+      _tokenAddress: string,
+      _poolAddress: string,
+      _inputType: BigNumberish,
+      _tokenId: BigNumberish,
+      _minAmount: BigNumberish,
+      _takeCustody: boolean,
+      _burn: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     allInputRequirements(
-      ndx: BigNumberish,
+      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [string, string, number, BigNumber, BigNumber, boolean, boolean]
     >;
 
     "allInputRequirements(uint256)"(
-      ndx: BigNumberish,
+      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [string, string, number, BigNumber, BigNumber, boolean, boolean]
@@ -823,19 +801,17 @@ export class NFTComplexGemPool extends Contract {
 
     "allowPurchase()"(overrides?: CallOverrides): Promise<[boolean]>;
 
-    allowedTokenSources(overrides?: Overrides): Promise<ContractTransaction>;
+    allowedTokenSources(overrides?: CallOverrides): Promise<[string[]]>;
 
-    "allowedTokenSources()"(
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
+    "allowedTokenSources()"(overrides?: CallOverrides): Promise<[string[]]>;
 
     allowedTokens(
-      idx: BigNumberish,
+      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
     "allowedTokens(uint256)"(
-      idx: BigNumberish,
+      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
@@ -843,79 +819,57 @@ export class NFTComplexGemPool extends Contract {
 
     "allowedTokensLength()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    category(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { c: BigNumber }>;
+    category(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    "category()"(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { c: BigNumber }>;
+    "category()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     claim(
       claimHash: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber, string, BigNumber] & {
-        claimAmount: BigNumber;
-        claimQuantity: BigNumber;
-        claimUnlockTime: BigNumber;
-        claimTokenAmount: BigNumber;
-        stakedToken: string;
-        nextClaimId: BigNumber;
-      }
-    >;
+    ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, string, BigNumber]>;
 
     "claim(uint256)"(
       claimHash: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber, string, BigNumber] & {
-        claimAmount: BigNumber;
-        claimQuantity: BigNumber;
-        claimUnlockTime: BigNumber;
-        claimTokenAmount: BigNumber;
-        stakedToken: string;
-        nextClaimId: BigNumber;
-      }
-    >;
+    ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, string, BigNumber]>;
 
     claimAmount(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     "claimAmount(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     claimQuantity(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     "claimQuantity(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     claimTokenAmount(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     "claimTokenAmount(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     claimUnlockTime(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     "claimUnlockTime(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -924,94 +878,94 @@ export class NFTComplexGemPool extends Contract {
     "claimedCount()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     collectClaim(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
+      _requireMature: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "collectClaim(uint256)"(
-      claimHash: BigNumberish,
+    "collectClaim(uint256,bool)"(
+      _claimHash: BigNumberish,
+      _requireMature: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     createClaim(
-      timeframe: BigNumberish,
+      _timeframe: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     "createClaim(uint256)"(
-      timeframe: BigNumberish,
+      _timeframe: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     createClaims(
-      timeframe: BigNumberish,
-      count: BigNumberish,
+      _timeframe: BigNumberish,
+      _count: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     "createClaims(uint256,uint256)"(
-      timeframe: BigNumberish,
-      count: BigNumberish,
+      _timeframe: BigNumberish,
+      _count: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     createERC20Claim(
-      erc20token: string,
-      tokenAmount: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "createERC20Claim(address,uint256)"(
-      erc20token: string,
-      tokenAmount: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     createERC20Claims(
-      erc20token: string,
-      tokenAmount: BigNumberish,
-      count: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
+      _count: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "createERC20Claims(address,uint256,uint256)"(
-      erc20token: string,
-      tokenAmount: BigNumberish,
-      count: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
+      _count: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     deposit(
-      erc20token: string,
-      tokenAmount: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "deposit(address,uint256)"(
-      erc20token: string,
-      tokenAmount: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     depositNFT(
-      erc1155token: string,
-      tokenId: BigNumberish,
-      tokenAmount: BigNumberish,
+      _erc1155TokenAddress: string,
+      _tokenId: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "depositNFT(address,uint256,uint256)"(
-      erc1155token: string,
-      tokenId: BigNumberish,
-      tokenAmount: BigNumberish,
+      _erc1155TokenAddress: string,
+      _tokenId: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    description(overrides?: CallOverrides): Promise<[string] & { c: string }>;
+    description(overrides?: CallOverrides): Promise<[string]>;
 
-    "description()"(
-      overrides?: CallOverrides
-    ): Promise<[string] & { c: string }>;
+    "description()"(overrides?: CallOverrides): Promise<[string]>;
 
     enabled(overrides?: CallOverrides): Promise<[boolean]>;
 
@@ -1022,53 +976,82 @@ export class NFTComplexGemPool extends Contract {
     "ethPrice()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     gemClaimHash(
-      gemHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     "gemClaimHash(uint256)"(
-      gemHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    importLegacyGem(
+      _poolAddress: string,
+      _legacyToken: string,
+      _tokenHash: BigNumberish,
+      _recipient: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "importLegacyGem(address,address,uint256,address)"(
+      _poolAddress: string,
+      _legacyToken: string,
+      _tokenHash: BigNumberish,
+      _recipient: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     initialize(
-      __symbol: string,
-      __name: string,
-      __ethPrice: BigNumberish,
-      __minTime: BigNumberish,
-      __maxTime: BigNumberish,
-      __diffstep: BigNumberish,
-      __maxClaims: BigNumberish,
-      __allowedToken: string,
+      _symbol: string,
+      _name: string,
+      _ethPrice: BigNumberish,
+      _minTime: BigNumberish,
+      _maxTime: BigNumberish,
+      _diffstep: BigNumberish,
+      _maxClaims: BigNumberish,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "initialize(string,string,uint256,uint256,uint256,uint256,uint256,address)"(
-      __symbol: string,
-      __name: string,
-      __ethPrice: BigNumberish,
-      __minTime: BigNumberish,
-      __maxTime: BigNumberish,
-      __diffstep: BigNumberish,
-      __maxClaims: BigNumberish,
-      __allowedToken: string,
+      _symbol: string,
+      _name: string,
+      _ethPrice: BigNumberish,
+      _minTime: BigNumberish,
+      _maxTime: BigNumberish,
+      _diffstep: BigNumberish,
+      _maxClaims: BigNumberish,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     isController(
-      caddress: string,
+      _controllerAddress: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
     "isController(address)"(
-      caddress: string,
+      _controllerAddress: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    isTokenAllowed(tkn: string, overrides?: CallOverrides): Promise<[boolean]>;
+    isLegacyGemImported(
+      _tokenhash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "isLegacyGemImported(uint256)"(
+      _tokenhash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    isTokenAllowed(
+      _tokenAddress: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     "isTokenAllowed(address)"(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
@@ -1081,14 +1064,14 @@ export class NFTComplexGemPool extends Contract {
     "maxQuantityPerClaim()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     mintGenesisGems(
-      creator: string,
-      funder: string,
+      _creatorAddress: string,
+      _funderAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "mintGenesisGems(address,address)"(
-      creator: string,
-      funder: string,
+      _creatorAddress: string,
+      _funderAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -1160,12 +1143,12 @@ export class NFTComplexGemPool extends Contract {
     ): Promise<[string]>;
 
     purchaseGems(
-      count: BigNumberish,
+      _count: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
     "purchaseGems(uint256)"(
-      count: BigNumberish,
+      _count: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
 
@@ -1174,42 +1157,42 @@ export class NFTComplexGemPool extends Contract {
     "relinquishControl()"(overrides?: Overrides): Promise<ContractTransaction>;
 
     removeAllowedToken(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "removeAllowedToken(address)"(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     removeAllowedTokenSource(
-      allowedToken: string,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "removeAllowedTokenSource(address)"(
-      allowedToken: string,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setAllowPurchase(
-      allow: boolean,
+      _allowPurchase: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setAllowPurchase(bool)"(
-      allow: boolean,
+      _allowPurchase: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setCategory(
-      category: BigNumberish,
+      _category: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setCategory(uint256)"(
-      category: BigNumberish,
+      _category: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -1224,118 +1207,104 @@ export class NFTComplexGemPool extends Contract {
     ): Promise<ContractTransaction>;
 
     setEnabled(
-      enable: boolean,
+      _enabled: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setEnabled(bool)"(
-      enable: boolean,
+      _enabled: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setFeeTracker(
-      addr: string,
+      _feeTrackerAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setFeeTracker(address)"(
-      addr: string,
+      _feeTrackerAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setGovernor(
-      addr: string,
+      _governorAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setGovernor(address)"(
-      addr: string,
+      _governorAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setMaxClaimsPerAccount(
-      maxCPA: BigNumberish,
+      _maxClaimsPerAccount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setMaxClaimsPerAccount(uint256)"(
-      maxCPA: BigNumberish,
+      _maxClaimsPerAccount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setMaxQuantityPerClaim(
-      maxQty: BigNumberish,
+      _maxQuantityPerClaim: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setMaxQuantityPerClaim(uint256)"(
-      maxQty: BigNumberish,
+      _maxQuantityPerClaim: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setMultiToken(
-      addr: string,
+      _multiTokenAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setMultiToken(address)"(
-      addr: string,
+      _multiTokenAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setNextIds(
-      nextClaimId: BigNumberish,
-      nextGemId: BigNumberish,
+      _nextClaimId: BigNumberish,
+      _nextGemId: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setNextIds(uint256,uint256)"(
-      nextClaimId: BigNumberish,
-      nextGemId: BigNumberish,
+      _nextClaimId: BigNumberish,
+      _nextGemId: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setPriceIncrementType(
-      incrementType: BigNumberish,
+      _incrementType: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setPriceIncrementType(uint8)"(
-      incrementType: BigNumberish,
+      _incrementType: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setSwapHelper(
-      addr: string,
+      _swapHelperAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setSwapHelper(address)"(
-      addr: string,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    setToken(
-      tokenHash: BigNumberish,
-      tokenType: BigNumberish,
-      tokenId: BigNumberish,
-      overrides?: Overrides
-    ): Promise<ContractTransaction>;
-
-    "setToken(uint256,uint8,uint256)"(
-      tokenHash: BigNumberish,
-      tokenType: BigNumberish,
-      tokenId: BigNumberish,
+      _swapHelperAddress: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setTokenHashes(
-      tokenHashes: BigNumberish[],
+      _tokenHashes: BigNumberish[],
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setTokenHashes(uint256[])"(
-      tokenHashes: BigNumberish[],
+      _tokenHashes: BigNumberish[],
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -1350,12 +1319,12 @@ export class NFTComplexGemPool extends Contract {
     ): Promise<ContractTransaction>;
 
     setVisible(
-      visible: boolean,
+      _visible: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "setVisible(bool)"(
-      visible: boolean,
+      _visible: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -1374,19 +1343,7 @@ export class NFTComplexGemPool extends Contract {
         BigNumber,
         BigNumber,
         BigNumber
-      ] & {
-        symbol: string;
-        name: string;
-        description: string;
-        category: BigNumber;
-        ethPrice: BigNumber;
-        minTime: BigNumber;
-        maxTime: BigNumber;
-        diffstep: BigNumber;
-        maxClaims: BigNumber;
-        maxQuantityPerClaim: BigNumber;
-        maxClaimsPerAccount: BigNumber;
-      }
+      ]
     >;
 
     "settings()"(
@@ -1404,28 +1361,16 @@ export class NFTComplexGemPool extends Contract {
         BigNumber,
         BigNumber,
         BigNumber
-      ] & {
-        symbol: string;
-        name: string;
-        description: string;
-        category: BigNumber;
-        ethPrice: BigNumber;
-        minTime: BigNumber;
-        maxTime: BigNumber;
-        diffstep: BigNumber;
-        maxClaims: BigNumber;
-        maxQuantityPerClaim: BigNumber;
-        maxClaimsPerAccount: BigNumber;
-      }
+      ]
     >;
 
     stakedToken(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
     "stakedToken(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
@@ -1441,16 +1386,7 @@ export class NFTComplexGemPool extends Contract {
         BigNumber,
         BigNumber,
         BigNumber
-      ] & {
-        visible: boolean;
-        claimedCount: BigNumber;
-        mintedCount: BigNumber;
-        totalStakedEth: BigNumber;
-        nextClaimHash: BigNumber;
-        nextGemHash: BigNumber;
-        nextClaimId: BigNumber;
-        nextGemId: BigNumber;
-      }
+      ]
     >;
 
     "stats()"(
@@ -1465,16 +1401,7 @@ export class NFTComplexGemPool extends Contract {
         BigNumber,
         BigNumber,
         BigNumber
-      ] & {
-        visible: boolean;
-        claimedCount: BigNumber;
-        mintedCount: BigNumber;
-        totalStakedEth: BigNumber;
-        nextClaimHash: BigNumber;
-        nextGemHash: BigNumber;
-        nextClaimId: BigNumber;
-        nextGemId: BigNumber;
-      }
+      ]
     >;
 
     supportsInterface(
@@ -1492,48 +1419,36 @@ export class NFTComplexGemPool extends Contract {
     "symbol()"(overrides?: CallOverrides): Promise<[string]>;
 
     token(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [number, BigNumber, string] & {
-        tokenType: number;
-        tokenId: BigNumber;
-        tokenSource: string;
-      }
-    >;
+    ): Promise<[number, BigNumber, string]>;
 
     "token(uint256)"(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [number, BigNumber, string] & {
-        tokenType: number;
-        tokenId: BigNumber;
-        tokenSource: string;
-      }
-    >;
+    ): Promise<[number, BigNumber, string]>;
 
     tokenHashes(overrides?: CallOverrides): Promise<[BigNumber[]]>;
 
     "tokenHashes()"(overrides?: CallOverrides): Promise<[BigNumber[]]>;
 
     tokenId(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     "tokenId(uint256)"(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     tokenType(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[number]>;
 
     "tokenType(uint256)"(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[number]>;
 
@@ -1542,26 +1457,26 @@ export class NFTComplexGemPool extends Contract {
     "totalStakedEth()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     updateInputRequirement(
-      ndx: BigNumberish,
-      token: string,
-      pool: string,
-      inputType: BigNumberish,
-      tid: BigNumberish,
-      minAmount: BigNumberish,
-      takeCustody: boolean,
-      burn: boolean,
+      _index: BigNumberish,
+      _tokenAddress: string,
+      _poolAddress: string,
+      _inputType: BigNumberish,
+      _tokenId: BigNumberish,
+      _minAmount: BigNumberish,
+      _takeCustody: boolean,
+      _burn: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "updateInputRequirement(uint256,address,address,uint8,uint256,uint256,bool,bool)"(
-      ndx: BigNumberish,
-      token: string,
-      pool: string,
-      inputType: BigNumberish,
-      tid: BigNumberish,
-      minAmount: BigNumberish,
-      takeCustody: boolean,
-      burn: boolean,
+      _index: BigNumberish,
+      _tokenAddress: string,
+      _poolAddress: string,
+      _inputType: BigNumberish,
+      _tokenId: BigNumberish,
+      _minAmount: BigNumberish,
+      _takeCustody: boolean,
+      _burn: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -1569,120 +1484,100 @@ export class NFTComplexGemPool extends Contract {
 
     "validateErc20()"(overrides?: CallOverrides): Promise<[boolean]>;
 
-    visible(overrides?: CallOverrides): Promise<[boolean] & { v: boolean }>;
+    visible(overrides?: CallOverrides): Promise<[boolean]>;
 
-    "visible()"(overrides?: CallOverrides): Promise<[boolean] & { v: boolean }>;
+    "visible()"(overrides?: CallOverrides): Promise<[boolean]>;
 
     withdraw(
-      erc20token: string,
+      _erc20TokenAddress: string,
       destination: string,
-      tokenAmount: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "withdraw(address,address,uint256)"(
-      erc20token: string,
+      _erc20TokenAddress: string,
       destination: string,
-      tokenAmount: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     withdrawNFT(
-      erc1155token: string,
-      destination: string,
-      tokenId: BigNumberish,
-      tokenAmount: BigNumberish,
+      _erc1155TokenAddress: string,
+      _destinationAddress: string,
+      _tokenId: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "withdrawNFT(address,address,uint256,uint256)"(
-      erc1155token: string,
-      destination: string,
-      tokenId: BigNumberish,
-      tokenAmount: BigNumberish,
+      _erc1155TokenAddress: string,
+      _destinationAddress: string,
+      _tokenId: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
   addAllowedToken(
-    tkn: string,
+    _tokenAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "addAllowedToken(address)"(
-    tkn: string,
+    _tokenAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   addAllowedTokenSource(
-    allowedToken: string,
+    _allowedToken: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "addAllowedTokenSource(address)"(
-    allowedToken: string,
+    _allowedToken: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   addController(
-    controller: string,
+    _controllerAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "addController(address)"(
-    controller: string,
+    _controllerAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   addInputRequirement(
-    token: string,
-    pool: string,
-    inputType: BigNumberish,
-    tid: BigNumberish,
-    minAmount: BigNumberish,
-    takeCustody: boolean,
-    burn: boolean,
+    _tokenAddress: string,
+    _poolAddress: string,
+    _inputType: BigNumberish,
+    _tokenId: BigNumberish,
+    _minAmount: BigNumberish,
+    _takeCustody: boolean,
+    _burn: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "addInputRequirement(address,address,uint8,uint256,uint256,bool,bool)"(
-    token: string,
-    pool: string,
-    inputType: BigNumberish,
-    tid: BigNumberish,
-    minAmount: BigNumberish,
-    takeCustody: boolean,
-    burn: boolean,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  addLegacyToken(
-    token: string,
-    tokenType: BigNumberish,
-    tokenHash: BigNumberish,
-    tokenId: BigNumberish,
-    recipient: string,
-    qty: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "addLegacyToken(address,uint8,uint256,uint256,address,uint256)"(
-    token: string,
-    tokenType: BigNumberish,
-    tokenHash: BigNumberish,
-    tokenId: BigNumberish,
-    recipient: string,
-    qty: BigNumberish,
+    _tokenAddress: string,
+    _poolAddress: string,
+    _inputType: BigNumberish,
+    _tokenId: BigNumberish,
+    _minAmount: BigNumberish,
+    _takeCustody: boolean,
+    _burn: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   allInputRequirements(
-    ndx: BigNumberish,
+    _index: BigNumberish,
     overrides?: CallOverrides
   ): Promise<[string, string, number, BigNumber, BigNumber, boolean, boolean]>;
 
   "allInputRequirements(uint256)"(
-    ndx: BigNumberish,
+    _index: BigNumberish,
     overrides?: CallOverrides
   ): Promise<[string, string, number, BigNumber, BigNumber, boolean, boolean]>;
 
@@ -1708,14 +1603,17 @@ export class NFTComplexGemPool extends Contract {
 
   "allowPurchase()"(overrides?: CallOverrides): Promise<boolean>;
 
-  allowedTokenSources(overrides?: Overrides): Promise<ContractTransaction>;
+  allowedTokenSources(overrides?: CallOverrides): Promise<string[]>;
 
-  "allowedTokenSources()"(overrides?: Overrides): Promise<ContractTransaction>;
+  "allowedTokenSources()"(overrides?: CallOverrides): Promise<string[]>;
 
-  allowedTokens(idx: BigNumberish, overrides?: CallOverrides): Promise<string>;
+  allowedTokens(
+    _index: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   "allowedTokens(uint256)"(
-    idx: BigNumberish,
+    _index: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -1730,68 +1628,50 @@ export class NFTComplexGemPool extends Contract {
   claim(
     claimHash: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, BigNumber, BigNumber, string, BigNumber] & {
-      claimAmount: BigNumber;
-      claimQuantity: BigNumber;
-      claimUnlockTime: BigNumber;
-      claimTokenAmount: BigNumber;
-      stakedToken: string;
-      nextClaimId: BigNumber;
-    }
-  >;
+  ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, string, BigNumber]>;
 
   "claim(uint256)"(
     claimHash: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, BigNumber, BigNumber, string, BigNumber] & {
-      claimAmount: BigNumber;
-      claimQuantity: BigNumber;
-      claimUnlockTime: BigNumber;
-      claimTokenAmount: BigNumber;
-      stakedToken: string;
-      nextClaimId: BigNumber;
-    }
-  >;
+  ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, string, BigNumber]>;
 
   claimAmount(
-    claimHash: BigNumberish,
+    _claimHash: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   "claimAmount(uint256)"(
-    claimHash: BigNumberish,
+    _claimHash: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   claimQuantity(
-    claimHash: BigNumberish,
+    _claimHash: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   "claimQuantity(uint256)"(
-    claimHash: BigNumberish,
+    _claimHash: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   claimTokenAmount(
-    claimHash: BigNumberish,
+    _claimHash: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   "claimTokenAmount(uint256)"(
-    claimHash: BigNumberish,
+    _claimHash: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   claimUnlockTime(
-    claimHash: BigNumberish,
+    _claimHash: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   "claimUnlockTime(uint256)"(
-    claimHash: BigNumberish,
+    _claimHash: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -1800,86 +1680,88 @@ export class NFTComplexGemPool extends Contract {
   "claimedCount()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   collectClaim(
-    claimHash: BigNumberish,
+    _claimHash: BigNumberish,
+    _requireMature: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "collectClaim(uint256)"(
-    claimHash: BigNumberish,
+  "collectClaim(uint256,bool)"(
+    _claimHash: BigNumberish,
+    _requireMature: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   createClaim(
-    timeframe: BigNumberish,
+    _timeframe: BigNumberish,
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   "createClaim(uint256)"(
-    timeframe: BigNumberish,
+    _timeframe: BigNumberish,
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   createClaims(
-    timeframe: BigNumberish,
-    count: BigNumberish,
+    _timeframe: BigNumberish,
+    _count: BigNumberish,
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   "createClaims(uint256,uint256)"(
-    timeframe: BigNumberish,
-    count: BigNumberish,
+    _timeframe: BigNumberish,
+    _count: BigNumberish,
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   createERC20Claim(
-    erc20token: string,
-    tokenAmount: BigNumberish,
+    _erc20TokenAddress: string,
+    _tokenAmount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "createERC20Claim(address,uint256)"(
-    erc20token: string,
-    tokenAmount: BigNumberish,
+    _erc20TokenAddress: string,
+    _tokenAmount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   createERC20Claims(
-    erc20token: string,
-    tokenAmount: BigNumberish,
-    count: BigNumberish,
+    _erc20TokenAddress: string,
+    _tokenAmount: BigNumberish,
+    _count: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "createERC20Claims(address,uint256,uint256)"(
-    erc20token: string,
-    tokenAmount: BigNumberish,
-    count: BigNumberish,
+    _erc20TokenAddress: string,
+    _tokenAmount: BigNumberish,
+    _count: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   deposit(
-    erc20token: string,
-    tokenAmount: BigNumberish,
+    _erc20TokenAddress: string,
+    _tokenAmount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "deposit(address,uint256)"(
-    erc20token: string,
-    tokenAmount: BigNumberish,
+    _erc20TokenAddress: string,
+    _tokenAmount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   depositNFT(
-    erc1155token: string,
-    tokenId: BigNumberish,
-    tokenAmount: BigNumberish,
+    _erc1155TokenAddress: string,
+    _tokenId: BigNumberish,
+    _tokenAmount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "depositNFT(address,uint256,uint256)"(
-    erc1155token: string,
-    tokenId: BigNumberish,
-    tokenAmount: BigNumberish,
+    _erc1155TokenAddress: string,
+    _tokenId: BigNumberish,
+    _tokenAmount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -1896,50 +1778,82 @@ export class NFTComplexGemPool extends Contract {
   "ethPrice()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   gemClaimHash(
-    gemHash: BigNumberish,
+    _claimHash: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   "gemClaimHash(uint256)"(
-    gemHash: BigNumberish,
+    _claimHash: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  importLegacyGem(
+    _poolAddress: string,
+    _legacyToken: string,
+    _tokenHash: BigNumberish,
+    _recipient: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "importLegacyGem(address,address,uint256,address)"(
+    _poolAddress: string,
+    _legacyToken: string,
+    _tokenHash: BigNumberish,
+    _recipient: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   initialize(
-    __symbol: string,
-    __name: string,
-    __ethPrice: BigNumberish,
-    __minTime: BigNumberish,
-    __maxTime: BigNumberish,
-    __diffstep: BigNumberish,
-    __maxClaims: BigNumberish,
-    __allowedToken: string,
+    _symbol: string,
+    _name: string,
+    _ethPrice: BigNumberish,
+    _minTime: BigNumberish,
+    _maxTime: BigNumberish,
+    _diffstep: BigNumberish,
+    _maxClaims: BigNumberish,
+    _allowedToken: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "initialize(string,string,uint256,uint256,uint256,uint256,uint256,address)"(
-    __symbol: string,
-    __name: string,
-    __ethPrice: BigNumberish,
-    __minTime: BigNumberish,
-    __maxTime: BigNumberish,
-    __diffstep: BigNumberish,
-    __maxClaims: BigNumberish,
-    __allowedToken: string,
+    _symbol: string,
+    _name: string,
+    _ethPrice: BigNumberish,
+    _minTime: BigNumberish,
+    _maxTime: BigNumberish,
+    _diffstep: BigNumberish,
+    _maxClaims: BigNumberish,
+    _allowedToken: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  isController(caddress: string, overrides?: CallOverrides): Promise<boolean>;
-
-  "isController(address)"(
-    caddress: string,
+  isController(
+    _controllerAddress: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  isTokenAllowed(tkn: string, overrides?: CallOverrides): Promise<boolean>;
+  "isController(address)"(
+    _controllerAddress: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  isLegacyGemImported(
+    _tokenhash: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  "isLegacyGemImported(uint256)"(
+    _tokenhash: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  isTokenAllowed(
+    _tokenAddress: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   "isTokenAllowed(address)"(
-    tkn: string,
+    _tokenAddress: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
@@ -1952,14 +1866,14 @@ export class NFTComplexGemPool extends Contract {
   "maxQuantityPerClaim()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   mintGenesisGems(
-    creator: string,
-    funder: string,
+    _creatorAddress: string,
+    _funderAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "mintGenesisGems(address,address)"(
-    creator: string,
-    funder: string,
+    _creatorAddress: string,
+    _funderAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -2028,12 +1942,12 @@ export class NFTComplexGemPool extends Contract {
   "proxies(address)"(arg0: string, overrides?: CallOverrides): Promise<string>;
 
   purchaseGems(
-    count: BigNumberish,
+    _count: BigNumberish,
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
   "purchaseGems(uint256)"(
-    count: BigNumberish,
+    _count: BigNumberish,
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
@@ -2042,42 +1956,42 @@ export class NFTComplexGemPool extends Contract {
   "relinquishControl()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   removeAllowedToken(
-    tkn: string,
+    _tokenAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "removeAllowedToken(address)"(
-    tkn: string,
+    _tokenAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   removeAllowedTokenSource(
-    allowedToken: string,
+    _allowedToken: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "removeAllowedTokenSource(address)"(
-    allowedToken: string,
+    _allowedToken: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setAllowPurchase(
-    allow: boolean,
+    _allowPurchase: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setAllowPurchase(bool)"(
-    allow: boolean,
+    _allowPurchase: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setCategory(
-    category: BigNumberish,
+    _category: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setCategory(uint256)"(
-    category: BigNumberish,
+    _category: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -2092,118 +2006,104 @@ export class NFTComplexGemPool extends Contract {
   ): Promise<ContractTransaction>;
 
   setEnabled(
-    enable: boolean,
+    _enabled: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setEnabled(bool)"(
-    enable: boolean,
+    _enabled: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setFeeTracker(
-    addr: string,
+    _feeTrackerAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setFeeTracker(address)"(
-    addr: string,
+    _feeTrackerAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setGovernor(
-    addr: string,
+    _governorAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setGovernor(address)"(
-    addr: string,
+    _governorAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setMaxClaimsPerAccount(
-    maxCPA: BigNumberish,
+    _maxClaimsPerAccount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setMaxClaimsPerAccount(uint256)"(
-    maxCPA: BigNumberish,
+    _maxClaimsPerAccount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setMaxQuantityPerClaim(
-    maxQty: BigNumberish,
+    _maxQuantityPerClaim: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setMaxQuantityPerClaim(uint256)"(
-    maxQty: BigNumberish,
+    _maxQuantityPerClaim: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setMultiToken(
-    addr: string,
+    _multiTokenAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setMultiToken(address)"(
-    addr: string,
+    _multiTokenAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setNextIds(
-    nextClaimId: BigNumberish,
-    nextGemId: BigNumberish,
+    _nextClaimId: BigNumberish,
+    _nextGemId: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setNextIds(uint256,uint256)"(
-    nextClaimId: BigNumberish,
-    nextGemId: BigNumberish,
+    _nextClaimId: BigNumberish,
+    _nextGemId: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setPriceIncrementType(
-    incrementType: BigNumberish,
+    _incrementType: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setPriceIncrementType(uint8)"(
-    incrementType: BigNumberish,
+    _incrementType: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setSwapHelper(
-    addr: string,
+    _swapHelperAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setSwapHelper(address)"(
-    addr: string,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  setToken(
-    tokenHash: BigNumberish,
-    tokenType: BigNumberish,
-    tokenId: BigNumberish,
-    overrides?: Overrides
-  ): Promise<ContractTransaction>;
-
-  "setToken(uint256,uint8,uint256)"(
-    tokenHash: BigNumberish,
-    tokenType: BigNumberish,
-    tokenId: BigNumberish,
+    _swapHelperAddress: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setTokenHashes(
-    tokenHashes: BigNumberish[],
+    _tokenHashes: BigNumberish[],
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setTokenHashes(uint256[])"(
-    tokenHashes: BigNumberish[],
+    _tokenHashes: BigNumberish[],
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -2218,12 +2118,12 @@ export class NFTComplexGemPool extends Contract {
   ): Promise<ContractTransaction>;
 
   setVisible(
-    visible: boolean,
+    _visible: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "setVisible(bool)"(
-    visible: boolean,
+    _visible: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -2242,19 +2142,7 @@ export class NFTComplexGemPool extends Contract {
       BigNumber,
       BigNumber,
       BigNumber
-    ] & {
-      symbol: string;
-      name: string;
-      description: string;
-      category: BigNumber;
-      ethPrice: BigNumber;
-      minTime: BigNumber;
-      maxTime: BigNumber;
-      diffstep: BigNumber;
-      maxClaims: BigNumber;
-      maxQuantityPerClaim: BigNumber;
-      maxClaimsPerAccount: BigNumber;
-    }
+    ]
   >;
 
   "settings()"(
@@ -2272,28 +2160,16 @@ export class NFTComplexGemPool extends Contract {
       BigNumber,
       BigNumber,
       BigNumber
-    ] & {
-      symbol: string;
-      name: string;
-      description: string;
-      category: BigNumber;
-      ethPrice: BigNumber;
-      minTime: BigNumber;
-      maxTime: BigNumber;
-      diffstep: BigNumber;
-      maxClaims: BigNumber;
-      maxQuantityPerClaim: BigNumber;
-      maxClaimsPerAccount: BigNumber;
-    }
+    ]
   >;
 
   stakedToken(
-    claimHash: BigNumberish,
+    _claimHash: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>;
 
   "stakedToken(uint256)"(
-    claimHash: BigNumberish,
+    _claimHash: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -2309,16 +2185,7 @@ export class NFTComplexGemPool extends Contract {
       BigNumber,
       BigNumber,
       BigNumber
-    ] & {
-      visible: boolean;
-      claimedCount: BigNumber;
-      mintedCount: BigNumber;
-      totalStakedEth: BigNumber;
-      nextClaimHash: BigNumber;
-      nextGemHash: BigNumber;
-      nextClaimId: BigNumber;
-      nextGemId: BigNumber;
-    }
+    ]
   >;
 
   "stats()"(
@@ -2333,16 +2200,7 @@ export class NFTComplexGemPool extends Contract {
       BigNumber,
       BigNumber,
       BigNumber
-    ] & {
-      visible: boolean;
-      claimedCount: BigNumber;
-      mintedCount: BigNumber;
-      totalStakedEth: BigNumber;
-      nextClaimHash: BigNumber;
-      nextGemHash: BigNumber;
-      nextClaimId: BigNumber;
-      nextGemId: BigNumber;
-    }
+    ]
   >;
 
   supportsInterface(
@@ -2360,48 +2218,36 @@ export class NFTComplexGemPool extends Contract {
   "symbol()"(overrides?: CallOverrides): Promise<string>;
 
   token(
-    tokenHash: BigNumberish,
+    _tokenHash: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<
-    [number, BigNumber, string] & {
-      tokenType: number;
-      tokenId: BigNumber;
-      tokenSource: string;
-    }
-  >;
+  ): Promise<[number, BigNumber, string]>;
 
   "token(uint256)"(
-    tokenHash: BigNumberish,
+    _tokenHash: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<
-    [number, BigNumber, string] & {
-      tokenType: number;
-      tokenId: BigNumber;
-      tokenSource: string;
-    }
-  >;
+  ): Promise<[number, BigNumber, string]>;
 
   tokenHashes(overrides?: CallOverrides): Promise<BigNumber[]>;
 
   "tokenHashes()"(overrides?: CallOverrides): Promise<BigNumber[]>;
 
   tokenId(
-    tokenHash: BigNumberish,
+    _tokenHash: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   "tokenId(uint256)"(
-    tokenHash: BigNumberish,
+    _tokenHash: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   tokenType(
-    tokenHash: BigNumberish,
+    _tokenHash: BigNumberish,
     overrides?: CallOverrides
   ): Promise<number>;
 
   "tokenType(uint256)"(
-    tokenHash: BigNumberish,
+    _tokenHash: BigNumberish,
     overrides?: CallOverrides
   ): Promise<number>;
 
@@ -2410,26 +2256,26 @@ export class NFTComplexGemPool extends Contract {
   "totalStakedEth()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   updateInputRequirement(
-    ndx: BigNumberish,
-    token: string,
-    pool: string,
-    inputType: BigNumberish,
-    tid: BigNumberish,
-    minAmount: BigNumberish,
-    takeCustody: boolean,
-    burn: boolean,
+    _index: BigNumberish,
+    _tokenAddress: string,
+    _poolAddress: string,
+    _inputType: BigNumberish,
+    _tokenId: BigNumberish,
+    _minAmount: BigNumberish,
+    _takeCustody: boolean,
+    _burn: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "updateInputRequirement(uint256,address,address,uint8,uint256,uint256,bool,bool)"(
-    ndx: BigNumberish,
-    token: string,
-    pool: string,
-    inputType: BigNumberish,
-    tid: BigNumberish,
-    minAmount: BigNumberish,
-    takeCustody: boolean,
-    burn: boolean,
+    _index: BigNumberish,
+    _tokenAddress: string,
+    _poolAddress: string,
+    _inputType: BigNumberish,
+    _tokenId: BigNumberish,
+    _minAmount: BigNumberish,
+    _takeCustody: boolean,
+    _burn: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -2442,111 +2288,97 @@ export class NFTComplexGemPool extends Contract {
   "visible()"(overrides?: CallOverrides): Promise<boolean>;
 
   withdraw(
-    erc20token: string,
+    _erc20TokenAddress: string,
     destination: string,
-    tokenAmount: BigNumberish,
+    _tokenAmount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "withdraw(address,address,uint256)"(
-    erc20token: string,
+    _erc20TokenAddress: string,
     destination: string,
-    tokenAmount: BigNumberish,
+    _tokenAmount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   withdrawNFT(
-    erc1155token: string,
-    destination: string,
-    tokenId: BigNumberish,
-    tokenAmount: BigNumberish,
+    _erc1155TokenAddress: string,
+    _destinationAddress: string,
+    _tokenId: BigNumberish,
+    _tokenAmount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "withdrawNFT(address,address,uint256,uint256)"(
-    erc1155token: string,
-    destination: string,
-    tokenId: BigNumberish,
-    tokenAmount: BigNumberish,
+    _erc1155TokenAddress: string,
+    _destinationAddress: string,
+    _tokenId: BigNumberish,
+    _tokenAmount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    addAllowedToken(tkn: string, overrides?: CallOverrides): Promise<void>;
+    addAllowedToken(
+      _tokenAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     "addAllowedToken(address)"(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     addAllowedTokenSource(
-      allowedToken: string,
+      _allowedToken: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "addAllowedTokenSource(address)"(
-      allowedToken: string,
+      _allowedToken: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    addController(controller: string, overrides?: CallOverrides): Promise<void>;
+    addController(
+      _controllerAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     "addController(address)"(
-      controller: string,
+      _controllerAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     addInputRequirement(
-      token: string,
-      pool: string,
-      inputType: BigNumberish,
-      tid: BigNumberish,
-      minAmount: BigNumberish,
-      takeCustody: boolean,
-      burn: boolean,
+      _tokenAddress: string,
+      _poolAddress: string,
+      _inputType: BigNumberish,
+      _tokenId: BigNumberish,
+      _minAmount: BigNumberish,
+      _takeCustody: boolean,
+      _burn: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "addInputRequirement(address,address,uint8,uint256,uint256,bool,bool)"(
-      token: string,
-      pool: string,
-      inputType: BigNumberish,
-      tid: BigNumberish,
-      minAmount: BigNumberish,
-      takeCustody: boolean,
-      burn: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    addLegacyToken(
-      token: string,
-      tokenType: BigNumberish,
-      tokenHash: BigNumberish,
-      tokenId: BigNumberish,
-      recipient: string,
-      qty: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "addLegacyToken(address,uint8,uint256,uint256,address,uint256)"(
-      token: string,
-      tokenType: BigNumberish,
-      tokenHash: BigNumberish,
-      tokenId: BigNumberish,
-      recipient: string,
-      qty: BigNumberish,
+      _tokenAddress: string,
+      _poolAddress: string,
+      _inputType: BigNumberish,
+      _tokenId: BigNumberish,
+      _minAmount: BigNumberish,
+      _takeCustody: boolean,
+      _burn: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
     allInputRequirements(
-      ndx: BigNumberish,
+      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [string, string, number, BigNumber, BigNumber, boolean, boolean]
     >;
 
     "allInputRequirements(uint256)"(
-      ndx: BigNumberish,
+      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [string, string, number, BigNumber, BigNumber, boolean, boolean]
@@ -2581,12 +2413,12 @@ export class NFTComplexGemPool extends Contract {
     "allowedTokenSources()"(overrides?: CallOverrides): Promise<string[]>;
 
     allowedTokens(
-      idx: BigNumberish,
+      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
 
     "allowedTokens(uint256)"(
-      idx: BigNumberish,
+      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -2601,68 +2433,50 @@ export class NFTComplexGemPool extends Contract {
     claim(
       claimHash: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber, string, BigNumber] & {
-        claimAmount: BigNumber;
-        claimQuantity: BigNumber;
-        claimUnlockTime: BigNumber;
-        claimTokenAmount: BigNumber;
-        stakedToken: string;
-        nextClaimId: BigNumber;
-      }
-    >;
+    ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, string, BigNumber]>;
 
     "claim(uint256)"(
       claimHash: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber, string, BigNumber] & {
-        claimAmount: BigNumber;
-        claimQuantity: BigNumber;
-        claimUnlockTime: BigNumber;
-        claimTokenAmount: BigNumber;
-        stakedToken: string;
-        nextClaimId: BigNumber;
-      }
-    >;
+    ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, string, BigNumber]>;
 
     claimAmount(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "claimAmount(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     claimQuantity(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "claimQuantity(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     claimTokenAmount(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "claimTokenAmount(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     claimUnlockTime(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "claimUnlockTime(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -2671,86 +2485,88 @@ export class NFTComplexGemPool extends Contract {
     "claimedCount()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     collectClaim(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
+      _requireMature: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "collectClaim(uint256)"(
-      claimHash: BigNumberish,
+    "collectClaim(uint256,bool)"(
+      _claimHash: BigNumberish,
+      _requireMature: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
     createClaim(
-      timeframe: BigNumberish,
+      _timeframe: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "createClaim(uint256)"(
-      timeframe: BigNumberish,
+      _timeframe: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     createClaims(
-      timeframe: BigNumberish,
-      count: BigNumberish,
+      _timeframe: BigNumberish,
+      _count: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "createClaims(uint256,uint256)"(
-      timeframe: BigNumberish,
-      count: BigNumberish,
+      _timeframe: BigNumberish,
+      _count: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     createERC20Claim(
-      erc20token: string,
-      tokenAmount: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "createERC20Claim(address,uint256)"(
-      erc20token: string,
-      tokenAmount: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     createERC20Claims(
-      erc20token: string,
-      tokenAmount: BigNumberish,
-      count: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
+      _count: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "createERC20Claims(address,uint256,uint256)"(
-      erc20token: string,
-      tokenAmount: BigNumberish,
-      count: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
+      _count: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     deposit(
-      erc20token: string,
-      tokenAmount: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "deposit(address,uint256)"(
-      erc20token: string,
-      tokenAmount: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     depositNFT(
-      erc1155token: string,
-      tokenId: BigNumberish,
-      tokenAmount: BigNumberish,
+      _erc1155TokenAddress: string,
+      _tokenId: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "depositNFT(address,uint256,uint256)"(
-      erc1155token: string,
-      tokenId: BigNumberish,
-      tokenAmount: BigNumberish,
+      _erc1155TokenAddress: string,
+      _tokenId: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -2767,50 +2583,82 @@ export class NFTComplexGemPool extends Contract {
     "ethPrice()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     gemClaimHash(
-      gemHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "gemClaimHash(uint256)"(
-      gemHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    importLegacyGem(
+      _poolAddress: string,
+      _legacyToken: string,
+      _tokenHash: BigNumberish,
+      _recipient: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "importLegacyGem(address,address,uint256,address)"(
+      _poolAddress: string,
+      _legacyToken: string,
+      _tokenHash: BigNumberish,
+      _recipient: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     initialize(
-      __symbol: string,
-      __name: string,
-      __ethPrice: BigNumberish,
-      __minTime: BigNumberish,
-      __maxTime: BigNumberish,
-      __diffstep: BigNumberish,
-      __maxClaims: BigNumberish,
-      __allowedToken: string,
+      _symbol: string,
+      _name: string,
+      _ethPrice: BigNumberish,
+      _minTime: BigNumberish,
+      _maxTime: BigNumberish,
+      _diffstep: BigNumberish,
+      _maxClaims: BigNumberish,
+      _allowedToken: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "initialize(string,string,uint256,uint256,uint256,uint256,uint256,address)"(
-      __symbol: string,
-      __name: string,
-      __ethPrice: BigNumberish,
-      __minTime: BigNumberish,
-      __maxTime: BigNumberish,
-      __diffstep: BigNumberish,
-      __maxClaims: BigNumberish,
-      __allowedToken: string,
+      _symbol: string,
+      _name: string,
+      _ethPrice: BigNumberish,
+      _minTime: BigNumberish,
+      _maxTime: BigNumberish,
+      _diffstep: BigNumberish,
+      _maxClaims: BigNumberish,
+      _allowedToken: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    isController(caddress: string, overrides?: CallOverrides): Promise<boolean>;
-
-    "isController(address)"(
-      caddress: string,
+    isController(
+      _controllerAddress: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    isTokenAllowed(tkn: string, overrides?: CallOverrides): Promise<boolean>;
+    "isController(address)"(
+      _controllerAddress: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    isLegacyGemImported(
+      _tokenhash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "isLegacyGemImported(uint256)"(
+      _tokenhash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    isTokenAllowed(
+      _tokenAddress: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     "isTokenAllowed(address)"(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
@@ -2823,14 +2671,14 @@ export class NFTComplexGemPool extends Contract {
     "maxQuantityPerClaim()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     mintGenesisGems(
-      creator: string,
-      funder: string,
+      _creatorAddress: string,
+      _funderAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "mintGenesisGems(address,address)"(
-      creator: string,
-      funder: string,
+      _creatorAddress: string,
+      _funderAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -2901,10 +2749,13 @@ export class NFTComplexGemPool extends Contract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    purchaseGems(count: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    purchaseGems(
+      _count: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     "purchaseGems(uint256)"(
-      count: BigNumberish,
+      _count: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -2912,37 +2763,43 @@ export class NFTComplexGemPool extends Contract {
 
     "relinquishControl()"(overrides?: CallOverrides): Promise<void>;
 
-    removeAllowedToken(tkn: string, overrides?: CallOverrides): Promise<void>;
+    removeAllowedToken(
+      _tokenAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     "removeAllowedToken(address)"(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     removeAllowedTokenSource(
-      allowedToken: string,
+      _allowedToken: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "removeAllowedTokenSource(address)"(
-      allowedToken: string,
+      _allowedToken: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setAllowPurchase(allow: boolean, overrides?: CallOverrides): Promise<void>;
+    setAllowPurchase(
+      _allowPurchase: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     "setAllowPurchase(bool)"(
-      allow: boolean,
+      _allowPurchase: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setCategory(
-      category: BigNumberish,
+      _category: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "setCategory(uint256)"(
-      category: BigNumberish,
+      _category: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -2953,104 +2810,102 @@ export class NFTComplexGemPool extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setEnabled(enable: boolean, overrides?: CallOverrides): Promise<void>;
+    setEnabled(_enabled: boolean, overrides?: CallOverrides): Promise<void>;
 
     "setEnabled(bool)"(
-      enable: boolean,
+      _enabled: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setFeeTracker(addr: string, overrides?: CallOverrides): Promise<void>;
+    setFeeTracker(
+      _feeTrackerAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     "setFeeTracker(address)"(
-      addr: string,
+      _feeTrackerAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setGovernor(addr: string, overrides?: CallOverrides): Promise<void>;
+    setGovernor(
+      _governorAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     "setGovernor(address)"(
-      addr: string,
+      _governorAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setMaxClaimsPerAccount(
-      maxCPA: BigNumberish,
+      _maxClaimsPerAccount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "setMaxClaimsPerAccount(uint256)"(
-      maxCPA: BigNumberish,
+      _maxClaimsPerAccount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setMaxQuantityPerClaim(
-      maxQty: BigNumberish,
+      _maxQuantityPerClaim: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "setMaxQuantityPerClaim(uint256)"(
-      maxQty: BigNumberish,
+      _maxQuantityPerClaim: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setMultiToken(addr: string, overrides?: CallOverrides): Promise<void>;
+    setMultiToken(
+      _multiTokenAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     "setMultiToken(address)"(
-      addr: string,
+      _multiTokenAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setNextIds(
-      nextClaimId: BigNumberish,
-      nextGemId: BigNumberish,
+      _nextClaimId: BigNumberish,
+      _nextGemId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "setNextIds(uint256,uint256)"(
-      nextClaimId: BigNumberish,
-      nextGemId: BigNumberish,
+      _nextClaimId: BigNumberish,
+      _nextGemId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setPriceIncrementType(
-      incrementType: BigNumberish,
+      _incrementType: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "setPriceIncrementType(uint8)"(
-      incrementType: BigNumberish,
+      _incrementType: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setSwapHelper(addr: string, overrides?: CallOverrides): Promise<void>;
+    setSwapHelper(
+      _swapHelperAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     "setSwapHelper(address)"(
-      addr: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setToken(
-      tokenHash: BigNumberish,
-      tokenType: BigNumberish,
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "setToken(uint256,uint8,uint256)"(
-      tokenHash: BigNumberish,
-      tokenType: BigNumberish,
-      tokenId: BigNumberish,
+      _swapHelperAddress: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setTokenHashes(
-      tokenHashes: BigNumberish[],
+      _tokenHashes: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
     "setTokenHashes(uint256[])"(
-      tokenHashes: BigNumberish[],
+      _tokenHashes: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -3061,10 +2916,10 @@ export class NFTComplexGemPool extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setVisible(visible: boolean, overrides?: CallOverrides): Promise<void>;
+    setVisible(_visible: boolean, overrides?: CallOverrides): Promise<void>;
 
     "setVisible(bool)"(
-      visible: boolean,
+      _visible: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -3083,19 +2938,7 @@ export class NFTComplexGemPool extends Contract {
         BigNumber,
         BigNumber,
         BigNumber
-      ] & {
-        symbol: string;
-        name: string;
-        description: string;
-        category: BigNumber;
-        ethPrice: BigNumber;
-        minTime: BigNumber;
-        maxTime: BigNumber;
-        diffstep: BigNumber;
-        maxClaims: BigNumber;
-        maxQuantityPerClaim: BigNumber;
-        maxClaimsPerAccount: BigNumber;
-      }
+      ]
     >;
 
     "settings()"(
@@ -3113,28 +2956,16 @@ export class NFTComplexGemPool extends Contract {
         BigNumber,
         BigNumber,
         BigNumber
-      ] & {
-        symbol: string;
-        name: string;
-        description: string;
-        category: BigNumber;
-        ethPrice: BigNumber;
-        minTime: BigNumber;
-        maxTime: BigNumber;
-        diffstep: BigNumber;
-        maxClaims: BigNumber;
-        maxQuantityPerClaim: BigNumber;
-        maxClaimsPerAccount: BigNumber;
-      }
+      ]
     >;
 
     stakedToken(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
 
     "stakedToken(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -3150,16 +2981,7 @@ export class NFTComplexGemPool extends Contract {
         BigNumber,
         BigNumber,
         BigNumber
-      ] & {
-        visible: boolean;
-        claimedCount: BigNumber;
-        mintedCount: BigNumber;
-        totalStakedEth: BigNumber;
-        nextClaimHash: BigNumber;
-        nextGemHash: BigNumber;
-        nextClaimId: BigNumber;
-        nextGemId: BigNumber;
-      }
+      ]
     >;
 
     "stats()"(
@@ -3174,16 +2996,7 @@ export class NFTComplexGemPool extends Contract {
         BigNumber,
         BigNumber,
         BigNumber
-      ] & {
-        visible: boolean;
-        claimedCount: BigNumber;
-        mintedCount: BigNumber;
-        totalStakedEth: BigNumber;
-        nextClaimHash: BigNumber;
-        nextGemHash: BigNumber;
-        nextClaimId: BigNumber;
-        nextGemId: BigNumber;
-      }
+      ]
     >;
 
     supportsInterface(
@@ -3201,48 +3014,36 @@ export class NFTComplexGemPool extends Contract {
     "symbol()"(overrides?: CallOverrides): Promise<string>;
 
     token(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [number, BigNumber, string] & {
-        tokenType: number;
-        tokenId: BigNumber;
-        tokenSource: string;
-      }
-    >;
+    ): Promise<[number, BigNumber, string]>;
 
     "token(uint256)"(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [number, BigNumber, string] & {
-        tokenType: number;
-        tokenId: BigNumber;
-        tokenSource: string;
-      }
-    >;
+    ): Promise<[number, BigNumber, string]>;
 
     tokenHashes(overrides?: CallOverrides): Promise<BigNumber[]>;
 
     "tokenHashes()"(overrides?: CallOverrides): Promise<BigNumber[]>;
 
     tokenId(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "tokenId(uint256)"(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     tokenType(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<number>;
 
     "tokenType(uint256)"(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<number>;
 
@@ -3251,26 +3052,26 @@ export class NFTComplexGemPool extends Contract {
     "totalStakedEth()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     updateInputRequirement(
-      ndx: BigNumberish,
-      token: string,
-      pool: string,
-      inputType: BigNumberish,
-      tid: BigNumberish,
-      minAmount: BigNumberish,
-      takeCustody: boolean,
-      burn: boolean,
+      _index: BigNumberish,
+      _tokenAddress: string,
+      _poolAddress: string,
+      _inputType: BigNumberish,
+      _tokenId: BigNumberish,
+      _minAmount: BigNumberish,
+      _takeCustody: boolean,
+      _burn: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "updateInputRequirement(uint256,address,address,uint8,uint256,uint256,bool,bool)"(
-      ndx: BigNumberish,
-      token: string,
-      pool: string,
-      inputType: BigNumberish,
-      tid: BigNumberish,
-      minAmount: BigNumberish,
-      takeCustody: boolean,
-      burn: boolean,
+      _index: BigNumberish,
+      _tokenAddress: string,
+      _poolAddress: string,
+      _inputType: BigNumberish,
+      _tokenId: BigNumberish,
+      _minAmount: BigNumberish,
+      _takeCustody: boolean,
+      _burn: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -3283,50 +3084,50 @@ export class NFTComplexGemPool extends Contract {
     "visible()"(overrides?: CallOverrides): Promise<boolean>;
 
     withdraw(
-      erc20token: string,
+      _erc20TokenAddress: string,
       destination: string,
-      tokenAmount: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "withdraw(address,address,uint256)"(
-      erc20token: string,
+      _erc20TokenAddress: string,
       destination: string,
-      tokenAmount: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     withdrawNFT(
-      erc1155token: string,
-      destination: string,
-      tokenId: BigNumberish,
-      tokenAmount: BigNumberish,
+      _erc1155TokenAddress: string,
+      _destinationAddress: string,
+      _tokenId: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "withdrawNFT(address,address,uint256,uint256)"(
-      erc1155token: string,
-      destination: string,
-      tokenId: BigNumberish,
-      tokenAmount: BigNumberish,
+      _erc1155TokenAddress: string,
+      _destinationAddress: string,
+      _tokenId: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
   };
 
   filters: {
     NFTGemClaimCreated(
-      account: null,
-      pool: null,
-      claimHash: null,
+      account: string | null,
+      pool: string | null,
+      claimHash: BigNumberish | null,
       length: null,
       quantity: null,
       amountPaid: null
     ): EventFilter;
 
     NFTGemClaimRedeemed(
-      account: null,
-      pool: null,
-      claimHash: null,
+      account: string | null,
+      pool: string | null,
+      claimHash: BigNumberish | null,
       amountPaid: null,
       quantity: null,
       feeAssessed: null
@@ -3341,9 +3142,9 @@ export class NFTComplexGemPool extends Contract {
     ): EventFilter;
 
     NFTGemERC20ClaimCreated(
-      account: null,
-      pool: null,
-      claimHash: null,
+      account: string | null,
+      pool: string | null,
+      claimHash: BigNumberish | null,
       length: null,
       token: null,
       quantity: null,
@@ -3351,94 +3152,86 @@ export class NFTComplexGemPool extends Contract {
     ): EventFilter;
 
     NFTGemERC20ClaimRedeemed(
-      account: null,
-      pool: null,
-      claimHash: null,
+      account: string | null,
+      pool: string | null,
+      claimHash: BigNumberish | null,
       token: null,
       ethPrice: null,
       tokenAmount: null,
       quantity: null,
       feeAssessed: null
     ): EventFilter;
+
+    NFTGemImported(
+      converter: string | null,
+      pool: string | null,
+      oldPool: null,
+      oldToken: null,
+      gemHash: BigNumberish | null,
+      quantity: null
+    ): EventFilter;
   };
 
   estimateGas: {
-    addAllowedToken(tkn: string, overrides?: Overrides): Promise<BigNumber>;
+    addAllowedToken(
+      _tokenAddress: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
 
     "addAllowedToken(address)"(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     addAllowedTokenSource(
-      allowedToken: string,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "addAllowedTokenSource(address)"(
-      allowedToken: string,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     addController(
-      controller: string,
+      _controllerAddress: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "addController(address)"(
-      controller: string,
+      _controllerAddress: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     addInputRequirement(
-      token: string,
-      pool: string,
-      inputType: BigNumberish,
-      tid: BigNumberish,
-      minAmount: BigNumberish,
-      takeCustody: boolean,
-      burn: boolean,
+      _tokenAddress: string,
+      _poolAddress: string,
+      _inputType: BigNumberish,
+      _tokenId: BigNumberish,
+      _minAmount: BigNumberish,
+      _takeCustody: boolean,
+      _burn: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "addInputRequirement(address,address,uint8,uint256,uint256,bool,bool)"(
-      token: string,
-      pool: string,
-      inputType: BigNumberish,
-      tid: BigNumberish,
-      minAmount: BigNumberish,
-      takeCustody: boolean,
-      burn: boolean,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    addLegacyToken(
-      token: string,
-      tokenType: BigNumberish,
-      tokenHash: BigNumberish,
-      tokenId: BigNumberish,
-      recipient: string,
-      qty: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "addLegacyToken(address,uint8,uint256,uint256,address,uint256)"(
-      token: string,
-      tokenType: BigNumberish,
-      tokenHash: BigNumberish,
-      tokenId: BigNumberish,
-      recipient: string,
-      qty: BigNumberish,
+      _tokenAddress: string,
+      _poolAddress: string,
+      _inputType: BigNumberish,
+      _tokenId: BigNumberish,
+      _minAmount: BigNumberish,
+      _takeCustody: boolean,
+      _burn: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     allInputRequirements(
-      ndx: BigNumberish,
+      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "allInputRequirements(uint256)"(
-      ndx: BigNumberish,
+      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -3466,17 +3259,17 @@ export class NFTComplexGemPool extends Contract {
 
     "allowPurchase()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    allowedTokenSources(overrides?: Overrides): Promise<BigNumber>;
+    allowedTokenSources(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "allowedTokenSources()"(overrides?: Overrides): Promise<BigNumber>;
+    "allowedTokenSources()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     allowedTokens(
-      idx: BigNumberish,
+      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "allowedTokens(uint256)"(
-      idx: BigNumberish,
+      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -3499,42 +3292,42 @@ export class NFTComplexGemPool extends Contract {
     ): Promise<BigNumber>;
 
     claimAmount(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "claimAmount(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     claimQuantity(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "claimQuantity(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     claimTokenAmount(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "claimTokenAmount(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     claimUnlockTime(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "claimUnlockTime(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -3543,86 +3336,88 @@ export class NFTComplexGemPool extends Contract {
     "claimedCount()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     collectClaim(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
+      _requireMature: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "collectClaim(uint256)"(
-      claimHash: BigNumberish,
+    "collectClaim(uint256,bool)"(
+      _claimHash: BigNumberish,
+      _requireMature: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     createClaim(
-      timeframe: BigNumberish,
+      _timeframe: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     "createClaim(uint256)"(
-      timeframe: BigNumberish,
+      _timeframe: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     createClaims(
-      timeframe: BigNumberish,
-      count: BigNumberish,
+      _timeframe: BigNumberish,
+      _count: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     "createClaims(uint256,uint256)"(
-      timeframe: BigNumberish,
-      count: BigNumberish,
+      _timeframe: BigNumberish,
+      _count: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     createERC20Claim(
-      erc20token: string,
-      tokenAmount: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "createERC20Claim(address,uint256)"(
-      erc20token: string,
-      tokenAmount: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     createERC20Claims(
-      erc20token: string,
-      tokenAmount: BigNumberish,
-      count: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
+      _count: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "createERC20Claims(address,uint256,uint256)"(
-      erc20token: string,
-      tokenAmount: BigNumberish,
-      count: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
+      _count: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     deposit(
-      erc20token: string,
-      tokenAmount: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "deposit(address,uint256)"(
-      erc20token: string,
-      tokenAmount: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     depositNFT(
-      erc1155token: string,
-      tokenId: BigNumberish,
-      tokenAmount: BigNumberish,
+      _erc1155TokenAddress: string,
+      _tokenId: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "depositNFT(address,uint256,uint256)"(
-      erc1155token: string,
-      tokenId: BigNumberish,
-      tokenAmount: BigNumberish,
+      _erc1155TokenAddress: string,
+      _tokenId: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -3639,53 +3434,82 @@ export class NFTComplexGemPool extends Contract {
     "ethPrice()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     gemClaimHash(
-      gemHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "gemClaimHash(uint256)"(
-      gemHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    importLegacyGem(
+      _poolAddress: string,
+      _legacyToken: string,
+      _tokenHash: BigNumberish,
+      _recipient: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "importLegacyGem(address,address,uint256,address)"(
+      _poolAddress: string,
+      _legacyToken: string,
+      _tokenHash: BigNumberish,
+      _recipient: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     initialize(
-      __symbol: string,
-      __name: string,
-      __ethPrice: BigNumberish,
-      __minTime: BigNumberish,
-      __maxTime: BigNumberish,
-      __diffstep: BigNumberish,
-      __maxClaims: BigNumberish,
-      __allowedToken: string,
+      _symbol: string,
+      _name: string,
+      _ethPrice: BigNumberish,
+      _minTime: BigNumberish,
+      _maxTime: BigNumberish,
+      _diffstep: BigNumberish,
+      _maxClaims: BigNumberish,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "initialize(string,string,uint256,uint256,uint256,uint256,uint256,address)"(
-      __symbol: string,
-      __name: string,
-      __ethPrice: BigNumberish,
-      __minTime: BigNumberish,
-      __maxTime: BigNumberish,
-      __diffstep: BigNumberish,
-      __maxClaims: BigNumberish,
-      __allowedToken: string,
+      _symbol: string,
+      _name: string,
+      _ethPrice: BigNumberish,
+      _minTime: BigNumberish,
+      _maxTime: BigNumberish,
+      _diffstep: BigNumberish,
+      _maxClaims: BigNumberish,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     isController(
-      caddress: string,
+      _controllerAddress: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "isController(address)"(
-      caddress: string,
+      _controllerAddress: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    isTokenAllowed(tkn: string, overrides?: CallOverrides): Promise<BigNumber>;
+    isLegacyGemImported(
+      _tokenhash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "isLegacyGemImported(uint256)"(
+      _tokenhash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isTokenAllowed(
+      _tokenAddress: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     "isTokenAllowed(address)"(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -3698,14 +3522,14 @@ export class NFTComplexGemPool extends Contract {
     "maxQuantityPerClaim()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     mintGenesisGems(
-      creator: string,
-      funder: string,
+      _creatorAddress: string,
+      _funderAddress: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "mintGenesisGems(address,address)"(
-      creator: string,
-      funder: string,
+      _creatorAddress: string,
+      _funderAddress: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -3777,12 +3601,12 @@ export class NFTComplexGemPool extends Contract {
     ): Promise<BigNumber>;
 
     purchaseGems(
-      count: BigNumberish,
+      _count: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
     "purchaseGems(uint256)"(
-      count: BigNumberish,
+      _count: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
@@ -3790,37 +3614,43 @@ export class NFTComplexGemPool extends Contract {
 
     "relinquishControl()"(overrides?: Overrides): Promise<BigNumber>;
 
-    removeAllowedToken(tkn: string, overrides?: Overrides): Promise<BigNumber>;
+    removeAllowedToken(
+      _tokenAddress: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
 
     "removeAllowedToken(address)"(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     removeAllowedTokenSource(
-      allowedToken: string,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "removeAllowedTokenSource(address)"(
-      allowedToken: string,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setAllowPurchase(allow: boolean, overrides?: Overrides): Promise<BigNumber>;
+    setAllowPurchase(
+      _allowPurchase: boolean,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
 
     "setAllowPurchase(bool)"(
-      allow: boolean,
+      _allowPurchase: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     setCategory(
-      category: BigNumberish,
+      _category: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "setCategory(uint256)"(
-      category: BigNumberish,
+      _category: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -3831,104 +3661,102 @@ export class NFTComplexGemPool extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setEnabled(enable: boolean, overrides?: Overrides): Promise<BigNumber>;
+    setEnabled(_enabled: boolean, overrides?: Overrides): Promise<BigNumber>;
 
     "setEnabled(bool)"(
-      enable: boolean,
+      _enabled: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setFeeTracker(addr: string, overrides?: Overrides): Promise<BigNumber>;
+    setFeeTracker(
+      _feeTrackerAddress: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
 
     "setFeeTracker(address)"(
-      addr: string,
+      _feeTrackerAddress: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setGovernor(addr: string, overrides?: Overrides): Promise<BigNumber>;
+    setGovernor(
+      _governorAddress: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
 
     "setGovernor(address)"(
-      addr: string,
+      _governorAddress: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     setMaxClaimsPerAccount(
-      maxCPA: BigNumberish,
+      _maxClaimsPerAccount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "setMaxClaimsPerAccount(uint256)"(
-      maxCPA: BigNumberish,
+      _maxClaimsPerAccount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     setMaxQuantityPerClaim(
-      maxQty: BigNumberish,
+      _maxQuantityPerClaim: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "setMaxQuantityPerClaim(uint256)"(
-      maxQty: BigNumberish,
+      _maxQuantityPerClaim: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setMultiToken(addr: string, overrides?: Overrides): Promise<BigNumber>;
+    setMultiToken(
+      _multiTokenAddress: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
 
     "setMultiToken(address)"(
-      addr: string,
+      _multiTokenAddress: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     setNextIds(
-      nextClaimId: BigNumberish,
-      nextGemId: BigNumberish,
+      _nextClaimId: BigNumberish,
+      _nextGemId: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "setNextIds(uint256,uint256)"(
-      nextClaimId: BigNumberish,
-      nextGemId: BigNumberish,
+      _nextClaimId: BigNumberish,
+      _nextGemId: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     setPriceIncrementType(
-      incrementType: BigNumberish,
+      _incrementType: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "setPriceIncrementType(uint8)"(
-      incrementType: BigNumberish,
+      _incrementType: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setSwapHelper(addr: string, overrides?: Overrides): Promise<BigNumber>;
+    setSwapHelper(
+      _swapHelperAddress: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
 
     "setSwapHelper(address)"(
-      addr: string,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    setToken(
-      tokenHash: BigNumberish,
-      tokenType: BigNumberish,
-      tokenId: BigNumberish,
-      overrides?: Overrides
-    ): Promise<BigNumber>;
-
-    "setToken(uint256,uint8,uint256)"(
-      tokenHash: BigNumberish,
-      tokenType: BigNumberish,
-      tokenId: BigNumberish,
+      _swapHelperAddress: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     setTokenHashes(
-      tokenHashes: BigNumberish[],
+      _tokenHashes: BigNumberish[],
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "setTokenHashes(uint256[])"(
-      tokenHashes: BigNumberish[],
+      _tokenHashes: BigNumberish[],
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -3939,10 +3767,10 @@ export class NFTComplexGemPool extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setVisible(visible: boolean, overrides?: Overrides): Promise<BigNumber>;
+    setVisible(_visible: boolean, overrides?: Overrides): Promise<BigNumber>;
 
     "setVisible(bool)"(
-      visible: boolean,
+      _visible: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -3951,12 +3779,12 @@ export class NFTComplexGemPool extends Contract {
     "settings()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     stakedToken(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "stakedToken(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -3979,12 +3807,12 @@ export class NFTComplexGemPool extends Contract {
     "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     token(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "token(uint256)"(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -3993,22 +3821,22 @@ export class NFTComplexGemPool extends Contract {
     "tokenHashes()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     tokenId(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "tokenId(uint256)"(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     tokenType(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "tokenType(uint256)"(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -4017,26 +3845,26 @@ export class NFTComplexGemPool extends Contract {
     "totalStakedEth()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     updateInputRequirement(
-      ndx: BigNumberish,
-      token: string,
-      pool: string,
-      inputType: BigNumberish,
-      tid: BigNumberish,
-      minAmount: BigNumberish,
-      takeCustody: boolean,
-      burn: boolean,
+      _index: BigNumberish,
+      _tokenAddress: string,
+      _poolAddress: string,
+      _inputType: BigNumberish,
+      _tokenId: BigNumberish,
+      _minAmount: BigNumberish,
+      _takeCustody: boolean,
+      _burn: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "updateInputRequirement(uint256,address,address,uint8,uint256,uint256,bool,bool)"(
-      ndx: BigNumberish,
-      token: string,
-      pool: string,
-      inputType: BigNumberish,
-      tid: BigNumberish,
-      minAmount: BigNumberish,
-      takeCustody: boolean,
-      burn: boolean,
+      _index: BigNumberish,
+      _tokenAddress: string,
+      _poolAddress: string,
+      _inputType: BigNumberish,
+      _tokenId: BigNumberish,
+      _minAmount: BigNumberish,
+      _takeCustody: boolean,
+      _burn: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -4049,116 +3877,96 @@ export class NFTComplexGemPool extends Contract {
     "visible()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     withdraw(
-      erc20token: string,
+      _erc20TokenAddress: string,
       destination: string,
-      tokenAmount: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "withdraw(address,address,uint256)"(
-      erc20token: string,
+      _erc20TokenAddress: string,
       destination: string,
-      tokenAmount: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     withdrawNFT(
-      erc1155token: string,
-      destination: string,
-      tokenId: BigNumberish,
-      tokenAmount: BigNumberish,
+      _erc1155TokenAddress: string,
+      _destinationAddress: string,
+      _tokenId: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
     "withdrawNFT(address,address,uint256,uint256)"(
-      erc1155token: string,
-      destination: string,
-      tokenId: BigNumberish,
-      tokenAmount: BigNumberish,
+      _erc1155TokenAddress: string,
+      _destinationAddress: string,
+      _tokenId: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     addAllowedToken(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "addAllowedToken(address)"(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     addAllowedTokenSource(
-      allowedToken: string,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "addAllowedTokenSource(address)"(
-      allowedToken: string,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     addController(
-      controller: string,
+      _controllerAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "addController(address)"(
-      controller: string,
+      _controllerAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     addInputRequirement(
-      token: string,
-      pool: string,
-      inputType: BigNumberish,
-      tid: BigNumberish,
-      minAmount: BigNumberish,
-      takeCustody: boolean,
-      burn: boolean,
+      _tokenAddress: string,
+      _poolAddress: string,
+      _inputType: BigNumberish,
+      _tokenId: BigNumberish,
+      _minAmount: BigNumberish,
+      _takeCustody: boolean,
+      _burn: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "addInputRequirement(address,address,uint8,uint256,uint256,bool,bool)"(
-      token: string,
-      pool: string,
-      inputType: BigNumberish,
-      tid: BigNumberish,
-      minAmount: BigNumberish,
-      takeCustody: boolean,
-      burn: boolean,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    addLegacyToken(
-      token: string,
-      tokenType: BigNumberish,
-      tokenHash: BigNumberish,
-      tokenId: BigNumberish,
-      recipient: string,
-      qty: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "addLegacyToken(address,uint8,uint256,uint256,address,uint256)"(
-      token: string,
-      tokenType: BigNumberish,
-      tokenHash: BigNumberish,
-      tokenId: BigNumberish,
-      recipient: string,
-      qty: BigNumberish,
+      _tokenAddress: string,
+      _poolAddress: string,
+      _inputType: BigNumberish,
+      _tokenId: BigNumberish,
+      _minAmount: BigNumberish,
+      _takeCustody: boolean,
+      _burn: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     allInputRequirements(
-      ndx: BigNumberish,
+      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "allInputRequirements(uint256)"(
-      ndx: BigNumberish,
+      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -4192,19 +4000,21 @@ export class NFTComplexGemPool extends Contract {
 
     "allowPurchase()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    allowedTokenSources(overrides?: Overrides): Promise<PopulatedTransaction>;
+    allowedTokenSources(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     "allowedTokenSources()"(
-      overrides?: Overrides
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     allowedTokens(
-      idx: BigNumberish,
+      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "allowedTokens(uint256)"(
-      idx: BigNumberish,
+      _index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -4231,42 +4041,42 @@ export class NFTComplexGemPool extends Contract {
     ): Promise<PopulatedTransaction>;
 
     claimAmount(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "claimAmount(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     claimQuantity(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "claimQuantity(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     claimTokenAmount(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "claimTokenAmount(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     claimUnlockTime(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "claimUnlockTime(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -4275,86 +4085,88 @@ export class NFTComplexGemPool extends Contract {
     "claimedCount()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     collectClaim(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
+      _requireMature: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "collectClaim(uint256)"(
-      claimHash: BigNumberish,
+    "collectClaim(uint256,bool)"(
+      _claimHash: BigNumberish,
+      _requireMature: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     createClaim(
-      timeframe: BigNumberish,
+      _timeframe: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     "createClaim(uint256)"(
-      timeframe: BigNumberish,
+      _timeframe: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     createClaims(
-      timeframe: BigNumberish,
-      count: BigNumberish,
+      _timeframe: BigNumberish,
+      _count: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     "createClaims(uint256,uint256)"(
-      timeframe: BigNumberish,
-      count: BigNumberish,
+      _timeframe: BigNumberish,
+      _count: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     createERC20Claim(
-      erc20token: string,
-      tokenAmount: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "createERC20Claim(address,uint256)"(
-      erc20token: string,
-      tokenAmount: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     createERC20Claims(
-      erc20token: string,
-      tokenAmount: BigNumberish,
-      count: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
+      _count: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "createERC20Claims(address,uint256,uint256)"(
-      erc20token: string,
-      tokenAmount: BigNumberish,
-      count: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
+      _count: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     deposit(
-      erc20token: string,
-      tokenAmount: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "deposit(address,uint256)"(
-      erc20token: string,
-      tokenAmount: BigNumberish,
+      _erc20TokenAddress: string,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     depositNFT(
-      erc1155token: string,
-      tokenId: BigNumberish,
-      tokenAmount: BigNumberish,
+      _erc1155TokenAddress: string,
+      _tokenId: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "depositNFT(address,uint256,uint256)"(
-      erc1155token: string,
-      tokenId: BigNumberish,
-      tokenAmount: BigNumberish,
+      _erc1155TokenAddress: string,
+      _tokenId: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -4371,56 +4183,82 @@ export class NFTComplexGemPool extends Contract {
     "ethPrice()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     gemClaimHash(
-      gemHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "gemClaimHash(uint256)"(
-      gemHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    importLegacyGem(
+      _poolAddress: string,
+      _legacyToken: string,
+      _tokenHash: BigNumberish,
+      _recipient: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "importLegacyGem(address,address,uint256,address)"(
+      _poolAddress: string,
+      _legacyToken: string,
+      _tokenHash: BigNumberish,
+      _recipient: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
     initialize(
-      __symbol: string,
-      __name: string,
-      __ethPrice: BigNumberish,
-      __minTime: BigNumberish,
-      __maxTime: BigNumberish,
-      __diffstep: BigNumberish,
-      __maxClaims: BigNumberish,
-      __allowedToken: string,
+      _symbol: string,
+      _name: string,
+      _ethPrice: BigNumberish,
+      _minTime: BigNumberish,
+      _maxTime: BigNumberish,
+      _diffstep: BigNumberish,
+      _maxClaims: BigNumberish,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "initialize(string,string,uint256,uint256,uint256,uint256,uint256,address)"(
-      __symbol: string,
-      __name: string,
-      __ethPrice: BigNumberish,
-      __minTime: BigNumberish,
-      __maxTime: BigNumberish,
-      __diffstep: BigNumberish,
-      __maxClaims: BigNumberish,
-      __allowedToken: string,
+      _symbol: string,
+      _name: string,
+      _ethPrice: BigNumberish,
+      _minTime: BigNumberish,
+      _maxTime: BigNumberish,
+      _diffstep: BigNumberish,
+      _maxClaims: BigNumberish,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     isController(
-      caddress: string,
+      _controllerAddress: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "isController(address)"(
-      caddress: string,
+      _controllerAddress: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isLegacyGemImported(
+      _tokenhash: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "isLegacyGemImported(uint256)"(
+      _tokenhash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     isTokenAllowed(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "isTokenAllowed(address)"(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -4441,14 +4279,14 @@ export class NFTComplexGemPool extends Contract {
     ): Promise<PopulatedTransaction>;
 
     mintGenesisGems(
-      creator: string,
-      funder: string,
+      _creatorAddress: string,
+      _funderAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "mintGenesisGems(address,address)"(
-      creator: string,
-      funder: string,
+      _creatorAddress: string,
+      _funderAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -4527,12 +4365,12 @@ export class NFTComplexGemPool extends Contract {
     ): Promise<PopulatedTransaction>;
 
     purchaseGems(
-      count: BigNumberish,
+      _count: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
     "purchaseGems(uint256)"(
-      count: BigNumberish,
+      _count: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -4541,42 +4379,42 @@ export class NFTComplexGemPool extends Contract {
     "relinquishControl()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     removeAllowedToken(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "removeAllowedToken(address)"(
-      tkn: string,
+      _tokenAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     removeAllowedTokenSource(
-      allowedToken: string,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "removeAllowedTokenSource(address)"(
-      allowedToken: string,
+      _allowedToken: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setAllowPurchase(
-      allow: boolean,
+      _allowPurchase: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setAllowPurchase(bool)"(
-      allow: boolean,
+      _allowPurchase: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setCategory(
-      category: BigNumberish,
+      _category: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setCategory(uint256)"(
-      category: BigNumberish,
+      _category: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -4591,118 +4429,104 @@ export class NFTComplexGemPool extends Contract {
     ): Promise<PopulatedTransaction>;
 
     setEnabled(
-      enable: boolean,
+      _enabled: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setEnabled(bool)"(
-      enable: boolean,
+      _enabled: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setFeeTracker(
-      addr: string,
+      _feeTrackerAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setFeeTracker(address)"(
-      addr: string,
+      _feeTrackerAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setGovernor(
-      addr: string,
+      _governorAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setGovernor(address)"(
-      addr: string,
+      _governorAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setMaxClaimsPerAccount(
-      maxCPA: BigNumberish,
+      _maxClaimsPerAccount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setMaxClaimsPerAccount(uint256)"(
-      maxCPA: BigNumberish,
+      _maxClaimsPerAccount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setMaxQuantityPerClaim(
-      maxQty: BigNumberish,
+      _maxQuantityPerClaim: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setMaxQuantityPerClaim(uint256)"(
-      maxQty: BigNumberish,
+      _maxQuantityPerClaim: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setMultiToken(
-      addr: string,
+      _multiTokenAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setMultiToken(address)"(
-      addr: string,
+      _multiTokenAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setNextIds(
-      nextClaimId: BigNumberish,
-      nextGemId: BigNumberish,
+      _nextClaimId: BigNumberish,
+      _nextGemId: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setNextIds(uint256,uint256)"(
-      nextClaimId: BigNumberish,
-      nextGemId: BigNumberish,
+      _nextClaimId: BigNumberish,
+      _nextGemId: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setPriceIncrementType(
-      incrementType: BigNumberish,
+      _incrementType: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setPriceIncrementType(uint8)"(
-      incrementType: BigNumberish,
+      _incrementType: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setSwapHelper(
-      addr: string,
+      _swapHelperAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setSwapHelper(address)"(
-      addr: string,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    setToken(
-      tokenHash: BigNumberish,
-      tokenType: BigNumberish,
-      tokenId: BigNumberish,
-      overrides?: Overrides
-    ): Promise<PopulatedTransaction>;
-
-    "setToken(uint256,uint8,uint256)"(
-      tokenHash: BigNumberish,
-      tokenType: BigNumberish,
-      tokenId: BigNumberish,
+      _swapHelperAddress: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setTokenHashes(
-      tokenHashes: BigNumberish[],
+      _tokenHashes: BigNumberish[],
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setTokenHashes(uint256[])"(
-      tokenHashes: BigNumberish[],
+      _tokenHashes: BigNumberish[],
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -4717,12 +4541,12 @@ export class NFTComplexGemPool extends Contract {
     ): Promise<PopulatedTransaction>;
 
     setVisible(
-      visible: boolean,
+      _visible: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "setVisible(bool)"(
-      visible: boolean,
+      _visible: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -4731,12 +4555,12 @@ export class NFTComplexGemPool extends Contract {
     "settings()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     stakedToken(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "stakedToken(uint256)"(
-      claimHash: BigNumberish,
+      _claimHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -4759,12 +4583,12 @@ export class NFTComplexGemPool extends Contract {
     "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     token(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "token(uint256)"(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -4773,22 +4597,22 @@ export class NFTComplexGemPool extends Contract {
     "tokenHashes()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     tokenId(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "tokenId(uint256)"(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     tokenType(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "tokenType(uint256)"(
-      tokenHash: BigNumberish,
+      _tokenHash: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -4799,26 +4623,26 @@ export class NFTComplexGemPool extends Contract {
     ): Promise<PopulatedTransaction>;
 
     updateInputRequirement(
-      ndx: BigNumberish,
-      token: string,
-      pool: string,
-      inputType: BigNumberish,
-      tid: BigNumberish,
-      minAmount: BigNumberish,
-      takeCustody: boolean,
-      burn: boolean,
+      _index: BigNumberish,
+      _tokenAddress: string,
+      _poolAddress: string,
+      _inputType: BigNumberish,
+      _tokenId: BigNumberish,
+      _minAmount: BigNumberish,
+      _takeCustody: boolean,
+      _burn: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "updateInputRequirement(uint256,address,address,uint8,uint256,uint256,bool,bool)"(
-      ndx: BigNumberish,
-      token: string,
-      pool: string,
-      inputType: BigNumberish,
-      tid: BigNumberish,
-      minAmount: BigNumberish,
-      takeCustody: boolean,
-      burn: boolean,
+      _index: BigNumberish,
+      _tokenAddress: string,
+      _poolAddress: string,
+      _inputType: BigNumberish,
+      _tokenId: BigNumberish,
+      _minAmount: BigNumberish,
+      _takeCustody: boolean,
+      _burn: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -4831,32 +4655,32 @@ export class NFTComplexGemPool extends Contract {
     "visible()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     withdraw(
-      erc20token: string,
+      _erc20TokenAddress: string,
       destination: string,
-      tokenAmount: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "withdraw(address,address,uint256)"(
-      erc20token: string,
+      _erc20TokenAddress: string,
       destination: string,
-      tokenAmount: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     withdrawNFT(
-      erc1155token: string,
-      destination: string,
-      tokenId: BigNumberish,
-      tokenAmount: BigNumberish,
+      _erc1155TokenAddress: string,
+      _destinationAddress: string,
+      _tokenId: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "withdrawNFT(address,address,uint256,uint256)"(
-      erc1155token: string,
-      destination: string,
-      tokenId: BigNumberish,
-      tokenAmount: BigNumberish,
+      _erc1155TokenAddress: string,
+      _destinationAddress: string,
+      _tokenId: BigNumberish,
+      _tokenAmount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };

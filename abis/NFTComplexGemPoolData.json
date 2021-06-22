@@ -5,10 +5,53 @@
     "type": "constructor"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "converter",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "oldPool",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "oldToken",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "gemHash",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      }
+    ],
+    "name": "NFTGemImported",
+    "type": "event"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
-        "name": "tkn",
+        "name": "_tokenAddress",
         "type": "address"
       }
     ],
@@ -21,7 +64,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "allowedToken",
+        "name": "_allowedToken",
         "type": "address"
       }
     ],
@@ -34,37 +77,37 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "token",
+        "name": "_tokenAddress",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "pool",
+        "name": "_poolAddress",
         "type": "address"
       },
       {
-        "internalType": "uint8",
-        "name": "inputType",
+        "internalType": "enum INFTComplexGemPool.RequirementType",
+        "name": "_inputType",
         "type": "uint8"
       },
       {
         "internalType": "uint256",
-        "name": "tid",
+        "name": "_tokenId",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "minAmount",
+        "name": "_minAmount",
         "type": "uint256"
       },
       {
         "internalType": "bool",
-        "name": "takeCustody",
+        "name": "_takeCustody",
         "type": "bool"
       },
       {
         "internalType": "bool",
-        "name": "burn",
+        "name": "_burn",
         "type": "bool"
       }
     ],
@@ -76,46 +119,8 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "uint8",
-        "name": "tokenType",
-        "type": "uint8"
-      },
-      {
         "internalType": "uint256",
-        "name": "tokenHash",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "qty",
-        "type": "uint256"
-      }
-    ],
-    "name": "addLegacyToken",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "ndx",
+        "name": "_index",
         "type": "uint256"
       }
     ],
@@ -132,7 +137,7 @@
         "type": "address"
       },
       {
-        "internalType": "uint8",
+        "internalType": "enum INFTComplexGemPool.RequirementType",
         "name": "",
         "type": "uint8"
       },
@@ -228,14 +233,14 @@
         "type": "address[]"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "idx",
+        "name": "_index",
         "type": "uint256"
       }
     ],
@@ -269,7 +274,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "c",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -288,32 +293,32 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "claimAmount",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "claimQuantity",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "claimUnlockTime",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "claimTokenAmount",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "address",
-        "name": "stakedToken",
+        "name": "",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "nextClaimId",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -324,7 +329,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "claimHash",
+        "name": "_claimHash",
         "type": "uint256"
       }
     ],
@@ -343,7 +348,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "claimHash",
+        "name": "_claimHash",
         "type": "uint256"
       }
     ],
@@ -362,7 +367,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "claimHash",
+        "name": "_claimHash",
         "type": "uint256"
       }
     ],
@@ -381,7 +386,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "claimHash",
+        "name": "_claimHash",
         "type": "uint256"
       }
     ],
@@ -415,7 +420,7 @@
     "outputs": [
       {
         "internalType": "string",
-        "name": "c",
+        "name": "",
         "type": "string"
       }
     ],
@@ -452,7 +457,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "gemHash",
+        "name": "_claimHash",
         "type": "uint256"
       }
     ],
@@ -471,7 +476,54 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "tkn",
+        "name": "_poolAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_legacyToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_tokenHash",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_recipient",
+        "type": "address"
+      }
+    ],
+    "name": "importLegacyGem",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenhash",
+        "type": "uint256"
+      }
+    ],
+    "name": "isLegacyGemImported",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_tokenAddress",
         "type": "address"
       }
     ],
@@ -613,7 +665,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "tkn",
+        "name": "_tokenAddress",
         "type": "address"
       }
     ],
@@ -626,7 +678,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "allowedToken",
+        "name": "_allowedToken",
         "type": "address"
       }
     ],
@@ -639,7 +691,7 @@
     "inputs": [
       {
         "internalType": "bool",
-        "name": "allow",
+        "name": "_allowPurchase",
         "type": "bool"
       }
     ],
@@ -652,7 +704,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "category",
+        "name": "_category",
         "type": "uint256"
       }
     ],
@@ -678,7 +730,7 @@
     "inputs": [
       {
         "internalType": "bool",
-        "name": "enable",
+        "name": "_enabled",
         "type": "bool"
       }
     ],
@@ -691,7 +743,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "maxCPA",
+        "name": "_maxClaimsPerAccount",
         "type": "uint256"
       }
     ],
@@ -704,7 +756,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "maxQty",
+        "name": "_maxQuantityPerClaim",
         "type": "uint256"
       }
     ],
@@ -717,12 +769,12 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "nextClaimId",
+        "name": "_nextClaimId",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "nextGemId",
+        "name": "_nextGemId",
         "type": "uint256"
       }
     ],
@@ -735,7 +787,7 @@
     "inputs": [
       {
         "internalType": "enum INFTComplexGemPoolData.PriceIncrementType",
-        "name": "incrementType",
+        "name": "_incrementType",
         "type": "uint8"
       }
     ],
@@ -747,31 +799,8 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "tokenHash",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint8",
-        "name": "tokenType",
-        "type": "uint8"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "setToken",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256[]",
-        "name": "tokenHashes",
+        "name": "_tokenHashes",
         "type": "uint256[]"
       }
     ],
@@ -797,7 +826,7 @@
     "inputs": [
       {
         "internalType": "bool",
-        "name": "visible",
+        "name": "_visible",
         "type": "bool"
       }
     ],
@@ -812,57 +841,57 @@
     "outputs": [
       {
         "internalType": "string",
-        "name": "symbol",
+        "name": "",
         "type": "string"
       },
       {
         "internalType": "string",
-        "name": "name",
+        "name": "",
         "type": "string"
       },
       {
         "internalType": "string",
-        "name": "description",
+        "name": "",
         "type": "string"
       },
       {
         "internalType": "uint256",
-        "name": "category",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "ethPrice",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "minTime",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "maxTime",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "diffstep",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "maxClaims",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "maxQuantityPerClaim",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "maxClaimsPerAccount",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -873,7 +902,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "claimHash",
+        "name": "_claimHash",
         "type": "uint256"
       }
     ],
@@ -894,42 +923,42 @@
     "outputs": [
       {
         "internalType": "bool",
-        "name": "visible",
+        "name": "",
         "type": "bool"
       },
       {
         "internalType": "uint256",
-        "name": "claimedCount",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "mintedCount",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "totalStakedEth",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "nextClaimHash",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "nextGemHash",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "nextClaimId",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "nextGemId",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -953,25 +982,25 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "tokenHash",
+        "name": "_tokenHash",
         "type": "uint256"
       }
     ],
     "name": "token",
     "outputs": [
       {
-        "internalType": "uint8",
-        "name": "tokenType",
+        "internalType": "enum INFTGemMultiToken.TokenType",
+        "name": "",
         "type": "uint8"
       },
       {
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "address",
-        "name": "tokenSource",
+        "name": "",
         "type": "address"
       }
     ],
@@ -995,7 +1024,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "tokenHash",
+        "name": "_tokenHash",
         "type": "uint256"
       }
     ],
@@ -1014,14 +1043,14 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "tokenHash",
+        "name": "_tokenHash",
         "type": "uint256"
       }
     ],
     "name": "tokenType",
     "outputs": [
       {
-        "internalType": "uint8",
+        "internalType": "enum INFTGemMultiToken.TokenType",
         "name": "",
         "type": "uint8"
       }
@@ -1046,42 +1075,42 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "ndx",
+        "name": "_index",
         "type": "uint256"
       },
       {
         "internalType": "address",
-        "name": "token",
+        "name": "_tokenAddress",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "pool",
+        "name": "_poolAddress",
         "type": "address"
       },
       {
-        "internalType": "uint8",
-        "name": "inputType",
+        "internalType": "enum INFTComplexGemPool.RequirementType",
+        "name": "_inputType",
         "type": "uint8"
       },
       {
         "internalType": "uint256",
-        "name": "tid",
+        "name": "_tokenId",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "minAmount",
+        "name": "_minAmount",
         "type": "uint256"
       },
       {
         "internalType": "bool",
-        "name": "takeCustody",
+        "name": "_takeCustody",
         "type": "bool"
       },
       {
         "internalType": "bool",
-        "name": "burn",
+        "name": "_burn",
         "type": "bool"
       }
     ],
@@ -1109,7 +1138,7 @@
     "outputs": [
       {
         "internalType": "bool",
-        "name": "v",
+        "name": "",
         "type": "bool"
       }
     ],

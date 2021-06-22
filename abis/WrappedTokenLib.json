@@ -50,9 +50,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint8",
+        "internalType": "enum INFTGemMultiToken.TokenType",
         "name": "tokenType",
-        "type": "uint8"
+        "type": "INFTGemMultiToken.TokenType"
       },
       {
         "internalType": "address",

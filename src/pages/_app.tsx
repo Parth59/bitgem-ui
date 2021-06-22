@@ -5,19 +5,20 @@ import {Footer} from 'components/footer';
 import Head from 'next/head';
 import '../styles/globals.css';
 import {Web3ReactProvider} from '@web3-react/core';
-// import {Web3ProviderNetwork} from 'components/web3-provider-network';
 import {ethers} from 'ethers';
 import {ToastProvider} from 'components/toast-context';
-import {Web3BitgemProvider} from 'components/web3-bitgem-context';
+// import {Web3BitgemProvider} from 'components/web3-bitgem-context';
 import {QueryClient, QueryClientProvider} from 'react-query';
-// import {Web3ReactManager} from 'components/web3-react-manager';
+import {Web3ReactManager} from 'components/web3-react-manager';
 import {opengraphData} from 'lib/data';
+import {QueryManagerProvider} from 'components/query-manager-context';
 import dynamic from 'next/dynamic';
+// import {ClaimProps} from 'components/claim';
 
-// const Web3ProviderNetwork = dynamic(
-//   () => import('components/web3-provider-network'),
-//   {ssr: false}
-// );
+const Web3ProviderNetwork = dynamic(
+  () => import('components/web3-provider-network'),
+  {ssr: false}
+);
 
 const queryClient = new QueryClient();
 
@@ -25,7 +26,28 @@ const getLibrary = (provider) => {
   return new ethers.providers.Web3Provider(provider);
 };
 
+const ServerCacheProvider = ({children}: {children: React.ReactNode}) => {
+  // Initialize pending item cache
+  // const claim: ClaimProps = {
+  //   stakedAmount: '0',
+  //   quantity: '0',
+  //   createdAtTimestamp: '0',
+  //   stakedTimeSeconds: '0',
+  //   transactionHash: '0',
+  //   pending: true,
+  //   gemPool: {
+  //     id: '4',
+  //     symbol: 'some',
+  //     name: 'stuff'
+  //   }
+  // };
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+};
+
 const MyApp = ({Component, pageProps}: AppProps): JSX.Element => {
+  console.log('RERENDER');
   return (
     <>
       <Head>
@@ -43,25 +65,28 @@ const MyApp = ({Component, pageProps}: AppProps): JSX.Element => {
           />
         ))}
       </Head>
-      <ToastProvider>
-        <QueryClientProvider client={queryClient}>
+
+      <ServerCacheProvider>
+        <ToastProvider>
           <Web3ReactProvider getLibrary={getLibrary}>
-            {/* <Web3ProviderNetwork getLibrary={getLibrary}> */}
-            {/* <Web3ReactManager> */}
-            {/* <Web3BitgemProvider> */}
-            <div className="font-pixel bg-blue-1000 bg-app-wallpaper">
-              <div className="max-w-5xl min-h-screen flex flex-col mx-auto px-3 md:px-10">
-                <Header />
-                <Component {...pageProps} />
-                <Footer />
-              </div>
-            </div>
-            {/* </Web3BitgemProvider> */}
-            {/* </Web3ReactManager> */}
-            {/* </Web3ProviderNetwork> */}
+            <Web3ProviderNetwork getLibrary={getLibrary}>
+              <Web3ReactManager>
+                <QueryManagerProvider>
+                  {/* <Web3BitgemProvider> */}
+                  <div className="font-pixel bg-blue-1000 bg-app-wallpaper">
+                    <div className="max-w-5xl min-h-screen flex flex-col mx-auto px-3 md:px-10">
+                      <Header />
+                      <Component {...pageProps} />
+                      <Footer />
+                    </div>
+                  </div>
+                  {/* </Web3BitgemProvider> */}
+                </QueryManagerProvider>
+              </Web3ReactManager>
+            </Web3ProviderNetwork>
           </Web3ReactProvider>
-        </QueryClientProvider>
-      </ToastProvider>
+        </ToastProvider>
+      </ServerCacheProvider>
     </>
   );
 };

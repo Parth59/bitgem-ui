@@ -280,6 +280,11 @@
         "internalType": "uint8",
         "name": "decimals",
         "type": "uint8"
+      },
+      {
+        "internalType": "address",
+        "name": "feeManager",
+        "type": "address"
       }
     ],
     "name": "initialize",

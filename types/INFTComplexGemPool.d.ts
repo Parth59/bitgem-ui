@@ -23,7 +23,7 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface INFTComplexGemPoolInterface extends ethers.utils.Interface {
   functions: {
-    "collectClaim(uint256)": FunctionFragment;
+    "collectClaim(uint256,bool)": FunctionFragment;
     "createClaim(uint256)": FunctionFragment;
     "createClaims(uint256,uint256)": FunctionFragment;
     "createERC20Claim(address,uint256)": FunctionFragment;
@@ -43,7 +43,7 @@ interface INFTComplexGemPoolInterface extends ethers.utils.Interface {
 
   encodeFunctionData(
     functionFragment: "collectClaim",
-    values: [BigNumberish]
+    values: [BigNumberish, boolean]
   ): string;
   encodeFunctionData(
     functionFragment: "createClaim",
@@ -196,11 +196,13 @@ export class INFTComplexGemPool extends Contract {
   functions: {
     collectClaim(
       claimHash: BigNumberish,
+      requireMature: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "collectClaim(uint256)"(
+    "collectClaim(uint256,bool)"(
       claimHash: BigNumberish,
+      requireMature: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -397,11 +399,13 @@ export class INFTComplexGemPool extends Contract {
 
   collectClaim(
     claimHash: BigNumberish,
+    requireMature: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "collectClaim(uint256)"(
+  "collectClaim(uint256,bool)"(
     claimHash: BigNumberish,
+    requireMature: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -598,11 +602,13 @@ export class INFTComplexGemPool extends Contract {
   callStatic: {
     collectClaim(
       claimHash: BigNumberish,
+      requireMature: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "collectClaim(uint256)"(
+    "collectClaim(uint256,bool)"(
       claimHash: BigNumberish,
+      requireMature: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -784,18 +790,18 @@ export class INFTComplexGemPool extends Contract {
 
   filters: {
     NFTGemClaimCreated(
-      account: null,
-      pool: null,
-      claimHash: null,
+      account: string | null,
+      pool: string | null,
+      claimHash: BigNumberish | null,
       length: null,
       quantity: null,
       amountPaid: null
     ): EventFilter;
 
     NFTGemClaimRedeemed(
-      account: null,
-      pool: null,
-      claimHash: null,
+      account: string | null,
+      pool: string | null,
+      claimHash: BigNumberish | null,
       amountPaid: null,
       quantity: null,
       feeAssessed: null
@@ -810,9 +816,9 @@ export class INFTComplexGemPool extends Contract {
     ): EventFilter;
 
     NFTGemERC20ClaimCreated(
-      account: null,
-      pool: null,
-      claimHash: null,
+      account: string | null,
+      pool: string | null,
+      claimHash: BigNumberish | null,
       length: null,
       token: null,
       quantity: null,
@@ -820,9 +826,9 @@ export class INFTComplexGemPool extends Contract {
     ): EventFilter;
 
     NFTGemERC20ClaimRedeemed(
-      account: null,
-      pool: null,
-      claimHash: null,
+      account: string | null,
+      pool: string | null,
+      claimHash: BigNumberish | null,
       token: null,
       ethPrice: null,
       tokenAmount: null,
@@ -834,11 +840,13 @@ export class INFTComplexGemPool extends Contract {
   estimateGas: {
     collectClaim(
       claimHash: BigNumberish,
+      requireMature: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "collectClaim(uint256)"(
+    "collectClaim(uint256,bool)"(
       claimHash: BigNumberish,
+      requireMature: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -1024,11 +1032,13 @@ export class INFTComplexGemPool extends Contract {
   populateTransaction: {
     collectClaim(
       claimHash: BigNumberish,
+      requireMature: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "collectClaim(uint256)"(
+    "collectClaim(uint256,bool)"(
       claimHash: BigNumberish,
+      requireMature: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

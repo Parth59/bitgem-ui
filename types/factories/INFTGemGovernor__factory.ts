@@ -83,6 +83,25 @@ const _abi = [
         type: "uint256",
       },
     ],
+    name: "FuelTokenIssued",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
     name: "GovernanceTokenIssued",
     type: "event",
   },
@@ -566,13 +585,20 @@ const _abi = [
       },
     ],
     name: "issueFuelToken",
-    outputs: [
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
+        internalType: "address",
+        name: "receiver",
+        type: "address",
       },
     ],
+    name: "issueInitialFuelTokens",
+    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -585,13 +611,7 @@ const _abi = [
       },
     ],
     name: "issueInitialGovernanceTokens",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -604,13 +624,7 @@ const _abi = [
       },
     ],
     name: "maybeIssueGovernanceToken",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },

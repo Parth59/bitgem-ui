@@ -21,6 +21,12 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
+        indexed: true,
+        internalType: "address",
+        name: "gemPoolAdress",
+        type: "address",
+      },
+      {
         indexed: false,
         internalType: "string",
         name: "gemSymbol",
@@ -39,6 +45,12 @@ const _abi = [
   {
     anonymous: false,
     inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "gemPoolAddress",
+        type: "address",
+      },
       {
         indexed: false,
         internalType: "string",
@@ -60,7 +72,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "mintTime",
+        name: "minTime",
         type: "uint256",
       },
       {

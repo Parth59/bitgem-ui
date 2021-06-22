@@ -30,11 +30,13 @@ interface INFTGemMultiTokenInterface extends ethers.utils.Interface {
     "allTokenHolders(uint256,uint256)": FunctionFragment;
     "allTokenHoldersLength(uint256)": FunctionFragment;
     "burn(address,uint256,uint256)": FunctionFragment;
+    "burnBatch(address,uint256[],uint256[])": FunctionFragment;
     "getRegistryManager()": FunctionFragment;
     "getTokenData(uint256)": FunctionFragment;
     "heldTokens(address)": FunctionFragment;
     "lock(uint256,uint256)": FunctionFragment;
     "mint(address,uint256,uint256)": FunctionFragment;
+    "mintBatch(address,uint256[],uint256[])": FunctionFragment;
     "removeProxyRegistryAt(uint256)": FunctionFragment;
     "setRegistryManager(address)": FunctionFragment;
     "setTokenData(uint256,uint8,address)": FunctionFragment;
@@ -76,6 +78,10 @@ interface INFTGemMultiTokenInterface extends ethers.utils.Interface {
     values: [string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "burnBatch",
+    values: [string, BigNumberish[], BigNumberish[]]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getRegistryManager",
     values?: undefined
   ): string;
@@ -91,6 +97,10 @@ interface INFTGemMultiTokenInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "mint",
     values: [string, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mintBatch",
+    values: [string, BigNumberish[], BigNumberish[]]
   ): string;
   encodeFunctionData(
     functionFragment: "removeProxyRegistryAt",
@@ -146,6 +156,7 @@ interface INFTGemMultiTokenInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "burnBatch", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getRegistryManager",
     data: BytesLike
@@ -157,6 +168,7 @@ interface INFTGemMultiTokenInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "heldTokens", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "lock", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "mintBatch", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "removeProxyRegistryAt",
     data: BytesLike
@@ -280,6 +292,20 @@ export class INFTGemMultiToken extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    burnBatch(
+      account: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "burnBatch(address,uint256[],uint256[])"(
+      account: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     getRegistryManager(overrides?: CallOverrides): Promise<[string]>;
 
     "getRegistryManager()"(overrides?: CallOverrides): Promise<[string]>;
@@ -327,6 +353,20 @@ export class INFTGemMultiToken extends Contract {
       account: string,
       tokenHash: BigNumberish,
       amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    mintBatch(
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "mintBatch(address,uint256[],uint256[])"(
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -479,6 +519,20 @@ export class INFTGemMultiToken extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  burnBatch(
+    account: string,
+    ids: BigNumberish[],
+    amounts: BigNumberish[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "burnBatch(address,uint256[],uint256[])"(
+    account: string,
+    ids: BigNumberish[],
+    amounts: BigNumberish[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   getRegistryManager(overrides?: CallOverrides): Promise<string>;
 
   "getRegistryManager()"(overrides?: CallOverrides): Promise<string>;
@@ -523,6 +577,20 @@ export class INFTGemMultiToken extends Contract {
     account: string,
     tokenHash: BigNumberish,
     amount: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  mintBatch(
+    to: string,
+    ids: BigNumberish[],
+    amounts: BigNumberish[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "mintBatch(address,uint256[],uint256[])"(
+    to: string,
+    ids: BigNumberish[],
+    amounts: BigNumberish[],
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -675,6 +743,20 @@ export class INFTGemMultiToken extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    burnBatch(
+      account: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "burnBatch(address,uint256[],uint256[])"(
+      account: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     getRegistryManager(overrides?: CallOverrides): Promise<string>;
 
     "getRegistryManager()"(overrides?: CallOverrides): Promise<string>;
@@ -719,6 +801,20 @@ export class INFTGemMultiToken extends Contract {
       account: string,
       tokenHash: BigNumberish,
       amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    mintBatch(
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "mintBatch(address,uint256[],uint256[])"(
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -874,6 +970,20 @@ export class INFTGemMultiToken extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    burnBatch(
+      account: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "burnBatch(address,uint256[],uint256[])"(
+      account: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     getRegistryManager(overrides?: CallOverrides): Promise<BigNumber>;
 
     "getRegistryManager()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -918,6 +1028,20 @@ export class INFTGemMultiToken extends Contract {
       account: string,
       tokenHash: BigNumberish,
       amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    mintBatch(
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "mintBatch(address,uint256[],uint256[])"(
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -1075,6 +1199,20 @@ export class INFTGemMultiToken extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
+    burnBatch(
+      account: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "burnBatch(address,uint256[],uint256[])"(
+      account: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
     getRegistryManager(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1126,6 +1264,20 @@ export class INFTGemMultiToken extends Contract {
       account: string,
       tokenHash: BigNumberish,
       amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    mintBatch(
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "mintBatch(address,uint256[],uint256[])"(
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

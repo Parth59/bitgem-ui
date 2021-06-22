@@ -36,6 +36,7 @@ interface NFTGemGovernorInterface extends ethers.utils.Interface {
     "initialized()": FunctionFragment;
     "isController(address)": FunctionFragment;
     "issueFuelToken(address,uint256)": FunctionFragment;
+    "issueInitialFuelTokens(address)": FunctionFragment;
     "issueInitialGovernanceTokens(address)": FunctionFragment;
     "maybeIssueGovernanceToken(address)": FunctionFragment;
     "relinquishControl()": FunctionFragment;
@@ -132,6 +133,10 @@ interface NFTGemGovernorInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "issueInitialFuelTokens",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "issueInitialGovernanceTokens",
     values: [string]
   ): string;
@@ -212,6 +217,10 @@ interface NFTGemGovernorInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "issueInitialFuelTokens",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "issueInitialGovernanceTokens",
     data: BytesLike
   ): Result;
@@ -246,6 +255,7 @@ interface NFTGemGovernorInterface extends ethers.utils.Interface {
     "ControllerAdded(address,address)": EventFragment;
     "ControllerRemoved(address,address)": EventFragment;
     "FeeUpdated(address,address,uint256)": EventFragment;
+    "FuelTokenIssued(address,uint256)": EventFragment;
     "GovernanceTokenIssued(address,uint256)": EventFragment;
     "ProjectFunded(address,address,uint256)": EventFragment;
     "StakingPoolCreated(address,address,string,string,uint256,uint256,uint256,uint256,uint256,address)": EventFragment;
@@ -255,6 +265,7 @@ interface NFTGemGovernorInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "ControllerAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ControllerRemoved"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "FeeUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "FuelTokenIssued"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GovernanceTokenIssued"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ProjectFunded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "StakingPoolCreated"): EventFragment;
@@ -488,6 +499,16 @@ export class NFTGemGovernor extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    issueInitialFuelTokens(
+      receiver: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "issueInitialFuelTokens(address)"(
+      receiver: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     issueInitialGovernanceTokens(
       receiver: string,
       overrides?: Overrides
@@ -508,9 +529,9 @@ export class NFTGemGovernor extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<[void]>;
+    relinquishControl(overrides?: Overrides): Promise<ContractTransaction>;
 
-    "relinquishControl()"(overrides?: CallOverrides): Promise<[void]>;
+    "relinquishControl()"(overrides?: Overrides): Promise<ContractTransaction>;
 
     setFactory(a: string, overrides?: Overrides): Promise<ContractTransaction>;
 
@@ -771,6 +792,16 @@ export class NFTGemGovernor extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  issueInitialFuelTokens(
+    receiver: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "issueInitialFuelTokens(address)"(
+    receiver: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   issueInitialGovernanceTokens(
     receiver: string,
     overrides?: Overrides
@@ -791,9 +822,9 @@ export class NFTGemGovernor extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  relinquishControl(overrides?: CallOverrides): Promise<void>;
+  relinquishControl(overrides?: Overrides): Promise<ContractTransaction>;
 
-  "relinquishControl()"(overrides?: CallOverrides): Promise<void>;
+  "relinquishControl()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   setFactory(a: string, overrides?: Overrides): Promise<ContractTransaction>;
 
@@ -1037,33 +1068,43 @@ export class NFTGemGovernor extends Contract {
       receiver: string,
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
 
     "issueFuelToken(address,uint256)"(
       receiver: string,
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
+
+    issueInitialFuelTokens(
+      receiver: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "issueInitialFuelTokens(address)"(
+      receiver: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     issueInitialGovernanceTokens(
       receiver: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
 
     "issueInitialGovernanceTokens(address)"(
       receiver: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
 
     maybeIssueGovernanceToken(
       receiver: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
 
     "maybeIssueGovernanceToken(address)"(
       receiver: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
 
     relinquishControl(overrides?: CallOverrides): Promise<void>;
 
@@ -1124,6 +1165,8 @@ export class NFTGemGovernor extends Contract {
       token: string | null,
       newFee: null
     ): EventFilter;
+
+    FuelTokenIssued(receiver: string | null, amount: null): EventFilter;
 
     GovernanceTokenIssued(receiver: string | null, amount: null): EventFilter;
 
@@ -1362,6 +1405,16 @@ export class NFTGemGovernor extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    issueInitialFuelTokens(
+      receiver: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "issueInitialFuelTokens(address)"(
+      receiver: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     issueInitialGovernanceTokens(
       receiver: string,
       overrides?: Overrides
@@ -1382,9 +1435,9 @@ export class NFTGemGovernor extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<BigNumber>;
+    relinquishControl(overrides?: Overrides): Promise<BigNumber>;
 
-    "relinquishControl()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "relinquishControl()"(overrides?: Overrides): Promise<BigNumber>;
 
     setFactory(a: string, overrides?: Overrides): Promise<BigNumber>;
 
@@ -1634,6 +1687,16 @@ export class NFTGemGovernor extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
+    issueInitialFuelTokens(
+      receiver: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "issueInitialFuelTokens(address)"(
+      receiver: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
     issueInitialGovernanceTokens(
       receiver: string,
       overrides?: Overrides
@@ -1654,11 +1717,9 @@ export class NFTGemGovernor extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    relinquishControl(overrides?: Overrides): Promise<PopulatedTransaction>;
 
-    "relinquishControl()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    "relinquishControl()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     setFactory(a: string, overrides?: Overrides): Promise<PopulatedTransaction>;
 

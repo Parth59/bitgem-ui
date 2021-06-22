@@ -790,18 +790,18 @@ export type GetUserClaimsQueryVariables = Exact<{
 
 
 export type GetUserClaimsQuery = { user?: Maybe<{ claims: Array<(
-      Pick<Claim, 'stakedAmount' | 'quantity' | 'createdAtTimestamp' | 'stakedTimeSeconds' | 'transactionHash'>
+      Pick<Claim, 'id' | 'stakedAmount' | 'quantity' | 'createdAtTimestamp' | 'stakedTimeSeconds' | 'transactionHash'>
       & { gemPool: Pick<GemPool, 'id' | 'symbol' | 'name'> }
     )> }> };
 
-export type GetUserInventoryQueryVariables = Exact<{
+export type GetUserGemsQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type GetUserInventoryQuery = { user?: Maybe<{ gems: Array<(
-      Pick<Gem, 'quantity' | 'createdAtTimestamp' | 'transactionHash'>
-      & { gemPool: Pick<GemPool, 'symbol' | 'name'> }
+export type GetUserGemsQuery = { user?: Maybe<{ gems: Array<(
+      Pick<Gem, 'id' | 'quantity' | 'createdAtTimestamp' | 'transactionHash'>
+      & { gemPool: Pick<GemPool, 'id' | 'symbol' | 'name'> }
     )> }> };
 
 
@@ -832,6 +832,8 @@ export const useGetPoolsQuery = <
       fetcher<GetPoolsQuery, GetPoolsQueryVariables>(client, GetPoolsDocument, variables),
       options
     );
+useGetPoolsQuery.getKey = (variables?: GetPoolsQueryVariables) => ['GetPools', variables];
+
 export const GetPoolDocument = `
     query GetPool($id: ID!) {
   gemPool(id: $id) {
@@ -859,6 +861,8 @@ export const useGetPoolQuery = <
       fetcher<GetPoolQuery, GetPoolQueryVariables>(client, GetPoolDocument, variables),
       options
     );
+useGetPoolQuery.getKey = (variables: GetPoolQueryVariables) => ['GetPool', variables];
+
 export const GetStatsDocument = `
     query GetStats {
   game(id: "BITGEM") {
@@ -881,6 +885,8 @@ export const useGetStatsQuery = <
       fetcher<GetStatsQuery, GetStatsQueryVariables>(client, GetStatsDocument, variables),
       options
     );
+useGetStatsQuery.getKey = (variables?: GetStatsQueryVariables) => ['GetStats', variables];
+
 export const GetUserStatsDocument = `
     query GetUserStats($id: ID!) {
   user(id: $id) {
@@ -902,10 +908,17 @@ export const useGetUserStatsQuery = <
       fetcher<GetUserStatsQuery, GetUserStatsQueryVariables>(client, GetUserStatsDocument, variables),
       options
     );
+useGetUserStatsQuery.getKey = (variables: GetUserStatsQueryVariables) => ['GetUserStats', variables];
+
 export const GetUserClaimsDocument = `
     query GetUserClaims($id: ID!, $collected: Boolean) {
   user(id: $id) {
-    claims(where: {collected: $collected}) {
+    claims(
+      where: {collected: $collected}
+      orderBy: createdAtTimestamp
+      orderDirection: desc
+    ) {
+      id
       stakedAmount
       quantity
       createdAtTimestamp
@@ -933,14 +946,18 @@ export const useGetUserClaimsQuery = <
       fetcher<GetUserClaimsQuery, GetUserClaimsQueryVariables>(client, GetUserClaimsDocument, variables),
       options
     );
-export const GetUserInventoryDocument = `
-    query GetUserInventory($id: ID!) {
+useGetUserClaimsQuery.getKey = (variables: GetUserClaimsQueryVariables) => ['GetUserClaims', variables];
+
+export const GetUserGemsDocument = `
+    query GetUserGems($id: ID!) {
   user(id: $id) {
     gems {
+      id
       quantity
       createdAtTimestamp
       transactionHash
       gemPool {
+        id
         symbol
         name
       }
@@ -948,16 +965,17 @@ export const GetUserInventoryDocument = `
   }
 }
     `;
-export const useGetUserInventoryQuery = <
-      TData = GetUserInventoryQuery,
+export const useGetUserGemsQuery = <
+      TData = GetUserGemsQuery,
       TError = Error
     >(
       client: GraphQLClient, 
-      variables: GetUserInventoryQueryVariables, 
-      options?: UseQueryOptions<GetUserInventoryQuery, TError, TData>
+      variables: GetUserGemsQueryVariables, 
+      options?: UseQueryOptions<GetUserGemsQuery, TError, TData>
     ) => 
-    useQuery<GetUserInventoryQuery, TError, TData>(
-      ['GetUserInventory', variables],
-      fetcher<GetUserInventoryQuery, GetUserInventoryQueryVariables>(client, GetUserInventoryDocument, variables),
+    useQuery<GetUserGemsQuery, TError, TData>(
+      ['GetUserGems', variables],
+      fetcher<GetUserGemsQuery, GetUserGemsQueryVariables>(client, GetUserGemsDocument, variables),
       options
     );
+useGetUserGemsQuery.getKey = (variables: GetUserGemsQueryVariables) => ['GetUserGems', variables];

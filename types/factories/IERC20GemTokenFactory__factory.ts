@@ -111,6 +111,11 @@ const _abi = [
         name: "decimals",
         type: "uint8",
       },
+      {
+        internalType: "address",
+        name: "feeManager",
+        type: "address",
+      },
     ],
     name: "createItem",
     outputs: [

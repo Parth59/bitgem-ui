@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {SectionHeader} from 'components/section-header';
 import {Pool} from 'components/pool';
-// import {usePools} from 'hooks/use-pools';
 import {Skeleton} from 'components/skeleton';
 import {useGetPoolsQuery} from 'graph';
 import {client} from 'graph/client';
@@ -15,9 +14,7 @@ const Pools = (): JSX.Element => {
   if (isIdle) return <div>Idle</div>;
   if (isLoading) return <div>Loading</div>;
   if (isError) return <p className="text-white">{error.message}</p>;
-
   const {gemPools} = data;
-  console.log({gemPools});
 
   return (
     <main className="flex-1 px-1">

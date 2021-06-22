@@ -420,7 +420,7 @@ const _abi = [
     name: "tokenType",
     outputs: [
       {
-        internalType: "uint8",
+        internalType: "enum INFTGemMultiToken.TokenType",
         name: "",
         type: "uint8",
       },

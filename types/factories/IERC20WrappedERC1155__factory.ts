@@ -125,6 +125,11 @@ const _abi = [
         name: "",
         type: "uint8",
       },
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
     ],
     name: "initialize",
     outputs: [],

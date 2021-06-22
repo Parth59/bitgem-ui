@@ -4,8 +4,13 @@ import {BigNumber} from '@ethersproject/bignumber';
 import {useMutation, useQueryClient} from 'react-query';
 import {formatEther, parseEther} from 'ethers/lib/utils';
 import {PoolType} from 'components/pool';
-import { usePoolContract } from './use-contract';
-import { useWeb3React } from '@web3-react/core';
+import {usePoolContract} from './use-contract';
+import {ClaimProps} from 'components/claim';
+import {
+  REFETCH_INTERVAL_WITH_PENDING,
+  useQueryManager
+} from 'components/query-manager-context';
+import {ClaimRequestParams, submitClaim} from 'lib/blockchain';
 
 type PoolFormValues = {
   gems: number;
@@ -18,12 +23,6 @@ type PoolFormErrors = {
   duration?: string;
   price?: string;
 };
-
-type ClaimRequestParams = {
-  stakingTime: BigNumber;
-  gemCount: BigNumber;
-  total: BigNumber;
-}
 
 type PoolForm = {
   formValues: PoolFormValues;
@@ -71,51 +70,37 @@ const usePoolForm = (pool: PoolType): PoolForm => {
     getInitialState(pool)
   );
   const poolContract = usePoolContract(pool.id);
-  const {account} = useWeb3React();
+  const {setClaimRefetchInterval} = useQueryManager();
 
   const queryClient = useQueryClient();
-  const {mutate} = useMutation(
-    (variables: ClaimRequestParams) => submitClaim(variables),
+  const {mutate} = useMutation<string, Error, ClaimRequestParams, ClaimProps>(
+    (variables) => submitClaim(variables),
     {
-      onMutate: async ({stakingDuration, gemCount, total}) => {
-        // create our temporary token. The made up hash value will
-        // help us delete this temp item once tx fails or succeeds.
-        // const hash = Date.now().toString(36);
-        //  let a = 3;
-        // const claim = {
-        //   stakedAmount: 1
-        //  };
-        // const claim = {
-        //   stakedAmount: total,
-        //   quantity: gemCount,
-        //   createdAtTimestamp: Date.now().toString(),
-        //   stakedTimeSeconds: "0",
-        //   transactionHash: "0",
-        //   gemPool: {
-        //       id: pool.id,
-        //     symbol: pool.symbol,
-        //     name: pool.name
-        //    }
-        // }
-        // Cancel any currently running queries.
-        // await queryClient.cancelQueries('tokens');
-        // manually insert optimistic update
-        // queryClient.setQueryData('tokens', (previous) => {
-        //   let newQueryData = [...previous, token];
-        //   console.log('SETTING QUERY DATA TO', newQueryData);
-        //   return newQueryData;
-        // });
-        console.log('QUERYCLIENT', queryClient);
-        return;
-      },
-      onSettled: (txReceipt, error, variables, context) => {
-        console.log('Claim settled', {txReceipt, context});
-        console.log('QUERYCLIENT2', queryClient);
-        queryClient.invalidateQueries('GetUserClaims');
-        queryClient.invalidateQueries(['GetUserStats', {id: account}]);
-        // queryClient.setQueryData('tokens', (previous) =>
-        //   previous.filter((token) => token.hash !== context.hash)
-        // );
+      onSettled: (transactionHash, error, {stakingTime, gemCount, total}) => {
+        if (error) {
+          console.log('Error submitting transaction', error);
+        }
+        // Create a pending claim and save it to the pending cache.
+        const claim: ClaimProps = {
+          id: transactionHash, // temporary
+          stakedAmount: total.toString(),
+          quantity: gemCount.toString(),
+          createdAtTimestamp: Date.now().toString(),
+          stakedTimeSeconds: stakingTime.toString(),
+          transactionHash,
+          status: 'pendingSubmit',
+          gemPool: {
+            id: pool.id,
+            symbol: pool.symbol,
+            name: pool.name
+          }
+        };
+        // Keeping our pending cache in react-query
+        queryClient.setQueryData<ClaimProps[]>('pendingClaims', (previous) => [
+          ...previous,
+          claim
+        ]);
+        setClaimRefetchInterval(REFETCH_INTERVAL_WITH_PENDING);
       }
     }
   );
@@ -124,7 +109,7 @@ const usePoolForm = (pool: PoolType): PoolForm => {
     event?.preventDefault();
     const {values} = formState;
     const minPoolDuration = BigNumber.from(pool.minTimeSecs);
-    const minPoolPrice = BigNumber.from(pool.stakingPrice)
+    const minPoolPrice = BigNumber.from(pool.stakingPrice);
     const stakingTime = BigNumber.from(values.duration);
     const gemCount = BigNumber.from(values.gems);
     const pricePerUnit = minPoolPrice.mul(minPoolDuration).div(stakingTime);
@@ -141,29 +126,7 @@ const usePoolForm = (pool: PoolType): PoolForm => {
       return;
     }
 
-    // total = BigNumber.from("117361111111110");
-    // console.log("CREATING CLAIM WITH", {
-    //   duration: durationRequested,
-    //   dparsed: durationRequested.toString(),
-    //   qty: values.gems,
-    //   price: pricePerUnit,
-    //   pparsed: pricePerUnit.toString(),
-    //   total: total.toString(),
-    //   value: pricePerUnit.mul(values.gems).toHexString(),
-    //   contract: poolContract,
-    //   settings: await poolContract.settings()
-    // })
-
-
-    mutate({stakingTime, gemCount, total});
-  };
-
-  const submitClaim = async ({stakingTime, gemCount, total}: ClaimRequestParams) => {
-    const txResponse = await poolContract.createClaims(stakingTime, gemCount, {
-      value: total.toHexString()
-    });
-
-    return txResponse.wait();
+    mutate({poolContract, stakingTime, gemCount, total});
   };
 
   const handleDurationChange = (event: React.ChangeEvent<HTMLInputElement>) => {

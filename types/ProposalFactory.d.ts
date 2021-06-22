@@ -184,9 +184,9 @@ export class ProposalFactory extends Contract {
       overrides?: CallOverrides
     ): Promise<[boolean] & { allowed: boolean }>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<[void]>;
+    relinquishControl(overrides?: Overrides): Promise<ContractTransaction>;
 
-    "relinquishControl()"(overrides?: CallOverrides): Promise<[void]>;
+    "relinquishControl()"(overrides?: Overrides): Promise<ContractTransaction>;
   };
 
   addController(
@@ -243,9 +243,9 @@ export class ProposalFactory extends Contract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  relinquishControl(overrides?: CallOverrides): Promise<void>;
+  relinquishControl(overrides?: Overrides): Promise<ContractTransaction>;
 
-  "relinquishControl()"(overrides?: CallOverrides): Promise<void>;
+  "relinquishControl()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   callStatic: {
     addController(
@@ -399,9 +399,9 @@ export class ProposalFactory extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<BigNumber>;
+    relinquishControl(overrides?: Overrides): Promise<BigNumber>;
 
-    "relinquishControl()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "relinquishControl()"(overrides?: Overrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -469,10 +469,8 @@ export class ProposalFactory extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    relinquishControl(overrides?: Overrides): Promise<PopulatedTransaction>;
 
-    "relinquishControl()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    "relinquishControl()"(overrides?: Overrides): Promise<PopulatedTransaction>;
   };
 }

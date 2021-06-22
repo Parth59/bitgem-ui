@@ -229,9 +229,9 @@ export class NFTGemFeeManager extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<[void]>;
+    relinquishControl(overrides?: Overrides): Promise<ContractTransaction>;
 
-    "relinquishControl()"(overrides?: CallOverrides): Promise<[void]>;
+    "relinquishControl()"(overrides?: Overrides): Promise<ContractTransaction>;
 
     setDefaultFeeDivisor(
       _feeDivisor: BigNumberish,
@@ -342,9 +342,9 @@ export class NFTGemFeeManager extends Contract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  relinquishControl(overrides?: CallOverrides): Promise<void>;
+  relinquishControl(overrides?: Overrides): Promise<ContractTransaction>;
 
-  "relinquishControl()"(overrides?: CallOverrides): Promise<void>;
+  "relinquishControl()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   setDefaultFeeDivisor(
     _feeDivisor: BigNumberish,
@@ -605,9 +605,9 @@ export class NFTGemFeeManager extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<BigNumber>;
+    relinquishControl(overrides?: Overrides): Promise<BigNumber>;
 
-    "relinquishControl()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "relinquishControl()"(overrides?: Overrides): Promise<BigNumber>;
 
     setDefaultFeeDivisor(
       _feeDivisor: BigNumberish,
@@ -735,11 +735,9 @@ export class NFTGemFeeManager extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    relinquishControl(overrides?: Overrides): Promise<PopulatedTransaction>;
 
-    "relinquishControl()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    "relinquishControl()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     setDefaultFeeDivisor(
       _feeDivisor: BigNumberish,

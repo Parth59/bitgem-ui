@@ -91,7 +91,7 @@ const _abi = [
     inputs: [],
     name: "relinquishControl",
     outputs: [],
-    stateMutability: "view",
+    stateMutability: "nonpayable",
     type: "function",
   },
 ];

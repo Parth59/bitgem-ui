@@ -52,18 +52,18 @@ export class ComplexPoolLib extends Contract {
 
   filters: {
     NFTGemClaimCreated(
-      account: null,
-      pool: null,
-      claimHash: null,
+      account: string | null,
+      pool: string | null,
+      claimHash: BigNumberish | null,
       length: null,
       quantity: null,
       amountPaid: null
     ): EventFilter;
 
     NFTGemClaimRedeemed(
-      account: null,
-      pool: null,
-      claimHash: null,
+      account: string | null,
+      pool: string | null,
+      claimHash: BigNumberish | null,
       amountPaid: null,
       quantity: null,
       feeAssessed: null
@@ -78,9 +78,9 @@ export class ComplexPoolLib extends Contract {
     ): EventFilter;
 
     NFTGemERC20ClaimCreated(
-      account: null,
-      pool: null,
-      claimHash: null,
+      account: string | null,
+      pool: string | null,
+      claimHash: BigNumberish | null,
       length: null,
       token: null,
       quantity: null,
@@ -88,9 +88,9 @@ export class ComplexPoolLib extends Contract {
     ): EventFilter;
 
     NFTGemERC20ClaimRedeemed(
-      account: null,
-      pool: null,
-      claimHash: null,
+      account: string | null,
+      pool: string | null,
+      claimHash: BigNumberish | null,
       token: null,
       ethPrice: null,
       tokenAmount: null,

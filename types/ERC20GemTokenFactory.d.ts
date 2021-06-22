@@ -25,7 +25,7 @@ interface ERC20GemTokenFactoryInterface extends ethers.utils.Interface {
     "addController(address)": FunctionFragment;
     "allItems(uint256)": FunctionFragment;
     "allItemsLength()": FunctionFragment;
-    "createItem(string,string,address,address,uint8)": FunctionFragment;
+    "createItem(string,string,address,address,uint8,address)": FunctionFragment;
     "getItem(uint256)": FunctionFragment;
     "isController(address)": FunctionFragment;
     "items()": FunctionFragment;
@@ -46,7 +46,7 @@ interface ERC20GemTokenFactoryInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "createItem",
-    values: [string, string, string, string, BigNumberish]
+    values: [string, string, string, string, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "getItem",
@@ -138,15 +138,17 @@ export class ERC20GemTokenFactory extends Contract {
       poolAddress: string,
       tokenAddress: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "createItem(string,string,address,address,uint8)"(
+    "createItem(string,string,address,address,uint8,address)"(
       tokenSymbol: string,
       tokenName: string,
       poolAddress: string,
       tokenAddress: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -174,9 +176,9 @@ export class ERC20GemTokenFactory extends Contract {
 
     "items()"(overrides?: CallOverrides): Promise<[string[]]>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<[void]>;
+    relinquishControl(overrides?: Overrides): Promise<ContractTransaction>;
 
-    "relinquishControl()"(overrides?: CallOverrides): Promise<[void]>;
+    "relinquishControl()"(overrides?: Overrides): Promise<ContractTransaction>;
   };
 
   addController(
@@ -206,15 +208,17 @@ export class ERC20GemTokenFactory extends Contract {
     poolAddress: string,
     tokenAddress: string,
     decimals: BigNumberish,
+    feeManager: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "createItem(string,string,address,address,uint8)"(
+  "createItem(string,string,address,address,uint8,address)"(
     tokenSymbol: string,
     tokenName: string,
     poolAddress: string,
     tokenAddress: string,
     decimals: BigNumberish,
+    feeManager: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -239,9 +243,9 @@ export class ERC20GemTokenFactory extends Contract {
 
   "items()"(overrides?: CallOverrides): Promise<string[]>;
 
-  relinquishControl(overrides?: CallOverrides): Promise<void>;
+  relinquishControl(overrides?: Overrides): Promise<ContractTransaction>;
 
-  "relinquishControl()"(overrides?: CallOverrides): Promise<void>;
+  "relinquishControl()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   callStatic: {
     addController(
@@ -271,15 +275,17 @@ export class ERC20GemTokenFactory extends Contract {
       poolAddress: string,
       tokenAddress: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    "createItem(string,string,address,address,uint8)"(
+    "createItem(string,string,address,address,uint8,address)"(
       tokenSymbol: string,
       tokenName: string,
       poolAddress: string,
       tokenAddress: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -356,15 +362,17 @@ export class ERC20GemTokenFactory extends Contract {
       poolAddress: string,
       tokenAddress: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "createItem(string,string,address,address,uint8)"(
+    "createItem(string,string,address,address,uint8,address)"(
       tokenSymbol: string,
       tokenName: string,
       poolAddress: string,
       tokenAddress: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -392,9 +400,9 @@ export class ERC20GemTokenFactory extends Contract {
 
     "items()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<BigNumber>;
+    relinquishControl(overrides?: Overrides): Promise<BigNumber>;
 
-    "relinquishControl()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "relinquishControl()"(overrides?: Overrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -430,15 +438,17 @@ export class ERC20GemTokenFactory extends Contract {
       poolAddress: string,
       tokenAddress: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "createItem(string,string,address,address,uint8)"(
+    "createItem(string,string,address,address,uint8,address)"(
       tokenSymbol: string,
       tokenName: string,
       poolAddress: string,
       tokenAddress: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
@@ -466,10 +476,8 @@ export class ERC20GemTokenFactory extends Contract {
 
     "items()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    relinquishControl(overrides?: Overrides): Promise<PopulatedTransaction>;
 
-    "relinquishControl()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    "relinquishControl()"(overrides?: Overrides): Promise<PopulatedTransaction>;
   };
 }

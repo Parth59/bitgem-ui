@@ -8,6 +8,7 @@ generates:
       - 'typescript-operations'
       - 'typescript-react-query'
     config:
+      exposeQueryKeys: true
       fetcher: 'graphql-request'
       skipTypename: true
       errorType: 'Error'

@@ -14,6 +14,7 @@ import {useGetStatsQuery, useGetUserStatsQuery} from 'graph';
 import {client} from 'graph/client';
 import {formatEther} from 'ethers/lib/utils';
 import {useWeb3React} from '@web3-react/core';
+import {Client, createClient} from 'graphql-ws';
 
 const Header = (): JSX.Element => {
   const router = useRouter();
@@ -27,7 +28,6 @@ const Header = (): JSX.Element => {
     {enabled: !!account}
   );
 
-  console.log('RAN THIS SHIT', userStatsData);
   // useWeb3Notification(
   //   contracts.governor,
   //   'GovernanceTokenIssued',

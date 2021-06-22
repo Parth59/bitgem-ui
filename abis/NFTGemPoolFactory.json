@@ -46,6 +46,12 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "address",
+        "name": "gemPoolAdress",
+        "type": "address"
+      },
+      {
         "indexed": false,
         "internalType": "string",
         "name": "gemSymbol",
@@ -64,6 +70,12 @@
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "gemPoolAddress",
+        "type": "address"
+      },
       {
         "indexed": false,
         "internalType": "string",
@@ -85,7 +97,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "mintTime",
+        "name": "minTime",
         "type": "uint256"
       },
       {
@@ -328,7 +340,7 @@
     "inputs": [],
     "name": "relinquishControl",
     "outputs": [],
-    "stateMutability": "view",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

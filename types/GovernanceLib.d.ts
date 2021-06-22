@@ -21,16 +21,16 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface GovernanceLibInterface extends ethers.utils.Interface {
   functions: {
-    "addressOfPropoal(address,address,string)": FunctionFragment;
+    "addressOfProposal(address,address,string)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "addressOfPropoal",
+    functionFragment: "addressOfProposal",
     values: [string, string, string]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "addressOfPropoal",
+    functionFragment: "addressOfProposal",
     data: BytesLike
   ): Result;
 
@@ -51,14 +51,14 @@ export class GovernanceLib extends Contract {
   interface: GovernanceLibInterface;
 
   functions: {
-    addressOfPropoal(
+    addressOfProposal(
       factory: string,
       submitter: string,
       title: string,
       overrides?: CallOverrides
     ): Promise<[string] & { govAddress: string }>;
 
-    "addressOfPropoal(address,address,string)"(
+    "addressOfProposal(address,address,string)"(
       factory: string,
       submitter: string,
       title: string,
@@ -66,14 +66,14 @@ export class GovernanceLib extends Contract {
     ): Promise<[string] & { govAddress: string }>;
   };
 
-  addressOfPropoal(
+  addressOfProposal(
     factory: string,
     submitter: string,
     title: string,
     overrides?: CallOverrides
   ): Promise<string>;
 
-  "addressOfPropoal(address,address,string)"(
+  "addressOfProposal(address,address,string)"(
     factory: string,
     submitter: string,
     title: string,
@@ -81,14 +81,14 @@ export class GovernanceLib extends Contract {
   ): Promise<string>;
 
   callStatic: {
-    addressOfPropoal(
+    addressOfProposal(
       factory: string,
       submitter: string,
       title: string,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    "addressOfPropoal(address,address,string)"(
+    "addressOfProposal(address,address,string)"(
       factory: string,
       submitter: string,
       title: string,
@@ -99,14 +99,14 @@ export class GovernanceLib extends Contract {
   filters: {};
 
   estimateGas: {
-    addressOfPropoal(
+    addressOfProposal(
       factory: string,
       submitter: string,
       title: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "addressOfPropoal(address,address,string)"(
+    "addressOfProposal(address,address,string)"(
       factory: string,
       submitter: string,
       title: string,
@@ -115,14 +115,14 @@ export class GovernanceLib extends Contract {
   };
 
   populateTransaction: {
-    addressOfPropoal(
+    addressOfProposal(
       factory: string,
       submitter: string,
       title: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "addressOfPropoal(address,address,string)"(
+    "addressOfProposal(address,address,string)"(
       factory: string,
       submitter: string,
       title: string,

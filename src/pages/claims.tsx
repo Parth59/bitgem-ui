@@ -1,22 +1,17 @@
+import * as React from 'react';
 import {SectionHeader} from 'components/section-header';
 import {StatusPanel} from 'components/status-panel';
 import {Claim} from 'components/claim';
 import {Skeleton} from 'components/skeleton';
 import {useWeb3React} from '@web3-react/core';
-import {useGetUserClaimsQuery} from 'graph';
-import {client} from 'graph/client';
+import {useClaimQueryRefetchInterval} from 'components/query-manager-context';
+import {useClaims} from 'hooks/use-claims';
 
 const Claims = (): JSX.Element => {
   const {account} = useWeb3React();
-  const {data, isLoading, isError, error, isIdle} = useGetUserClaimsQuery(
-    client,
-    {id: account.toLowerCase(), collected: false}
-  );
-
-  if (isIdle) return <div>Idle</div>;
-  if (isLoading) return <div>Loading</div>;
-  if (isError) return <p className="text-white">{error.message}</p>;
-  const claims = data.user?.claims ?? [];
+  const {claims, isLoading} = useClaims(account);
+  // While on this page, override any refetch intervals with this one.
+  useClaimQueryRefetchInterval(1000);
 
   return (
     <main className="flex-1 px-4">
@@ -24,25 +19,29 @@ const Claims = (): JSX.Element => {
       <div className="flex flex-col gap-6">
         {isLoading
           ? [...new Array(5)].map((_, i) => (
-              <Skeleton key={i} className="bg-green-900 h-60 md:h-56" />
+              <Skeleton key={i} className="bg-green-900 h-60 md:h-52" />
             ))
           : claims.map(
               ({
+                id,
                 transactionHash,
                 gemPool,
                 stakedAmount,
                 quantity,
                 createdAtTimestamp,
-                stakedTimeSeconds
+                stakedTimeSeconds,
+                status
               }) => (
                 <Claim
                   key={transactionHash}
+                  id={id}
                   quantity={quantity}
                   stakedTimeSeconds={stakedTimeSeconds}
                   createdAtTimestamp={createdAtTimestamp}
                   stakedAmount={stakedAmount}
                   transactionHash={transactionHash}
                   gemPool={gemPool}
+                  status={status}
                 />
               )
             )}

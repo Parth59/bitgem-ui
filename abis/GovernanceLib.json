@@ -17,7 +17,7 @@
         "type": "string"
       }
     ],
-    "name": "addressOfPropoal",
+    "name": "addressOfProposal",
     "outputs": [
       {
         "internalType": "address",

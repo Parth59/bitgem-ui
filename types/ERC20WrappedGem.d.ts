@@ -31,7 +31,7 @@ interface ERC20WrappedGemInterface extends ethers.utils.Interface {
     "getTokenAddress()": FunctionFragment;
     "getTokenId()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "initialize(string,string,address,address,uint8)": FunctionFragment;
+    "initialize(string,string,address,address,uint8,address)": FunctionFragment;
     "name()": FunctionFragment;
     "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
@@ -76,7 +76,7 @@ interface ERC20WrappedGemInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string, string, string, string, BigNumberish]
+    values: [string, string, string, string, BigNumberish, string]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
@@ -262,15 +262,17 @@ export class ERC20WrappedGem extends Contract {
       gemPool: string,
       gemToken: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "initialize(string,string,address,address,uint8)"(
+    "initialize(string,string,address,address,uint8,address)"(
       name: string,
       symbol: string,
       gemPool: string,
       gemToken: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -456,15 +458,17 @@ export class ERC20WrappedGem extends Contract {
     gemPool: string,
     gemToken: string,
     decimals: BigNumberish,
+    feeManager: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "initialize(string,string,address,address,uint8)"(
+  "initialize(string,string,address,address,uint8,address)"(
     name: string,
     symbol: string,
     gemPool: string,
     gemToken: string,
     decimals: BigNumberish,
+    feeManager: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -650,15 +654,17 @@ export class ERC20WrappedGem extends Contract {
       gemPool: string,
       gemToken: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "initialize(string,string,address,address,uint8)"(
+    "initialize(string,string,address,address,uint8,address)"(
       name: string,
       symbol: string,
       gemPool: string,
       gemToken: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -853,15 +859,17 @@ export class ERC20WrappedGem extends Contract {
       gemPool: string,
       gemToken: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "initialize(string,string,address,address,uint8)"(
+    "initialize(string,string,address,address,uint8,address)"(
       name: string,
       symbol: string,
       gemPool: string,
       gemToken: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -1047,15 +1055,17 @@ export class ERC20WrappedGem extends Contract {
       gemPool: string,
       gemToken: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "initialize(string,string,address,address,uint8)"(
+    "initialize(string,string,address,address,uint8,address)"(
       name: string,
       symbol: string,
       gemPool: string,
       gemToken: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

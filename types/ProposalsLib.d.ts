@@ -21,12 +21,14 @@ interface ProposalsLibInterface extends ethers.utils.Interface {
   events: {
     "AllowList(address,address,address,bool)": EventFragment;
     "FeeUpdated(address,address,uint256)": EventFragment;
+    "FuelTokenIssued(address,uint256)": EventFragment;
     "GovernanceTokenIssued(address,uint256)": EventFragment;
     "ProjectFunded(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "AllowList"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "FeeUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "FuelTokenIssued"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GovernanceTokenIssued"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ProjectFunded"): EventFragment;
 }
@@ -61,6 +63,8 @@ export class ProposalsLib extends Contract {
       token: string | null,
       newFee: null
     ): EventFilter;
+
+    FuelTokenIssued(receiver: string | null, amount: null): EventFilter;
 
     GovernanceTokenIssued(receiver: string | null, amount: null): EventFilter;
 

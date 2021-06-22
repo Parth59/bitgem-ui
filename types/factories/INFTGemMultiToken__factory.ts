@@ -172,6 +172,29 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+      {
+        internalType: "uint256[]",
+        name: "ids",
+        type: "uint256[]",
+      },
+      {
+        internalType: "uint256[]",
+        name: "amounts",
+        type: "uint256[]",
+      },
+    ],
+    name: "burnBatch",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "getRegistryManager",
     outputs: [
@@ -195,7 +218,7 @@ const _abi = [
     name: "getTokenData",
     outputs: [
       {
-        internalType: "uint8",
+        internalType: "enum INFTGemMultiToken.TokenType",
         name: "",
         type: "uint8",
       },
@@ -271,6 +294,29 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256[]",
+        name: "ids",
+        type: "uint256[]",
+      },
+      {
+        internalType: "uint256[]",
+        name: "amounts",
+        type: "uint256[]",
+      },
+    ],
+    name: "mintBatch",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
         name: "index",
         type: "uint256",
@@ -302,7 +348,7 @@ const _abi = [
         type: "uint256",
       },
       {
-        internalType: "uint8",
+        internalType: "enum INFTGemMultiToken.TokenType",
         name: "tokenType",
         type: "uint8",
       },

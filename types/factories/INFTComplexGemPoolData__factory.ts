@@ -22,6 +22,49 @@ export class INFTComplexGemPoolData__factory {
 
 const _abi = [
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "converter",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "pool",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "oldPool",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "oldToken",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "gemHash",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "quantity",
+        type: "uint256",
+      },
+    ],
+    name: "NFTGemImported",
+    type: "event",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -51,7 +94,7 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "token",
+        name: "theToken",
         type: "address",
       },
       {
@@ -60,13 +103,13 @@ const _abi = [
         type: "address",
       },
       {
-        internalType: "uint8",
+        internalType: "enum INFTComplexGemPool.RequirementType",
         name: "inputType",
         type: "uint8",
       },
       {
         internalType: "uint256",
-        name: "tokenId",
+        name: "theTokenId",
         type: "uint256",
       },
       {
@@ -93,44 +136,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "token",
-        type: "address",
-      },
-      {
-        internalType: "uint8",
-        name: "tokenType",
-        type: "uint8",
-      },
-      {
-        internalType: "uint256",
-        name: "tokenHash",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "recipient",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "quantity",
-        type: "uint256",
-      },
-    ],
-    name: "addLegacyToken",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "uint256",
         name: "ndx",
         type: "uint256",
@@ -149,7 +154,7 @@ const _abi = [
         type: "address",
       },
       {
-        internalType: "uint8",
+        internalType: "enum INFTComplexGemPool.RequirementType",
         name: "",
         type: "uint8",
       },
@@ -245,7 +250,7 @@ const _abi = [
         type: "address[]",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -488,6 +493,53 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "pool",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "legacyToken",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenHash",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "recipient",
+        type: "address",
+      },
+    ],
+    name: "importLegacyGem",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenhash",
+        type: "uint256",
+      },
+    ],
+    name: "isLegacyGemImported",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
         name: "tkn",
         type: "address",
       },
@@ -650,7 +702,7 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "category",
+        name: "theCategory",
         type: "uint256",
       },
     ],
@@ -663,7 +715,7 @@ const _abi = [
     inputs: [
       {
         internalType: "string",
-        name: "description",
+        name: "desc",
         type: "string",
       },
     ],
@@ -715,12 +767,12 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "nextClaimId",
+        name: "_nextClaimId",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "nextGemId",
+        name: "_nextGemId",
         type: "uint256",
       },
     ],
@@ -745,31 +797,8 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "tokenHash",
-        type: "uint256",
-      },
-      {
-        internalType: "uint8",
-        name: "tokenType",
-        type: "uint8",
-      },
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
-    name: "setToken",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "uint256[]",
-        name: "tokenHashes",
+        name: "inTokenHashes",
         type: "uint256[]",
       },
     ],
@@ -795,7 +824,7 @@ const _abi = [
     inputs: [
       {
         internalType: "bool",
-        name: "visible",
+        name: "isVisible",
         type: "bool",
       },
     ],
@@ -958,7 +987,7 @@ const _abi = [
     name: "token",
     outputs: [
       {
-        internalType: "uint8",
+        internalType: "enum INFTGemMultiToken.TokenType",
         name: "tokenType",
         type: "uint8",
       },
@@ -1019,7 +1048,7 @@ const _abi = [
     name: "tokenType",
     outputs: [
       {
-        internalType: "uint8",
+        internalType: "enum INFTGemMultiToken.TokenType",
         name: "",
         type: "uint8",
       },
@@ -1049,7 +1078,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "token",
+        name: "theToken",
         type: "address",
       },
       {
@@ -1058,7 +1087,7 @@ const _abi = [
         type: "address",
       },
       {
-        internalType: "uint8",
+        internalType: "enum INFTComplexGemPool.RequirementType",
         name: "inputType",
         type: "uint8",
       },

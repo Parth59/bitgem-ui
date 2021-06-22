@@ -1,6 +1,7 @@
+import {NetworkContextName} from '../constants';
 import {createWeb3ReactRoot} from '@web3-react/core';
 
-const Web3ReactProviderDefault = createWeb3ReactRoot('NETWORK');
+const Web3ReactProviderDefault = createWeb3ReactRoot(NetworkContextName);
 
 type Web3ProvierNetworkProps = {
   children: JSX.Element;

@@ -33,6 +33,7 @@ interface NFTGemMultiTokenInterface extends ethers.utils.Interface {
     "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
     "burn(address,uint256,uint256)": FunctionFragment;
+    "burnBatch(address,uint256[],uint256[])": FunctionFragment;
     "getRegistryManager()": FunctionFragment;
     "getTokenData(uint256)": FunctionFragment;
     "heldTokens(address)": FunctionFragment;
@@ -40,6 +41,7 @@ interface NFTGemMultiTokenInterface extends ethers.utils.Interface {
     "isController(address)": FunctionFragment;
     "lock(uint256,uint256)": FunctionFragment;
     "mint(address,uint256,uint256)": FunctionFragment;
+    "mintBatch(address,uint256[],uint256[])": FunctionFragment;
     "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
     "paused()": FunctionFragment;
@@ -102,6 +104,10 @@ interface NFTGemMultiTokenInterface extends ethers.utils.Interface {
     values: [string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "burnBatch",
+    values: [string, BigNumberish[], BigNumberish[]]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getRegistryManager",
     values?: undefined
   ): string;
@@ -125,6 +131,10 @@ interface NFTGemMultiTokenInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "mint",
     values: [string, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mintBatch",
+    values: [string, BigNumberish[], BigNumberish[]]
   ): string;
   encodeFunctionData(
     functionFragment: "onERC1155BatchReceived",
@@ -219,6 +229,7 @@ interface NFTGemMultiTokenInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "burnBatch", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getRegistryManager",
     data: BytesLike
@@ -238,6 +249,7 @@ interface NFTGemMultiTokenInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "lock", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "mintBatch", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "onERC1155BatchReceived",
     data: BytesLike
@@ -443,6 +455,20 @@ export class NFTGemMultiToken extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    burnBatch(
+      account: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "burnBatch(address,uint256[],uint256[])"(
+      account: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     getRegistryManager(overrides?: CallOverrides): Promise<[string]>;
 
     "getRegistryManager()"(overrides?: CallOverrides): Promise<[string]>;
@@ -515,6 +541,20 @@ export class NFTGemMultiToken extends Contract {
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
+    mintBatch(
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "mintBatch(address,uint256[],uint256[])"(
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -555,9 +595,9 @@ export class NFTGemMultiToken extends Contract {
 
     "paused()"(overrides?: CallOverrides): Promise<[boolean]>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<[void]>;
+    relinquishControl(overrides?: Overrides): Promise<ContractTransaction>;
 
-    "relinquishControl()"(overrides?: CallOverrides): Promise<[void]>;
+    "relinquishControl()"(overrides?: Overrides): Promise<ContractTransaction>;
 
     removeProxyRegistryAt(
       index: BigNumberish,
@@ -807,6 +847,20 @@ export class NFTGemMultiToken extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  burnBatch(
+    account: string,
+    ids: BigNumberish[],
+    amounts: BigNumberish[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "burnBatch(address,uint256[],uint256[])"(
+    account: string,
+    ids: BigNumberish[],
+    amounts: BigNumberish[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   getRegistryManager(overrides?: CallOverrides): Promise<string>;
 
   "getRegistryManager()"(overrides?: CallOverrides): Promise<string>;
@@ -873,6 +927,20 @@ export class NFTGemMultiToken extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  mintBatch(
+    to: string,
+    ids: BigNumberish[],
+    amounts: BigNumberish[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "mintBatch(address,uint256[],uint256[])"(
+    to: string,
+    ids: BigNumberish[],
+    amounts: BigNumberish[],
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   onERC1155BatchReceived(
     arg0: string,
     arg1: string,
@@ -913,9 +981,9 @@ export class NFTGemMultiToken extends Contract {
 
   "paused()"(overrides?: CallOverrides): Promise<boolean>;
 
-  relinquishControl(overrides?: CallOverrides): Promise<void>;
+  relinquishControl(overrides?: Overrides): Promise<ContractTransaction>;
 
-  "relinquishControl()"(overrides?: CallOverrides): Promise<void>;
+  "relinquishControl()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   removeProxyRegistryAt(
     index: BigNumberish,
@@ -1162,6 +1230,20 @@ export class NFTGemMultiToken extends Contract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    burnBatch(
+      account: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "burnBatch(address,uint256[],uint256[])"(
+      account: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     getRegistryManager(overrides?: CallOverrides): Promise<string>;
 
     "getRegistryManager()"(overrides?: CallOverrides): Promise<string>;
@@ -1225,6 +1307,20 @@ export class NFTGemMultiToken extends Contract {
       account: string,
       tokenHash: BigNumberish,
       amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    mintBatch(
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "mintBatch(address,uint256[],uint256[])"(
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1561,6 +1657,20 @@ export class NFTGemMultiToken extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    burnBatch(
+      account: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "burnBatch(address,uint256[],uint256[])"(
+      account: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     getRegistryManager(overrides?: CallOverrides): Promise<BigNumber>;
 
     "getRegistryManager()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1630,6 +1740,20 @@ export class NFTGemMultiToken extends Contract {
       overrides?: Overrides
     ): Promise<BigNumber>;
 
+    mintBatch(
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "mintBatch(address,uint256[],uint256[])"(
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -1670,9 +1794,9 @@ export class NFTGemMultiToken extends Contract {
 
     "paused()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<BigNumber>;
+    relinquishControl(overrides?: Overrides): Promise<BigNumber>;
 
-    "relinquishControl()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "relinquishControl()"(overrides?: Overrides): Promise<BigNumber>;
 
     removeProxyRegistryAt(
       index: BigNumberish,
@@ -1927,6 +2051,20 @@ export class NFTGemMultiToken extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
+    burnBatch(
+      account: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "burnBatch(address,uint256[],uint256[])"(
+      account: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
     getRegistryManager(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -2003,6 +2141,20 @@ export class NFTGemMultiToken extends Contract {
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
+    mintBatch(
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "mintBatch(address,uint256[],uint256[])"(
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
     onERC1155BatchReceived(
       arg0: string,
       arg1: string,
@@ -2043,11 +2195,9 @@ export class NFTGemMultiToken extends Contract {
 
     "paused()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    relinquishControl(overrides?: Overrides): Promise<PopulatedTransaction>;
 
-    "relinquishControl()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    "relinquishControl()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     removeProxyRegistryAt(
       index: BigNumberish,

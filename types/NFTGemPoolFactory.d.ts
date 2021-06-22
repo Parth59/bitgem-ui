@@ -146,8 +146,8 @@ interface NFTGemPoolFactoryInterface extends ethers.utils.Interface {
   events: {
     "ControllerAdded(address,address)": EventFragment;
     "ControllerRemoved(address,address)": EventFragment;
-    "CustomNFTGemPoolCreated(string,string)": EventFragment;
-    "NFTGemPoolCreated(string,string,uint256,uint256,uint256,uint256,uint256,address)": EventFragment;
+    "CustomNFTGemPoolCreated(address,string,string)": EventFragment;
+    "NFTGemPoolCreated(address,string,string,uint256,uint256,uint256,uint256,uint256,address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "ControllerAdded"): EventFragment;
@@ -270,9 +270,9 @@ export class NFTGemPoolFactory extends Contract {
 
     "nftGemPools()"(overrides?: CallOverrides): Promise<[string[]]>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<[void]>;
+    relinquishControl(overrides?: Overrides): Promise<ContractTransaction>;
 
-    "relinquishControl()"(overrides?: CallOverrides): Promise<[void]>;
+    "relinquishControl()"(overrides?: Overrides): Promise<ContractTransaction>;
 
     removeGemPool(
       poolHash: BigNumberish,
@@ -389,9 +389,9 @@ export class NFTGemPoolFactory extends Contract {
 
   "nftGemPools()"(overrides?: CallOverrides): Promise<string[]>;
 
-  relinquishControl(overrides?: CallOverrides): Promise<void>;
+  relinquishControl(overrides?: Overrides): Promise<ContractTransaction>;
 
-  "relinquishControl()"(overrides?: CallOverrides): Promise<void>;
+  "relinquishControl()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   removeGemPool(
     poolHash: BigNumberish,
@@ -547,13 +547,18 @@ export class NFTGemPoolFactory extends Contract {
       controllerAddress: string | null
     ): EventFilter;
 
-    CustomNFTGemPoolCreated(gemSymbol: null, gemName: null): EventFilter;
+    CustomNFTGemPoolCreated(
+      gemPoolAdress: string | null,
+      gemSymbol: null,
+      gemName: null
+    ): EventFilter;
 
     NFTGemPoolCreated(
+      gemPoolAddress: string | null,
       gemSymbol: null,
       gemName: null,
       ethPrice: null,
-      mintTime: null,
+      minTime: null,
       maxTime: null,
       diffstep: null,
       maxMint: null,
@@ -662,9 +667,9 @@ export class NFTGemPoolFactory extends Contract {
 
     "nftGemPools()"(overrides?: CallOverrides): Promise<BigNumber>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<BigNumber>;
+    relinquishControl(overrides?: Overrides): Promise<BigNumber>;
 
-    "relinquishControl()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "relinquishControl()"(overrides?: Overrides): Promise<BigNumber>;
 
     removeGemPool(
       poolHash: BigNumberish,
@@ -792,11 +797,9 @@ export class NFTGemPoolFactory extends Contract {
 
     "nftGemPools()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    relinquishControl(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    relinquishControl(overrides?: Overrides): Promise<PopulatedTransaction>;
 
-    "relinquishControl()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    "relinquishControl()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     removeGemPool(
       poolHash: BigNumberish,

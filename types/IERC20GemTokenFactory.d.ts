@@ -24,7 +24,7 @@ interface IERC20GemTokenFactoryInterface extends ethers.utils.Interface {
   functions: {
     "allItems(uint256)": FunctionFragment;
     "allItemsLength()": FunctionFragment;
-    "createItem(string,string,address,address,uint8)": FunctionFragment;
+    "createItem(string,string,address,address,uint8,address)": FunctionFragment;
     "getItem(uint256)": FunctionFragment;
     "items()": FunctionFragment;
   };
@@ -39,7 +39,7 @@ interface IERC20GemTokenFactoryInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "createItem",
-    values: [string, string, string, string, BigNumberish]
+    values: [string, string, string, string, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "getItem",
@@ -94,15 +94,17 @@ export class IERC20GemTokenFactory extends Contract {
       poolAddress: string,
       tokenAddress: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "createItem(string,string,address,address,uint8)"(
+    "createItem(string,string,address,address,uint8,address)"(
       tokenSymbol: string,
       tokenName: string,
       poolAddress: string,
       tokenAddress: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -138,15 +140,17 @@ export class IERC20GemTokenFactory extends Contract {
     poolAddress: string,
     tokenAddress: string,
     decimals: BigNumberish,
+    feeManager: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "createItem(string,string,address,address,uint8)"(
+  "createItem(string,string,address,address,uint8,address)"(
     tokenSymbol: string,
     tokenName: string,
     poolAddress: string,
     tokenAddress: string,
     decimals: BigNumberish,
+    feeManager: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -182,15 +186,17 @@ export class IERC20GemTokenFactory extends Contract {
       poolAddress: string,
       tokenAddress: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    "createItem(string,string,address,address,uint8)"(
+    "createItem(string,string,address,address,uint8,address)"(
       tokenSymbol: string,
       tokenName: string,
       poolAddress: string,
       tokenAddress: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -236,15 +242,17 @@ export class IERC20GemTokenFactory extends Contract {
       poolAddress: string,
       tokenAddress: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "createItem(string,string,address,address,uint8)"(
+    "createItem(string,string,address,address,uint8,address)"(
       tokenSymbol: string,
       tokenName: string,
       poolAddress: string,
       tokenAddress: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -286,15 +294,17 @@ export class IERC20GemTokenFactory extends Contract {
       poolAddress: string,
       tokenAddress: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "createItem(string,string,address,address,uint8)"(
+    "createItem(string,string,address,address,uint8,address)"(
       tokenSymbol: string,
       tokenName: string,
       poolAddress: string,
       tokenAddress: string,
       decimals: BigNumberish,
+      feeManager: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

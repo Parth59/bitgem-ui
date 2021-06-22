@@ -25,7 +25,7 @@ interface IERC20WrappedERC1155Interface extends ethers.utils.Interface {
     "getReserves()": FunctionFragment;
     "getTokenAddress()": FunctionFragment;
     "getTokenId()": FunctionFragment;
-    "initialize(string,string,address,address,uint8)": FunctionFragment;
+    "initialize(string,string,address,address,uint8,address)": FunctionFragment;
     "unwrap(uint256)": FunctionFragment;
     "wrap(uint256)": FunctionFragment;
   };
@@ -44,7 +44,7 @@ interface IERC20WrappedERC1155Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string, string, string, string, BigNumberish]
+    values: [string, string, string, string, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "unwrap",
@@ -106,15 +106,17 @@ export class IERC20WrappedERC1155 extends Contract {
       arg2: string,
       arg3: string,
       arg4: BigNumberish,
+      arg5: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "initialize(string,string,address,address,uint8)"(
+    "initialize(string,string,address,address,uint8,address)"(
       arg0: string,
       arg1: string,
       arg2: string,
       arg3: string,
       arg4: BigNumberish,
+      arg5: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -157,15 +159,17 @@ export class IERC20WrappedERC1155 extends Contract {
     arg2: string,
     arg3: string,
     arg4: BigNumberish,
+    arg5: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "initialize(string,string,address,address,uint8)"(
+  "initialize(string,string,address,address,uint8,address)"(
     arg0: string,
     arg1: string,
     arg2: string,
     arg3: string,
     arg4: BigNumberish,
+    arg5: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -208,15 +212,17 @@ export class IERC20WrappedERC1155 extends Contract {
       arg2: string,
       arg3: string,
       arg4: BigNumberish,
+      arg5: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "initialize(string,string,address,address,uint8)"(
+    "initialize(string,string,address,address,uint8,address)"(
       arg0: string,
       arg1: string,
       arg2: string,
       arg3: string,
       arg4: BigNumberish,
+      arg5: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -260,15 +266,17 @@ export class IERC20WrappedERC1155 extends Contract {
       arg2: string,
       arg3: string,
       arg4: BigNumberish,
+      arg5: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "initialize(string,string,address,address,uint8)"(
+    "initialize(string,string,address,address,uint8,address)"(
       arg0: string,
       arg1: string,
       arg2: string,
       arg3: string,
       arg4: BigNumberish,
+      arg5: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -306,15 +314,17 @@ export class IERC20WrappedERC1155 extends Contract {
       arg2: string,
       arg3: string,
       arg4: BigNumberish,
+      arg5: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "initialize(string,string,address,address,uint8)"(
+    "initialize(string,string,address,address,uint8,address)"(
       arg0: string,
       arg1: string,
       arg2: string,
       arg3: string,
       arg4: BigNumberish,
+      arg5: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
