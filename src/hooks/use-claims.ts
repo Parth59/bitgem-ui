@@ -11,7 +11,7 @@ type UseClaimsResult = {
 
 const useClaims = (account: string): UseClaimsResult => {
   const {data, isLoading} = useGetUserClaimsQuery(client, {
-    id: account.toLowerCase(),
+    id: account?.toLowerCase(),
     collected: false
   });
   const pendingClaims = usePendingClaims();

@@ -5,7 +5,11 @@ export enum ChainId {
 }
 
 export const networks = {
-  [ChainId.FANTOM]: {name: 'Opera', coin: 'FTM'},
-  [ChainId.LOCAL]: {name: 'Local', coin: 'lETH'},
-  [ChainId.FANTOM_TESTNET]: {name: 'FtmTest', coin: 'tFTM'}
+  [ChainId.FANTOM]: {name: 'Opera', coin: 'FTM', longName: 'Fantom'},
+  [ChainId.LOCAL]: {name: 'Local', coin: 'lETH', longName: 'localhost'},
+  [ChainId.FANTOM_TESTNET]: {
+    name: 'FtmTest',
+    coin: 'tFTM',
+    longName: 'Fantom Testnet'
+  }
 };

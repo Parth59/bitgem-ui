@@ -6,9 +6,12 @@ import useEagerConnect from 'hooks/use-eager-connect';
 import useInactiveListener from 'hooks/use-inactive-listener';
 import {useWeb3React} from '@web3-react/core';
 import {NetworkContextName} from '../constants';
+import {ConfirmationModal} from './confirmation-modal';
+import {useToggle} from 'hooks/use-toggle';
 
 const Web3ReactManager = ({children}: {children: JSX.Element}): JSX.Element => {
   const {active} = useWeb3React();
+  const [isErrorModalOpen, toggleErrorModal] = useToggle(false);
   const {
     active: networkActive,
     error: networkError,
@@ -47,20 +50,28 @@ const Web3ReactManager = ({children}: {children: JSX.Element}): JSX.Element => {
 
   // if the account context isn't active, and there's an error on the network context, it's an irrecoverable error
   if (!active && networkError) {
-    return (
-      <div>
-        Oops! An unknown error occurred. Please refresh the page, or visit from
-        another browser or device ${networkError.message}
-      </div>
-    );
+    toggleErrorModal();
   }
 
   // if neither context is active, spin
   if (!active && !networkActive) {
-    return showLoader ? <div>Loading...</div> : null;
+    return <div>Loading...</div>;
   }
 
-  return children;
+  return (
+    <>
+      {children}
+      <ConfirmationModal
+        title="Error while connecting"
+        hasCancel={false}
+        open={isErrorModalOpen}
+        toggle={toggleErrorModal}
+      >
+        Oops! An unknown error occurred. Please refresh the page, or visit from
+        another browser or device ${networkError?.message}
+      </ConfirmationModal>
+    </>
+  );
 };
 
 export {Web3ReactManager};

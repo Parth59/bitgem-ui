@@ -4,12 +4,12 @@ import {ExclamationIcon} from '@heroicons/react/outline';
 
 const ConfirmationModal = ({
   title,
-  text,
   hasCancel = true,
   confirmText = 'Ok',
   open,
   toggle,
-  onConfirm = () => null
+  onConfirm = () => null,
+  children
 }) => {
   const handleConfirm = () => {
     toggle();
@@ -70,7 +70,7 @@ const ConfirmationModal = ({
                   </Dialog.Title>
                 </div>
                 <div className="pt-4 text-center sm:pt-6 text-green-200">
-                  {text}
+                  {children}
                 </div>
               </div>
               <div className="flex mt-5 sm:mt-6 gap-1 sm:gap-5 lg:gap-7">

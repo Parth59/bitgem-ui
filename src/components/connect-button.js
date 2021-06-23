@@ -3,8 +3,9 @@ import {getWalletName} from 'lib/blockchain';
 import * as React from 'react';
 import {ConnectModal} from './connect-modal';
 
-const ConnectButton = ({className}) => {
+const ConnectButton = ({className = 'px-4 py-2'}) => {
   const {active, chainId, account, error} = useWeb3React();
+  const isUnsupported = error instanceof UnsupportedChainIdError;
   const [open, setOpen] = React.useState(false);
 
   const handleClick = () => {
@@ -12,7 +13,7 @@ const ConnectButton = ({className}) => {
   };
 
   let buttonLabel = active ? getWalletName(chainId, account) : 'Connect';
-  if (error && error instanceof UnsupportedChainIdError) {
+  if (isUnsupported) {
     buttonLabel = 'Unsupported network';
   } else if (error) {
     buttonLabel = 'Error connecting';
@@ -20,7 +21,10 @@ const ConnectButton = ({className}) => {
 
   return (
     <div>
-      <button className={className} onClick={handleClick}>
+      <button
+        className={`font-bold rounded-md focus:ring-2 focus:outline-none text-red-500 text-shadow-sm ${className}`}
+        onClick={handleClick}
+      >
         {buttonLabel}
       </button>
       <ConnectModal open={open} setOpen={setOpen} />

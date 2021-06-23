@@ -6,13 +6,16 @@ import {useWeb3React} from '@web3-react/core';
 import {useGems} from 'hooks/use-gems';
 
 const Gems = (): JSX.Element => {
-  const {account} = useWeb3React();
+  const {active, account} = useWeb3React();
   const {gems, isLoading} = useGems(account);
 
   return (
     <main className="flex-1 px-4 md:px-0">
       <SectionHeader title="My Bitgems" />
       <div className="flex flex-col gap-6">
+        {!active ? (
+          <div>You need to be connected to see this content</div>
+        ) : null}
         {isLoading
           ? [...new Array(5)].map((_, i) => (
               <Skeleton key={i} className="bg-blue-900 md:h-24 h-40" />

@@ -4,6 +4,7 @@ import {Pool} from 'components/pool';
 import {Skeleton} from 'components/skeleton';
 import {useGetPoolsQuery} from 'graph';
 import {client} from 'graph/client';
+import {StatusPanel} from 'components/status-panel';
 
 const Pools = (): JSX.Element => {
   const {data, isError, isIdle, isLoading, error} = useGetPoolsQuery(
@@ -20,6 +21,7 @@ const Pools = (): JSX.Element => {
     <main className="flex-1 px-1">
       <div className="flex flex-col gap-6">
         <SectionHeader title="BitGem Pools" />
+        <StatusPanel />
         {isLoading
           ? [...new Array(5)].map((_, i) => (
               <Skeleton key={i} className="bg-blue-900 h-80 md:h-72" />

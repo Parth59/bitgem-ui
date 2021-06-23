@@ -10,9 +10,11 @@ const useWeb3Event = (contract, eventId, eventHandler) => {
   }, [eventHandler]);
 
   React.useEffect(() => {
-    const eventListener = (event) => eventHandlerRef.current(event);
-
     if (contract) {
+      const eventListener = (event) => {
+        eventHandlerRef.current(event);
+      };
+
       contract.on(eventId, eventListener);
       return () => {
         contract.off(eventId, eventListener);

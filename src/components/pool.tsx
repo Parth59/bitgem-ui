@@ -6,6 +6,7 @@ import {useWeb3React} from '@web3-react/core';
 import {GemPool} from 'graph';
 import {getGemImage} from 'constants/gem-metadata';
 import {networks} from 'constants/networks';
+import {ConnectButton} from 'components/connect-button';
 import {formatEther, parseEther} from 'ethers/lib/utils';
 
 export type PoolType = Pick<
@@ -25,7 +26,7 @@ type PoolProps = {
 };
 
 const Pool = ({pool}: PoolProps): JSX.Element => {
-  const {chainId = 1} = useWeb3React();
+  const {chainId = 1, active} = useWeb3React();
   const {
     formValues,
     formErrors,
@@ -137,20 +138,22 @@ const Pool = ({pool}: PoolProps): JSX.Element => {
           </div>
         ) : null}
         {enabled ? (
-          <div className="px-1 py-2  text-base text-center text-shadow-sm font-bold text-green-600">
+          <div className="px-2 py-2 text-base text-center text-shadow-sm font-bold text-green-600">
             {formatEther(parseEther(formValues.price).mul(formValues.gems))}{' '}
             {coin} will be staked for {formValues.duration} day
             {formValues.duration > 1 ? 's' : ''}
           </div>
         ) : null}
         <div className="w-full sm:p-4">
-          <button
-            type="submit"
-            disabled={!enabled}
-            className="button-card sm:rounded-lg"
-          >
-            stake
-          </button>
+          {active ? (
+            <button
+              type="submit"
+              disabled={!enabled}
+              className="button-card sm:rounded-lg"
+            >
+              stake
+            </button>
+          ) : null}
         </div>
       </form>
     </div>

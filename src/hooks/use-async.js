@@ -1,9 +1,10 @@
 import * as React from 'react';
 
-const defaultState = {status: 'loading', data: null, error: null};
+const defaultState = {status: 'idle', data: null, error: null};
 const simpleReducer = (state, updates) => ({...state, ...updates});
 
 // @pricklywiggles: Need to make this safe for unmounting.
+// TODO: Type this
 const useAsync = (initialState) => {
   const initialStateRef = React.useRef({
     ...defaultState,
@@ -47,6 +48,7 @@ const useAsync = (initialState) => {
     isLoading: state.status === 'loading',
     isError: state.status === 'error',
     isSuccess: state.status === 'success',
+    isIdle: state.status === 'idle',
     reset,
     setData,
     setError,

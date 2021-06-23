@@ -5,6 +5,11 @@ import {RPC} from 'constants/rpc';
 import {NetworkConnector} from './network-connector';
 
 const POLLING_INTERVAL = 12000;
+export const supportedChainIds = [
+  // ChainId.FANTOM,
+  // ChainId.FANTOM_TESTNET,
+  ChainId.LOCAL
+];
 
 export const network = new NetworkConnector({
   defaultChainId: ChainId.FANTOM,
@@ -12,7 +17,7 @@ export const network = new NetworkConnector({
 });
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [ChainId.FANTOM, ChainId.FANTOM_TESTNET, ChainId.LOCAL]
+  supportedChainIds
 });
 
 export const walletConnect = new WalletConnectConnector({
