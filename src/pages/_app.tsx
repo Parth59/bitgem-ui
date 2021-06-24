@@ -51,7 +51,7 @@ const MyApp = ({Component, pageProps}: AppProps): JSX.Element => {
         ))}
       </Head>
 
-      <ServerCacheProvider>
+      <QueryClientProvider client={queryClient}>
         <ToastProvider>
           <Web3ReactProvider getLibrary={getLibrary}>
             <Web3ProviderNetwork getLibrary={getLibrary}>
@@ -73,7 +73,7 @@ const MyApp = ({Component, pageProps}: AppProps): JSX.Element => {
             </Web3ProviderNetwork>
           </Web3ReactProvider>
         </ToastProvider>
-      </ServerCacheProvider>
+      </QueryClientProvider>
     </>
   );
 };
