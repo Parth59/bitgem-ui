@@ -59,10 +59,49 @@
   }
 
   .menu-item {
-    @apply hover:no-underline font-bold text-yellow-300 text-shadow-sm px-1 hover:text-shadow-md focus:ring-2 focus:outline-none rounded-md;
+    @apply hover:no-underline font-bold text-yellow-300 text-shadow-sm px-1 focus:ring-2 focus:outline-none rounded-md;
   }
 
   .menu-item-sm {
-    @apply block px-2 py-2 rounded-md hover:bg-gray-700 hover:no-underline font-bold text-yellow-300 text-shadow-sm hover:text-shadow-md focus:ring-2 focus:outline-none;
+    @apply block px-2 py-2 rounded-md hover:bg-gray-700 hover:no-underline font-bold text-yellow-300 text-shadow-sm focus:ring-2 focus:outline-none;
+  }
+
+  .button-card {
+    @apply rounded-b-md text-lg w-full text-white disabled:text-gray-500 py-2 text-shadow-lg disabled:text-shadow-sm bg-blue-600 hover:bg-blue-700 px-2 hover:outline-none hover:ring-1 hover:ring-gray-500 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500 disabled:bg-gray-800;
+  }
+
+  .button-basic {
+    @apply rounded-md py-2 px-3 text-shadow-sm bg-blue-700 hover:bg-blue-600 hover:ring-1 hover:ring-gray-500 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500 disabled:bg-gray-800 disabled:text-gray-500;
+  }
+
+  .placeholder {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .placeholder::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: -150px;
+    top: 0;
+    height: 100%;
+    width: 150px;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 100%
+    );
+    animation: load 0.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  @keyframes load {
+    from {
+      left: -150px;
+    }
+    to {
+      left: 100%;
+    }
   }
 }

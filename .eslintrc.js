@@ -1,14 +1,42 @@
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
-  plugins: ['react', 'react-hooks', 'jsx-a11y', '@typescript-eslint'],
-  extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:react-hooks/recommended',
-    'plugin:jsx-a11y/recommended',
-    'plugin:@typescript-eslint/recommended',
-    'prettier'
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      excludedFiles: ['*.js'],
+      plugins: ['react', 'react-hooks', 'jsx-a11y', '@typescript-eslint'],
+      extends: [
+        'eslint:recommended',
+        'plugin:react/recommended',
+        'plugin:react-hooks/recommended',
+        'plugin:jsx-a11y/recommended',
+        'plugin:@typescript-eslint/recommended',
+        'prettier'
+      ],
+      rules: {
+        'react/react-in-jsx-scope': 'off',
+        'jsx-a11y/anchor-is-valid': 'off',
+        '@typescript-eslint/no-explicit-any': 'off'
+      }
+    },
+    {
+      files: ['*.js'],
+      excludedFiles: ['*.ts', '*.tsx'],
+      plugins: ['react', 'react-hooks', 'jsx-a11y'],
+      extends: [
+        'eslint:recommended',
+        'plugin:react/recommended',
+        'plugin:react-hooks/recommended',
+        'plugin:jsx-a11y/recommended',
+        'prettier'
+      ],
+      rules: {
+        'react/react-in-jsx-scope': 'off',
+        'jsx-a11y/anchor-is-valid': 'off',
+        'react/prop-types': 'off'
+      }
+    }
   ],
   parserOptions: {
     ecmaVersion: 2020,
@@ -16,10 +44,6 @@ module.exports = {
     ecmaFeatures: {
       jsx: true
     }
-  },
-  rules: {
-    'react/react-in-jsx-scope': 'off',
-    'jsx-a11y/anchor-is-valid': 'off'
   },
   env: {
     es6: true,

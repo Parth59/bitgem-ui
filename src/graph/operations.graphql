@@ -1,0 +1,78 @@
+query GetPools {
+  gemPools {
+    id
+    symbol
+    name
+    stakingPrice
+    minTimeSecs
+    maxTimeSecs
+    diffStep
+    maxMint
+  }
+}
+
+query GetPool($id: ID!) {
+  gemPool(id: $id) {
+    id
+    symbol
+    name
+    stakingPrice
+    minTimeSecs
+    maxTimeSecs
+    diffStep
+    maxMint
+  }
+}
+
+query GetStats {
+  game(id: "BITGEM") {
+    claimCount
+    gemCount
+    stakedAmount
+  }
+}
+
+query GetUserStats($id: ID!) {
+  user(id: $id) {
+    claimCount
+    gemCount
+  }
+}
+
+query GetUserClaims($id: ID!, $collected: Boolean) {
+  user(id: $id) {
+    claims(
+      where: {collected: $collected}
+      orderBy: createdAtTimestamp
+      orderDirection: desc
+    ) {
+      id
+      stakedAmount
+      quantity
+      createdAtTimestamp
+      stakedTimeSeconds
+      transactionHash
+      gemPool {
+        id
+        symbol
+        name
+      }
+    }
+  }
+}
+
+query GetUserGems($id: ID!) {
+  user(id: $id) {
+    gems {
+      id
+      quantity
+      createdAtTimestamp
+      transactionHash
+      gemPool {
+        id
+        symbol
+        name
+      }
+    }
+  }
+}
