@@ -20,7 +20,6 @@
     "ethers": "^5.1.4",
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
-    "graphql-ws": "^5.1.2",
     "immer": "^9.0.2",
     "next": "^11.0.0",
     "react": "^17.0.2",
