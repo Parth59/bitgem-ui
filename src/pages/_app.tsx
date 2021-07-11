@@ -26,11 +26,11 @@ const getLibrary = (provider) => {
   return new ethers.providers.Web3Provider(provider);
 };
 
-const ServerCacheProvider = ({children}: {children: React.ReactNode}) => {
-  return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
-};
+// const ServerCacheProvider = ({children}: {children: React.ReactNode}) => {
+//   return (
+//     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+//   );
+// };
 
 const MyApp = ({Component, pageProps}: AppProps): JSX.Element => {
   return (
