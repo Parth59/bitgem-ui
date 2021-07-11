@@ -10,7 +10,7 @@ Contracts - [https://github.com/nftgem/nftgem-contracts](https://https://github.
 
 Subgraph - [https://github.com/nftgem/nftgem-subgraph](https://github.com/nftgem/nftgem-subgraph)
 
-UI - [https://github.com/nftgem/bitgem-ui](https://github.com/nftgem/bitgem-uihttps://)
+UI - [https://github.com/nftgem/bitgem-ui](https://github.com/nftgem/bitgem-ui)
 
 You will need to follow these steps to:
 
